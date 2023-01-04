@@ -1,2 +1,6 @@
 #!/bin/sh
-fasterq-dump SRR000001
+input="./SraAccList.txt"
+while IFS= read -r line
+do
+  echo "$line"
+done
