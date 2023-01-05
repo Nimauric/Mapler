@@ -5,14 +5,14 @@
 input="./SraAccList.txt"
 while IFS= read -r line
 do  
-    if [ -f "$line"* ]
-        then
+    #if ls "$line"* 1> /dev/null 2>&1
+        #then
+	    #echo "$line" "is already downloaded"
+        #else
             echo "downloading" "$line""..."
-            prefetch "$line"
+	    prefetch "$line" --max-size u
             fasterq-dump "$line"
-        else
-            echo "$line" "is already downloaded"
-    fi
+    #fi
 done < "$input"
 echo "done !"
 
