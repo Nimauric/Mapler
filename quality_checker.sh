@@ -5,13 +5,15 @@
 #SBATCH --mail-type=END
 #SBATCH --mail-type=FAIL
 
+export _JAVA_OPTIONS=-Xmx2048m
+
 files=(./fastq/*.fastq)
 for f in "${files[@]}"
 do
     filename=`basename $f .fastq`
     if ! [ -f ./fastQC/${filename}_fastqc.html ]
         then
-	    fastqc $f -o ./fastQC
+	    fastqc $f -o ./fastQC 
         else
             echo "$filename already analysed"
     fi
