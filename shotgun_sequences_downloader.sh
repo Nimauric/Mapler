@@ -15,5 +15,6 @@ do
         fastq-dump  "$line"
     fi
 done < "$input"
+mv *.fastq fastq/
 echo "done !"
 
