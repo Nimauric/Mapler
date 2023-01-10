@@ -3,11 +3,11 @@
 The aim of this repository is to compare long-reads metagenomic assemblers.
 
 ## Files
-SraAccList.txt : contains the SRA accession numbers for the fasq files you wish to download, analyse and assemble
-pipeline.sh : coordinates the other scripts
-env_init.sh : sets up the correct genouest environnement
-shotgun_sequences_downloader : downloads the fasq files whose accession number is in SraAccList.txt
-quality_checker.sh : checks the reads quality using fastQC
+ - SraAccList.txt : contains the SRA accession numbers for the fasq files you wish to download, analyse and assemble
+ - pipeline.sh : coordinates the other scripts
+ - env_init.sh : sets up the correct genouest environnement
+ - shotgun_sequences_downloader : downloads the fasq files whose accession number is in SraAccList.txt
+ - quality_checker.sh : checks the reads quality using fastQC
 
 
 
