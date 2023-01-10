@@ -1,4 +1,6 @@
 #!/bin/sh
+# This script coordinates the various scripts for the long reads metagenomic assembly pipeline
+
 
 source ./env_init.sh
 echo "environement initialisation done"
