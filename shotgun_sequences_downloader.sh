@@ -10,7 +10,7 @@ do
     prefetch "$line" --max-size u
     fasterq-dump "$line"*
     rm -r "$line" # removes the temporary folder made by prefetch to quicken fasterq-dump
-    tar -cvf "$line".fastq "$line" # compress the fastq
+    gzip "$line".fastq # compress the fastq
     
 
     # If it doesn't work (no file is created) (mainly because fasterq-dump doesn't work on PacBio sequences), use fastq-dump
@@ -20,7 +20,7 @@ do
     fi
 
     # Once it'd done, move the archive to the fastq folder for the rest of the pipeline
-    mv "$line" fastq/
+    mv "$line".tar fastq/
 
 done < "$input"
 
