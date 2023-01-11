@@ -4,7 +4,7 @@
 # Sets up java parameters so that fastQC works on big files
 export _JAVA_OPTIONS=-Xmx2048m
 
-files=(./fastq/*.fastq)
+files=(./fastq/*.fastq.gz)
 for f in "${files[@]}"
 do
     filename=`basename $f .fastq`
