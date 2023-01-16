@@ -10,6 +10,8 @@ The aim of this repository is to compare long-reads metagenomic assemblers.
  - shotgun_sequences_downloader : downloads the fasq files whose accession number is in SraAccList.txt
  - quality_checker.sh : checks the reads quality using fastQC
  - metaflye_assembler : assemble reads using the flye --meta tool
+ - metadata_fetcher : a tool that gets the sequencer used from an accession number
+ - metaquast_caller.sh : calls metaquast, a tool to analyse the quality of the assembly
 
 
 
