@@ -10,3 +10,6 @@ echo "sequences downloaded"
 
 ./quality_checker.sh
 echo "sequences analysed"
+
+./metaflye_assembler.sh
+echo "assembly complete"
