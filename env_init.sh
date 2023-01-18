@@ -2,8 +2,10 @@
 # This script sets up the environement for the long reads metagenomic assembly pipeline
 
 echo "creating folders..."
-mkdir fastq # raw fastq
-mkdir fastQC # quality check
+mkdir data
+mkdir data/raw_reads # raw fastq
+mkdir data/reads_QC # quality check
+mkdir data/reference_genomes
 
 echo "setting up the conda environnement..."
 . /local/env/envconda.sh

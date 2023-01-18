@@ -1,9 +1,15 @@
 configfile: "config.yaml"
 
+
+reads = {
+    "pacbio1" : "SRR8073714",
+    "pacbio2" : "SRR8073715"
+}
+
 rule reads_download:
     input:
         "config.yaml"
     output:
-        expand("data/raw_reads/{read}.fastq.gz",read=config["reads"])
+        expand("data/raw_reads/{read}.fastq.gz", read = reads.keys())
     shell:
-        expand("reads_downloader.sh {read}",read=config["reads"])
+        "reads_downloader.sh"
