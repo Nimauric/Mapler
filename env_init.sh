@@ -7,8 +7,7 @@ mkdir fastQC # quality check
 
 echo "setting up the conda environnement..."
 . /local/env/envconda.sh
-# created with : . /local/env/envconda.sh
-# then : conda create -p ~/meta_flye_env flye xmlstarlet 
+# created with : conda create -p ~/meta_flye_env flye xmlstarlet snakemake 
 conda activate ~/meta_flye_env
 
 echo "setting up the genouest evnvironnement..."
