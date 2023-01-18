@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --mem=10G
+#SBATCH --mem=30G
 
-activate_environnement.sh
+source ./activate_environnement.sh
 snakemake --cores all all
