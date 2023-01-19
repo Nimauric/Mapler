@@ -1,23 +1,24 @@
 #!/bin/sh
-#SBATCH --mem=30G
 
-files=(./fastq/*.fastq.gz)
-for f in "${files[@]}"
+
+for f in "$@"
 do  
     #get the accession number
     filename=`basename $f .fastq.gz`
     
     #get the metadata
-    metadata=$(./metadata_fetcher.sh $filename 2> /dev/null)
+    metadata=$(./sequencer_fetcher.sh $filename 2> /dev/null)
     
     #assemble
-    arguments = "maxInputCoverage=10000 corOutCoverage=10000 corMhapSensitivity=high corMinCoverage=0 redMemory=32 oeaMemory=32 batMemory=200"
+    arguments="maxInputCoverage=10000 corOutCoverage=10000 corMhapSensitivity=high corMinCoverage=0 redMemory=32 oeaMemory=32 batMemory=200"
+    mkdir ./data/assemblies/canu_$filename
     case $metadata in
         "PacBio RS II")
-            $(canu -p $filename -d $filename genomeSize=500000 -$metadata -pacbio $f $arguments)
+            echo "canu -p $filename -d ./data/assemblies/canu_$filename genomeSize=500000 -$metadata -pacbio $f $arguments"        
+            $(canu -p $filename -d ./data/assemblies/canu_$filename genomeSize=500000 -pacbio $f $arguments)
             ;;
         "MinION")
-            $(canu -p $filename -d $filename genomeSize=500000 -$metadata -nanopore $f $arguments)
+            $(canu -p $filename -d ./data/assemblies/canu_$filename genomeSize=500000 -nanopore $f $arguments)
             ;;
         *)
             echo "Unsupported or unrecognized read sequencer !"
@@ -28,11 +29,6 @@ do
 done
 
 
-    
-canu \
- -p ecoli -d ecoli-pacbio \
- genomeSize=4.8m \
- -pacbio pacbio.fastq
 
 
 
