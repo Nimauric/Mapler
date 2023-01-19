@@ -23,4 +23,7 @@ The aim of this repository is to compare long-reads metagenomic assemblers.
 
 
 ## Usage
-Clone the repository in a genouest environnement, then modify the SraAccList.txt file to your liking and run pipeline.sh (if this is the first time you're running it, you need to follow the instruction in the comments of pipeline.sh before running it)
+Clone the repository in a genouest environnement, then run initialise_environnement.sh (once). 
+
+For each dataset you wish to analyse, place your runs.fastq in the data/raw_reads folder, and place your reference_genomes.fasta in the data/reference_genomes folder. Then, run the sbatch pipeline.sh command and wait
+
