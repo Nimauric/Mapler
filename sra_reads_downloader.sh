@@ -7,8 +7,11 @@ do
     echo ""
     echo "downloading" "$line""..."
     # Prefetch followed by fasterq-dump is the fastest way to download a fastq file
+    echo "prefetching..."
     prefetch "$line" --max-size u
+    echo "dumping..."
     fasterq-dump "$line"*
+    echo "compressing..."
     rm -r "$line" # removes the temporary folder made by prefetch to quicken fasterq-dump
     gzip "$line".fastq # compress the fastq
     
@@ -20,7 +23,7 @@ do
     fi
 
     # Once it'd done, move the archive to the fastq folder for the rest of the pipeline
-    mv "$line".tar fastq/
+    mv "$line".fastq.gz data/raw_reads/
 
 done < "$input"
 
