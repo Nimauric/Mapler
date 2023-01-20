@@ -4,6 +4,7 @@ rule all :
     input :
         "data/reads_QC/SRR8073714/SRR8073714_fastqc.html",
         "data/assemblies/metaflye_SRR8073714/",
+        "data/assemblies/canu_SRR8073714/",
         "data/assemblies_QC/metaflye_SRR8073714/",
         "data/assemblies_QC/canu_SRR8073714/"
 
@@ -24,7 +25,8 @@ rule metaflye_assembly :
         "metaflye_assembler.sh",
         "sequencer_fetcher.sh"
     output :
-        directory("data/assemblies/metaflye_{read}")
+        protected(directory("data/assemblies/metaflye_{read}")),
+        protected("data/assemblies/metaflye_{read}/assembly.fasta")
     shell : 
         "./metaflye_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
 
@@ -34,7 +36,10 @@ rule canu_assembly :
         "canu_assembler.sh",
         "sequencer_fetcher.sh"
     output :
-        directory("data/assemblies/canu_{read}")
+        protected(directory("data/assemblies/canu_{read}")),
+        protected("data/assemblies/canu_{read}/{read}.unassembled.fasta"),
+        protected("data/assemblies/canu_{read}/{read}.contigs.fasta")
+
     shell : 
         "./canu_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
   
