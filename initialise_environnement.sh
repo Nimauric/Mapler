@@ -10,7 +10,7 @@ mkdir data/assemblies_QC
 
 echo "creating the conda environnement..."
 . /local/env/envconda.sh
-conda create -p ~/meta_flye_env flye xmlstarlet snakemake
+conda create -p ~/meta_flye_env flye canu xmlstarlet snakemake
 
 echo "Your environnement is ready,"
 echo ""
