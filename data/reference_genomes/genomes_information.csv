@@ -1,0 +1,13 @@
+Filename,Abundance,IMG Taxon ID,Organism,Genome_size [bp],% GC,% Repeat,Molarity ×10-15
+Micsca_2.fasta,low,2623620567,Micromonospora echinofusca DSM 43913,7002527,73.3,3.85,0.43
+Micaca_2.fasta,low,2623620557,Micromonospora echinaurantiaca DSM 43904,7203133,73.2,2.91,0.47
+ProbacES041_2.fasta,low,2615840646,Propionibacteriaceae bacterium ES.041,4495552,69.5,2.42,0.74
+Micsis_2.fasta,low,2623620609,Micromonospora coxensis DSM 45161,6769693,73.6,3.48,0.77
+ThispES032_2.fasta,mid,2615840533,Thioclava sp. ES.032,4962820,62.8,3.44,1.61
+CohspES047_2.fasta,mid,2615840601,Cohaesibacter sp. ES.047,5110232,55.5,7.27,3.06
+MarspLV10MA5101_2.fasta,mid,2616644829,Marinobacter sp. LV10MA510-1,4447234,54.6,5.83,3.37
+MurspES050.fasta,mid,2615840527,Muricauda sp. ES.050,3593735,40.3,1.5,5.95
+MarspLV10R5108_2.fasta,high,2615840697,Marinobacter sp. LV10R510-8,4333333,53.9,4.8,7.1
+PsyspLV10R5206_2.fasta,high,2617270709,Psychrobacter sp. LV10R520-6,3218993,42.9,7.23,7.18
+Halomonassp_3.fasta,high,2623620617,Halomonas sp. HL-4,4238582,55.8,4.35,7.26
+HalomonasspHL93.fasta,high,2623620618,Halomonas sp. HL-93,4144442,55.9,2.78,7.42
