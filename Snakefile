@@ -6,7 +6,10 @@ rule all :
         "data/assemblies/metaflye_SRR8073714/",
         "data/assemblies/canu_SRR8073714/",
         "data/assemblies_QC/metaflye_SRR8073714/",
-        "data/assemblies_QC/canu_SRR8073714/"
+        "data/assemblies_QC/canu_SRR8073714/",
+        "data/stats_reports/canu_SRR8073714/canu_SRR8073714_report.txt",
+        "data/stats_reports/metaflye_SRR8073714/metaflye_SRR8073714_report.txt"
+
 
 rule reads_quality_check:
     input :
@@ -51,3 +54,12 @@ rule assembly_quality_check :
         directory("data/assemblies_QC/{assembly}")
     shell : 
         "./assembly_quality_checker.sh data/assemblies/{wildcards.assembly}"
+
+rule assembly_stats :
+    input : 
+        "data/assemblies_QC/{assembly}/summary/TSV",
+        "stats.py"
+    output : 
+        "data/stats_reports/{assembly}/{assembly}_report.txt"
+    shell : 
+        "python3 stats.py data/assemblies_QC/{wildcards.assembly}/summary/TSV > data/stats_reports/{wildcards.assembly}/{wildcards.assembly}_report.txt"
