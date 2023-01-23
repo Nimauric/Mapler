@@ -7,6 +7,7 @@ mkdir data/raw_reads # raw fastq
 mkdir data/reads_QC # quality check
 mkdir data/reference_genomes
 mkdir data/assemblies_QC
+mkdir data/stats_reports
 
 echo "creating the conda environnement..."
 . /local/env/envconda.sh
