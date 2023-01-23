@@ -51,3 +51,10 @@ rule assembly_quality_check :
         directory("data/assemblies_QC/{assembly}")
     shell : 
         "./assembly_quality_checker.sh data/assemblies/{wildcards.assembly}"
+
+rule assembly_stats :
+    input : 
+        "data/assemblies_QC/{assembly}/summary/TSV"
+        "stats.sh"
+    shell : 
+        "
