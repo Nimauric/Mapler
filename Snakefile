@@ -51,7 +51,8 @@ rule assembly_quality_check :
         "data/assemblies/{assembly}",
         "assembly_quality_checker.sh"
     output :
-        directory("data/assemblies_QC/{assembly}")
+        directory("data/assemblies_QC/{assembly}"),
+        directory("data/assemblies_QC/{assembly}/summary/TSV")
     shell : 
         "./assembly_quality_checker.sh data/assemblies/{wildcards.assembly}"
 
