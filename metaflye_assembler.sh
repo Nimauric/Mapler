@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script assemble a set of reads into a metagenome, using metaflye
 
 for f in "$@"
 do  

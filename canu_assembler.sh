@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# This script assemble a set of reads into a metagenome, using canu
 
 for f in "$@"
 do  

@@ -1,6 +1,9 @@
 import sys
 import pandas as pd
 
+############### FUNCTIONS ###############
+
+# Import a tsv and merge it with table
 def import_and_merge_metric(table, metric_path, metric_name) :
     metric_table = pd.read_csv(metric_path, sep = "\t", na_values=['-'])
     metric_table["assembly"] = metric_table.iloc[:,1]
@@ -26,7 +29,8 @@ def message_generator(table,abundance) :
     print("  - average NGA50 : " + str(NGA50))
 
 
-### Import data from csv
+############### MAIN ###############
+
 # Import metadata
 table = pd.read_csv("./data/reference_genomes/genomes_information.csv")
 table["Assemblies"] = table["Filename"].str.removesuffix(".fasta")
@@ -38,19 +42,7 @@ table = import_and_merge_metric(table, str(sys.argv[1]+"/num_misassemblies.tsv")
 table = import_and_merge_metric(table, str(sys.argv[1]+"/Duplication_ratio.tsv"), "duplication_ratio")
 table = import_and_merge_metric(table, str(sys.argv[1]+"/NGA50.tsv"), "NGA50")
 
-
-"""
-# Import and merge genome fraction
-genome_fraction = pd.read_csv(str(sys.argv[1]+"/Genome_fraction.tsv"), sep = "\t")
-genome_fraction.rename(columns={"assembly" : "genome_fraction"})
-table=pd.merge(table, genome_fraction, on="Assemblies")
-
-# Import and merge mismatches per 100kb
-mismatches = pd.read_csv(str(sys.argv[1]+"/num_mismatches_per_100_kbp.tsv"), sep = "\t")
-
-"""
-
-
+# Generate the output
 message_generator(table,"low")
 message_generator(table,"mid")
 message_generator(table,"high")

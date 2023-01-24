@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script checks the quality of any input assembly using metaquast
 
 for f in "$@"
 do
