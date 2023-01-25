@@ -7,6 +7,7 @@ echo "setting up the genouest evnvironnement..."
 . /local/env/envjava-1.8.0.sh
 . /local/env/envquast-5.0.2.sh
 . /local/env/envminimap2-2.15.sh
+. /local/env/envsamtools-1.15.sh 
 
 echo "setting up the conda environnement..."
 . /local/env/envconda.sh
