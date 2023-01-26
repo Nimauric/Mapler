@@ -4,8 +4,18 @@ rule all :
     input :
         "data/reads_QC/SRR8073714/SRR8073714_fastqc.html",
         "data/reference_genomes/coverage_information_SRR8073714.tsv",
+
+        "data/assemblies/metaflye_SRR8073714/",
+        "data/assemblies/canu_SRR8073714/",
+        "data/assemblies/miniasm_SRR8073714/",
+
+        "data/assemblies_QC/metaflye_SRR8073714/summary/TSV",
+        "data/assemblies_QC/canu_SRR8073714/summary/TSV",
+        "data/assemblies_QC/miniasm_SRR8073714/summary/TSV",
+
         "data/stats_reports/canu_SRR8073714/canu_SRR8073714_report.txt",
-        "data/stats_reports/metaflye_SRR8073714/metaflye_SRR8073714_report.txt"
+        "data/stats_reports/metaflye_SRR8073714/metaflye_SRR8073714_report.txt",
+        "data/stats_reports/miniasm_SRR8073714/miniasm_SRR8073714_report.txt"
     
 
 rule reads_quality_check :
@@ -49,7 +59,17 @@ rule canu_assembly :
 
     shell : 
         "./canu_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
-  
+
+rule miniasm_assembly :
+        input : 
+            "data/raw_reads/{read}.fastq.gz",
+            "miniasm_assembler.sh",
+            "sequencer_fetcher.sh"
+        output :
+            protected("data/assemblies/miniasm_{read}/assembly.fasta")
+        shell : 
+            "./miniasm_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
+
 rule assembly_quality_check :
     input : 
         "data/assemblies/{assembly}",

@@ -23,7 +23,19 @@ do
 
     echo "running minimap2 on $filename..."
     # Run minimap2
-    minimap2 -ax map-pb data/reference_genomes/multi_ref.multifasta "$f" > data/mapping/mapping_"$filename".sam
+    metadata=$(./sequencer_fetcher.sh $filename 2> /dev/null)
+    case $metadata in
+        "PacBio RS II")
+            minimap2 -ax map-pb data/reference_genomes/multi_ref.fasta "$run" > data/mapping/mapping_"$run".sam
+            ;;
+        "MinION")
+            minimap2 -ax map-ont  data/reference_genomes/multi_ref.fasta "$run" > data/mapping/mapping_"$run".sam
+            ;;
+        *)
+            echo "Unsupported or unrecognized read sequencer !"
+            echo $metadata
+            ;;
+    esac
 
     # Run SAMtools
     echo "running samtools on $filename..."
