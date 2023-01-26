@@ -4,6 +4,10 @@ rule all :
     input :
         "data/reads_QC/SRR8073714/SRR8073714_fastqc.html",
         "data/reference_genomes/coverage_information_SRR8073714.tsv",
+        "data/assemblies/metaflye_SRR8073714/",
+        "data/assemblies/canu_SRR8073714/",
+        "data/assemblies_QC/metaflye_SRR8073714/",
+        "data/assemblies_QC/canu_SRR8073714/",
         "data/stats_reports/canu_SRR8073714/canu_SRR8073714_report.txt",
         "data/stats_reports/metaflye_SRR8073714/metaflye_SRR8073714_report.txt"
     
