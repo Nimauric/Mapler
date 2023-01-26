@@ -9,9 +9,9 @@ rule all :
         "data/assemblies/canu_SRR8073714/",
         "data/assemblies/miniasm_SRR8073714/",
 
-        "data/assemblies_QC/metaflye_SRR8073714/",
-        "data/assemblies_QC/canu_SRR8073714/",
-        "data/assemblies_QC/miniasm_SRR8073714/",
+        "data/assemblies_QC/metaflye_SRR8073714/summary/TSV",
+        "data/assemblies_QC/canu_SRR8073714/summary/TSV",
+        "data/assemblies_QC/miniasm_SRR8073714/summary/TSV",
 
         "data/stats_reports/canu_SRR8073714/canu_SRR8073714_report.txt",
         "data/stats_reports/metaflye_SRR8073714/metaflye_SRR8073714_report.txt",
