@@ -11,6 +11,6 @@ mkdir data/stats_reports
 
 echo "creating the conda environnement..."
 . /local/env/envconda.sh
-conda create -p ~/my_env flye canu xmlstarlet snakemake pandas quast samtools minimap2 miniasm fastqc sra-tools
+conda create -p ~/my_env flye canu xmlstarlet snakemake pandas quast samtools=1.15 minimap2 miniasm fastqc sra-tools
 
 echo "Done !"

@@ -26,7 +26,9 @@ do
             echo $metadata
             ;;
     esac
-    echo "============================================"
+    
+    mv "data/assemblies/canu_"$filename"/"$filename".contigs.fasta" "data/assemblies/canu_"$filename"/assembly.fasta"
+
 done
 
 

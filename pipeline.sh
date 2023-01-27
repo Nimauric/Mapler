@@ -5,4 +5,4 @@
 # This script coordinates the other scripts
 
 source ./activate_environnement.sh
-snakemake --cores all all
+snakemake -p --cores all all

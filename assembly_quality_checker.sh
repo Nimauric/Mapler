@@ -5,5 +5,5 @@ for f in "$@"
 do
     foldername=`basename $f`
     mkdir data/assemblies_QC/"$foldername"
-    metaquast "$f"/*.fasta -r $( echo data/reference_genomes/[^multi_ref]*.fasta | tr ' ' , ) -o data/assemblies_QC/"$foldername"
+    metaquast "$f"/*.fasta -r $( echo data/reference_genomes/individual_genomes/*.fasta | tr ' ' , ) -o data/assemblies_QC/"$foldername"
 done

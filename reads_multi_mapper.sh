@@ -3,9 +3,9 @@
 
 
 # Create a merged reference file if it doesn't already exist
-if [ ! -f "data/reference_genomes/multi_ref.multi_fasta" ]; then
-    echo "" > data/reference_genomes/multi_ref.multi_fasta
-    for f in data/reference_genomes/*.fasta
+if [ ! -f "data/reference_genomes/multi_ref.multifasta" ]; then
+    echo "" > data/reference_genomes/multi_ref.multifasta
+    for f in data/reference_genomes/individual_genomes/*.fasta
     do
         filename=`basename $f .fasta`
         # Name the sequence from the filenmae
@@ -26,10 +26,10 @@ do
     metadata=$(./sequencer_fetcher.sh $filename 2> /dev/null)
     case $metadata in
         "PacBio RS II")
-            minimap2 -ax map-pb data/reference_genomes/multi_ref.fasta "$run" > data/mapping/mapping_"$run".sam
+            minimap2 -ax map-pb data/reference_genomes/multi_ref.multifasta "$f" > data/mapping/mapping_"$filename".sam
             ;;
         "MinION")
-            minimap2 -ax map-ont  data/reference_genomes/multi_ref.fasta "$run" > data/mapping/mapping_"$run".sam
+            minimap2 -ax map-ont  data/reference_genomes/multi_ref.multifasta "$f" > data/mapping/mapping_"$filename".sam
             ;;
         *)
             echo "Unsupported or unrecognized read sequencer !"

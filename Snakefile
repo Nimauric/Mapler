@@ -24,7 +24,7 @@ rule reads_quality_check :
 
 rule sequencing_debth_calculation :
     input :
-        "data/reference_genomes/*.fasta",
+        "data/reference_genomes/individual_genomes/",
         "data/raw_reads/{read}.fastq.gz",
         "reads_multi_mapper.sh"
     output : 
@@ -51,7 +51,7 @@ rule canu_assembly :
     output :
         directory("data/assemblies/canu_{read}"),
         protected("data/assemblies/canu_{read}/{read}.unassembled.fasta"),
-        protected("data/assemblies/canu_{read}/{read}.contigs.fasta")
+        protected("data/assemblies/canu_{read}/assembly.fasta")
 
     shell : 
         "./canu_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
@@ -69,12 +69,12 @@ rule miniasm_assembly :
 
 rule polishing : 
     input :
-        "data/assemblies/canu_{read}"
+        "data/assemblies/{assembler_to_polish}_{read}"
     output : 
         directory("data/assemblies/flye_polish_{assembler_to_polish}_{read}"),
         "data/assemblies/flye_polish_{assembler_to_polish}_{read}/polished_1.fasta"
     shell : 
-        "flye --pacbio-raw data/raw_reads/{wildcards.read}.fastq.gz --polish-target data/assemblies/{wildcards.assembler_to_polish}_{wildcards.read}/{wildcards.read}.contigs.fasta --out-dir data/assemblies/flye_polish_{wildcards.assembler_to_polish}_{wildcards.read}"
+        "./flye_polisher.sh {wildcards.assembler_to_polish} {wildcards.read}"
 
 rule assembly_quality_check :
     input : 
