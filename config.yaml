@@ -1,3 +1,11 @@
-reads :
-    pacbio1 : SRR8073714
-    pacbio2 : SRR8073715
+---
+long_reads :
+ - SRR8073714
+ - SRR8073713
+
+long_reads_assemblers :
+ - metaflye
+ - canu
+ - miniasm
+ - flye_polish_canu
+ - flye_polish_miniasm

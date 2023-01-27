@@ -2,25 +2,15 @@ configfile : "config.yaml"
 
 rule all :
     input :
-        "data/reads_QC/SRR8073714/SRR8073714_fastqc.html",
-        "data/reference_genomes/coverage_information_SRR8073714.tsv",
+        # Operations on reads
+        expand("data/reads_QC/{read}/{read}_fastqc.html", read=config["long_reads"]),
+        expand("data/reference_genomes/coverage_information_{read}.tsv", read=config["long_reads"]),
 
-        "data/assemblies/metaflye_SRR8073714/",
-        "data/assemblies/canu_SRR8073714/",
-        "data/assemblies/miniasm_SRR8073714/",
-
-        "data/assemblies/flye_polish_canu_SRR8073714/polished_1.fasta",
-        "data/assemblies_QC/flye_polish_canu_SRR8073714/summary/TSV",
-        "data/stats_reports/flye_polish_canu_SRR8073714/flye_polish_canu_SRR8073714_report.txt",
-
-        "data/assemblies_QC/metaflye_SRR8073714/summary/TSV",
-        "data/assemblies_QC/canu_SRR8073714/summary/TSV",
-        "data/assemblies_QC/miniasm_SRR8073714/summary/TSV",
-
-        "data/stats_reports/canu_SRR8073714/canu_SRR8073714_report.txt",
-        "data/stats_reports/metaflye_SRR8073714/metaflye_SRR8073714_report.txt",
-        "data/stats_reports/miniasm_SRR8073714/miniasm_SRR8073714_report.txt"
-    
+        # Operations on reads-assembler pairs
+        expand("data/assemblies/{assembler}_{read}/", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
+        expand("data/assemblies_QC/{assembler}_{read}/summary/TSV", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
+        expand( "data/stats_reports/{assembler}_{read}/{assembler}_{read}_report.txt", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
+     
 
 rule reads_quality_check :
     input :
