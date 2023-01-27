@@ -14,8 +14,10 @@ The aim of this repository is to compare long-reads metagenomic assemblers.
  - activate_environement.sh : activates the genouest environement 
  - Snakefile : coordinates the scripts below
  - reads_quality_checker.sh : checks the reads quality using fastQC
+ - reads_multi_mapper.sh : maps reads to reference genome to calculate their coverage
  - metaflye_assembler.sh : assemble metagenomes using metaflye
- - canu_assembler.sh (work in progress): assemble metagenomes using canux
+ - canu_assembler.sh : assemble metagenomes using canu
+ - miniasm_assembler.sh : assemble metagenomes using minimap, miniasm and awk
  - sequencer_fetcher.sh : fetch the sequencer used by a SRA run
  - assembly_quality_checker.sh : checks the quality of the assemblies using metaquast
  - stats.py : aggregates metaquast metrics and group them depending on the species abudance.

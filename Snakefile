@@ -9,6 +9,10 @@ rule all :
         "data/assemblies/canu_SRR8073714/",
         "data/assemblies/miniasm_SRR8073714/",
 
+        "data/assemblies/flye_polish_canu_SRR8073714/polished_1.fasta",
+        "data/assemblies_QC/flye_polish_canu_SRR8073714/summary/TSV",
+        "data/stats_reports/flye_polish_canu_SRR8073714/flye_polish_canu_SRR8073714_report.txt",
+
         "data/assemblies_QC/metaflye_SRR8073714/summary/TSV",
         "data/assemblies_QC/canu_SRR8073714/summary/TSV",
         "data/assemblies_QC/miniasm_SRR8073714/summary/TSV",
@@ -44,6 +48,7 @@ rule metaflye_assembly :
         "metaflye_assembler.sh",
         "sequencer_fetcher.sh"
     output :
+        directory("data/assemblies/metaflye_{read}"),
         protected("data/assemblies/metaflye_{read}/assembly.fasta")
     shell : 
         "./metaflye_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
@@ -54,6 +59,7 @@ rule canu_assembly :
         "canu_assembler.sh",
         "sequencer_fetcher.sh"
     output :
+        directory("data/assemblies/canu_{read}"),
         protected("data/assemblies/canu_{read}/{read}.unassembled.fasta"),
         protected("data/assemblies/canu_{read}/{read}.contigs.fasta")
 
@@ -61,14 +67,24 @@ rule canu_assembly :
         "./canu_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
 
 rule miniasm_assembly :
-        input : 
-            "data/raw_reads/{read}.fastq.gz",
-            "miniasm_assembler.sh",
-            "sequencer_fetcher.sh"
-        output :
-            protected("data/assemblies/miniasm_{read}/assembly.fasta")
-        shell : 
-            "./miniasm_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
+    input : 
+        "data/raw_reads/{read}.fastq.gz",
+        "miniasm_assembler.sh",
+        "sequencer_fetcher.sh"
+    output :
+        directory("data/assemblies/miniasm_{read}"),
+        protected("data/assemblies/miniasm_{read}/assembly.fasta")
+    shell : 
+        "./miniasm_assembler.sh data/raw_reads/{wildcards.read}.fastq.gz"
+
+rule polishing : 
+    input :
+        "data/assemblies/canu_{read}"
+    output : 
+        directory("data/assemblies/flye_polish_{assembler_to_polish}_{read}"),
+        "data/assemblies/flye_polish_{assembler_to_polish}_{read}/polished_1.fasta"
+    shell : 
+        "flye --pacbio-raw data/raw_reads/{wildcards.read}.fastq.gz --polish-target data/assemblies/{wildcards.assembler_to_polish}_{wildcards.read}/{wildcards.read}.contigs.fasta --out-dir data/assemblies/flye_polish_{wildcards.assembler_to_polish}_{wildcards.read}"
 
 rule assembly_quality_check :
     input : 
@@ -88,4 +104,5 @@ rule assembly_stats :
         "data/stats_reports/{assembly}_{read}/{assembly}_{read}_report.txt"
     shell : 
         "python3 stats.py data/assemblies_QC/{wildcards.assembly}_{wildcards.read}/summary/TSV data/reference_genomes/coverage_information_{wildcards.read}.tsv  > data/stats_reports/{wildcards.assembly}_{wildcards.read}/{wildcards.assembly}_{wildcards.read}_report.txt" 
+
 
