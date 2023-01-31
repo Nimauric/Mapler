@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --mem=30G
+#SBATCH --mem=100G
 #SBATCH --cpus-per-task=4
 
 # This script coordinates the other scripts

@@ -69,7 +69,8 @@ rule miniasm_assembly :
 
 rule polishing : 
     input :
-        "data/assemblies/{assembler_to_polish}_{read}"
+        "data/assemblies/{assembler_to_polish}_{read}",
+        "data/assemblies/{assembler_to_polish}_{read}/assembly.fasta"
     output : 
         directory("data/assemblies/flye_polish_{assembler_to_polish}_{read}"),
         "data/assemblies/flye_polish_{assembler_to_polish}_{read}/polished_1.fasta"

@@ -1,6 +1,6 @@
 ---
 long_reads :
- - SRR8073714
+# - SRR8073714
  - SRR8073713
 
 long_reads_assemblers :
