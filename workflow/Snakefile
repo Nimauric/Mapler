@@ -1,0 +1,15 @@
+configfile : "../config/config.yaml"
+
+rule all :
+    input :
+        "../data/hello.txt"
+
+rule say_hello :
+    input : 
+    output :
+        "../data/hello.txt"
+    shell : 
+        """
+        echo hello > ../data/hello.txt
+        sleep 10
+        """
