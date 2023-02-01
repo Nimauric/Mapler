@@ -2,14 +2,72 @@ configfile : "../config/config.yaml"
 
 rule all :
     input :
-        "../data/hello.txt"
+        # Test
+        "../data/hello.txt",
+       
+        #Once : 
+        "../data/merged_reference_genome/merged_reference.fasta",
+
+        # For each run of reads : 
+        expand("../data/reads_quality_check/{reads}/{reads}_fastqc.html", reads=config["long_reads"]),
+        expand("../data/reads_quality_check/{reads}/{reads}_fastqc.zip", reads=config["long_reads"]),
+
+        expand("../data/merged_reference_genome/coverage_information_{reads}.tsv", reads=config["long_reads"]),
+ 
+
+
+def get_files_in_folder(path):
+    files = os.listdir(path)
+    for i in range(len(files)) :
+        files[i] = path + files[i]
+    arguments = " ".join(files)
+    return arguments
 
 rule say_hello :
     input : 
     output :
         "../data/hello.txt"
+    message :
+        "This is a test rule to showcase what the Snakefile can do"
+    resources :
+        slurm_extra="--mem=1G"
     shell : 
         """
         echo hello > ../data/hello.txt
-        sleep 10
+        sleep 5
         """
+
+rule reads_quality_check :
+    input :
+        "scripts/reads_quality_checker.sh", # script
+        "../data/input_reads/{reads}.fastq.gz", # data
+    output :
+        "../data/reads_quality_check/{reads}/{reads}_fastqc.html",
+        "../data/reads_quality_check/{reads}/{reads}_fastqc.zip"
+    message :
+        "This rule checks the quality of every read and produces a human readable report"
+    resources :
+    shell : 
+        "./scripts/reads_quality_checker.sh ../data/input_reads/{wildcards.reads}.fastq.gz ../data/reads_quality_check/{wildcards.reads}"
+
+path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
+reference_genomes = get_files_in_folder(path_to_reference_genomes)
+rule references_merger :
+    input :
+        "scripts/references_merger.sh", # script
+        path_to_reference_genomes, # data
+    output : 
+        "../data/merged_reference_genome/merged_reference.fasta"
+    shell :
+        "./scripts/references_merger.sh {output} {reference_genomes}"
+
+rule coverage_calculator :
+    input :
+        "scripts/coverage_calculator.sh", # script
+        "scripts/sequencer_fetcher.sh", # script
+        reference="../data/merged_reference_genome/merged_reference.fasta", #data
+        run="../data/input_reads/{reads}.fastq.gz", # data
+    output :
+        "../data/merged_reference_genome/coverage_information_{reads}.tsv"
+    shell :
+        "./scripts/coverage_calculator.sh {wildcards.reads} {input.run} {input.reference} ../data/tmp/ {output}"
