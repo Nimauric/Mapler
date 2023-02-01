@@ -52,8 +52,8 @@ path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at 
 reference_genomes = get_files_in_folder(path_to_reference_genomes)
 rule references_merger :
     input :
-        script = "scripts/references_merger.sh", # script
         path_to_reference_genomes, # data
+        script = "scripts/references_merger.sh", # script
     output : 
         "../data/merged_reference_genome/merged_reference.fasta"
     shell :
@@ -78,4 +78,4 @@ rule metaflye_assembly :
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     shell :
-        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{run} " 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run} " 
