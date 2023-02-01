@@ -38,38 +38,37 @@ rule say_hello :
 
 rule reads_quality_check :
     input :
-        "scripts/reads_quality_checker.sh", # script
-        "../data/input_reads/{reads}.fastq.gz", # data
+        script = "scripts/reads_quality_checker.sh", # script
+        run = "../data/input_reads/{reads}.fastq.gz", # data
     output :
         "../data/reads_quality_check/{reads}/{reads}_fastqc.html",
         "../data/reads_quality_check/{reads}/{reads}_fastqc.zip"
     message :
         "This rule checks the quality of every read and produces a human readable report"
-    resources :
     shell : 
-        "./scripts/reads_quality_checker.sh ../data/input_reads/{wildcards.reads}.fastq.gz ../data/reads_quality_check/{wildcards.reads}"
+        "{input.script} {input.run} ../data/reads_quality_check/{wildcards.reads}"
 
 path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
 reference_genomes = get_files_in_folder(path_to_reference_genomes)
 rule references_merger :
     input :
-        "scripts/references_merger.sh", # script
+        script = "scripts/references_merger.sh", # script
         path_to_reference_genomes, # data
     output : 
         "../data/merged_reference_genome/merged_reference.fasta"
     shell :
-        "./scripts/references_merger.sh {output} {reference_genomes}"
+        "{input.script} {output} {reference_genomes}"
 
 rule coverage_calculator :
     input :
         "scripts/coverage_calculator.sh", # script
-        "scripts/sequencer_fetcher.sh", # script
-        reference="../data/merged_reference_genome/merged_reference.fasta", #data
-        run="../data/input_reads/{reads}.fastq.gz", # data
+        script = "scripts/sequencer_fetcher.sh", # script
+        reference = "../data/merged_reference_genome/merged_reference.fasta", #data
+        run = "../data/input_reads/{reads}.fastq.gz", # data
     output :
         "../data/merged_reference_genome/coverage_information_{reads}.tsv"
     shell :
-        "./scripts/coverage_calculator.sh {wildcards.reads} {input.run} {input.reference} ../data/tmp/ {output}"
+        "{input.script} {wildcards.reads} {input.run} {input.reference} ../data/tmp/ {output}"
 
 rule metaflye_assembly :
     input :
@@ -78,6 +77,5 @@ rule metaflye_assembly :
         run = "../data/input_reads/{run}.fastq.gz", # data
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
-        directory = directory("../data/assemblies/metaflye_{run}")
     shell :
-        "./{input.script} {wildcards.run} {input.run} {output.directory} " 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{run} " 
