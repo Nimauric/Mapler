@@ -46,7 +46,7 @@ rule reads_quality_check :
     message :
         "This rule checks the quality of every read and produces a human readable report"
     shell : 
-        "{input.script} {input.run} ../data/reads_quality_check/{wildcards.reads}"
+        "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
 
 path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
 reference_genomes = get_files_in_folder(path_to_reference_genomes)
@@ -61,14 +61,14 @@ rule references_merger :
 
 rule coverage_calculator :
     input :
-        "scripts/coverage_calculator.sh", # script
-        script = "scripts/sequencer_fetcher.sh", # script
+        "scripts/sequencer_fetcher.sh", # script
+        script = "scripts/coverage_calculator.sh", # script
         reference = "../data/merged_reference_genome/merged_reference.fasta", #data
         run = "../data/input_reads/{run}.fastq.gz", # data
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
     shell :
-        "{input.script} {wildcards.reads} {input.run} {input.reference} ../data/tmp/ {output}"
+        "{input.script} {wildcards.run} {input.run} {input.reference} ../data/tmp/ {output}"
 
 rule metaflye_assembly :
     input :
@@ -77,5 +77,8 @@ rule metaflye_assembly :
         run = "../data/input_reads/{run}.fastq.gz", # data
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
+    resources :
+        slurm_extra="--mem=100G"
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run} " 
+
