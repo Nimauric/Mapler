@@ -80,5 +80,28 @@ rule metaflye_assembly :
     resources :
         slurm_extra="--mem=100G"
     shell :
-        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run} " 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}" 
 
+rule canu_assembly :
+    input :
+        "scripts/sequencer_fetcher.sh", # script
+        script = "scripts/canu_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq.gz", # data
+    output :
+        "../data/assemblies/canu_{run}/assembly.fasta",
+    resources :
+        slurm_extra="--mem=100G"
+    shell :
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run} 500000" 
+
+rule miniasm_assembly :
+    input :
+        "scripts/sequencer_fetcher.sh", # script
+        script = "scripts/miniasm_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq.gz", # data
+    output :
+        "../data/assemblies/miniasm_{run}/assembly.fasta",
+    resources :
+        slurm_extra="--mem=100G"
+    shell :
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}" 
