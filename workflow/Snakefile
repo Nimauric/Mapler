@@ -9,8 +9,8 @@ rule all :
         "../data/merged_reference_genome/merged_reference.fasta",
 
         # For each run of reads : 
-        expand("../data/reads_quality_check/{reads}/{reads}_fastqc.html", reads=config["long_reads"]),
-        expand("../data/merged_reference_genome/coverage_information_{reads}.tsv", reads=config["long_reads"]),
+        expand("../data/reads_quality_check/{run}/{run}_fastqc.html", run=config["long_reads"]),
+        expand("../data/merged_reference_genome/coverage_information_{run}.tsv", run=config["long_reads"]),
 
         # For each assembler-run pair :
         expand("../data/assemblies/{assembler}_{read}/assembly.fasta", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
@@ -39,10 +39,10 @@ rule say_hello :
 rule reads_quality_check :
     input :
         script = "scripts/reads_quality_checker.sh", # script
-        run = "../data/input_reads/{reads}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq.gz", # data
     output :
-        "../data/reads_quality_check/{reads}/{reads}_fastqc.html",
-        "../data/reads_quality_check/{reads}/{reads}_fastqc.zip"
+        "../data/reads_quality_check/{run}/{run}_fastqc.html",
+        "../data/reads_quality_check/{run}/{run}_fastqc.zip"
     message :
         "This rule checks the quality of every read and produces a human readable report"
     shell : 
@@ -64,9 +64,9 @@ rule coverage_calculator :
         "scripts/coverage_calculator.sh", # script
         script = "scripts/sequencer_fetcher.sh", # script
         reference = "../data/merged_reference_genome/merged_reference.fasta", #data
-        run = "../data/input_reads/{reads}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq.gz", # data
     output :
-        "../data/merged_reference_genome/coverage_information_{reads}.tsv"
+        "../data/merged_reference_genome/coverage_information_{run}.tsv"
     shell :
         "{input.script} {wildcards.reads} {input.run} {input.reference} ../data/tmp/ {output}"
 
