@@ -10,11 +10,10 @@ rule all :
 
         # For each run of reads : 
         expand("../data/reads_quality_check/{reads}/{reads}_fastqc.html", reads=config["long_reads"]),
-        expand("../data/reads_quality_check/{reads}/{reads}_fastqc.zip", reads=config["long_reads"]),
-
         expand("../data/merged_reference_genome/coverage_information_{reads}.tsv", reads=config["long_reads"]),
- 
 
+        # For each assembler-run pair :
+        expand("../data/assemblies/{assembler}_{read}/assembly.fasta", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
 
 def get_files_in_folder(path):
     files = os.listdir(path)
@@ -71,3 +70,14 @@ rule coverage_calculator :
         "../data/merged_reference_genome/coverage_information_{reads}.tsv"
     shell :
         "./scripts/coverage_calculator.sh {wildcards.reads} {input.run} {input.reference} ../data/tmp/ {output}"
+
+rule metaflye_assembly :
+    input :
+        "scripts/sequencer_fetcher.sh", # script
+        script = "scripts/metaflye_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq.gz", # data
+    output :
+        "../data/assemblies/metaflye_{run}/assembly.fasta",
+        directory = directory("../data/assemblies/metaflye_{run}")
+    shell :
+        "./{input.script} {wildcards.run} {input.run} {output.directory} " 
