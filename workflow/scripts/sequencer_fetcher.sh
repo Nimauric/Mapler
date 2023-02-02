@@ -3,6 +3,11 @@
 
 INPUT=$1
 
+if ["$INPUT"="Toy"]
+    echo "PacBio RS II"
+    exit 0
+fi
+
 # search the element from its accession name
 XML="curl 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=sra&term=$INPUT' -s" 
 

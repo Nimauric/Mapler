@@ -78,10 +78,13 @@ rule metaflye_assembly :
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
-        slurm_extra="--mem=100G"
+        cpus_per_task=4,
+        mem_mb=100000
     shell :
-        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}" 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
 
+average_genome_size = 500000
+average_genome_size = 50000 # divided by 10 for the toy example
 rule canu_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
@@ -90,9 +93,10 @@ rule canu_assembly :
     output :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
-        slurm_extra="--mem=100G"
+        cpus_per_task=4,
+        mem_mb=100000
     shell :
-        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run} 500000" 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ 50000" 
 
 rule miniasm_assembly :
     input :
@@ -102,6 +106,7 @@ rule miniasm_assembly :
     output :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     resources :
-        slurm_extra="--mem=100G"
+        cpus_per_task=4,
+        mem_mb=100000
     shell :
-        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}" 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 

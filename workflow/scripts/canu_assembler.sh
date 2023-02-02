@@ -6,7 +6,7 @@
 # "$4" : estimated average genome size
 
 # Fetch the sequencer used for this run
-generic_arguments="genomeSize="$4" maxInputCoverage=10000 corOutCoverage=10000 corMhapSensitivity=high corMinCoverage=0 redMemory=32 oeaMemory=32 batMemory=200"
+generic_arguments=genomeSize="$4" maxInputCoverage=10000 corOutCoverage=10000 corMhapSensitivity=high corMinCoverage=0 redMemory=32 oeaMemory=32 batMemory=200
 sequencer=$(./scripts/sequencer_fetcher.sh "$1")
 case $sequencer in
     "PacBio RS II")
@@ -23,5 +23,6 @@ case $sequencer in
 esac
 
 # Run Canu
-canu -p "$1" -d "$3" "$sequencer_arguments" "$2" "$generic_arguments"
+#useGrid=flase means canu doesn't use the cluster
+canu -p "$1" -d "$3" "$sequencer_arguments" "$2" "$generic_arguments" useGrid=false
 mv "$3""$filename".contigs.fasta "$3"assembly.fasta
