@@ -3,7 +3,7 @@
 
 INPUT=$1
 
-if ["$INPUT"="Toy"]
+if [ "$INPUT" == Toy ]; then
     echo "PacBio RS II"
     exit 0
 fi

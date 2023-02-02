@@ -67,6 +67,8 @@ rule coverage_calculator :
         run = "../data/input_reads/{run}.fastq.gz", # data
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
+    resources :
+        mem_mb=10000
     shell :
         "{input.script} {wildcards.run} {input.run} {input.reference} ../data/tmp/ {output}"
 
@@ -84,7 +86,6 @@ rule metaflye_assembly :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
 
 average_genome_size = 500000
-average_genome_size = 50000 # divided by 10 for the toy example
 rule canu_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
