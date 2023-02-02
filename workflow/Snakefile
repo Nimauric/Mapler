@@ -111,3 +111,37 @@ rule miniasm_assembly :
         mem_mb=100000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
+
+rule flye_polishing : 
+    input :
+        script = "scripts/flye_polisher.sh", #script
+        assembly = "../data/assemblies/{assembler_to_polish}_{run}/assembly.fasta", #data
+        run = "../data/input_reads/{run}.fastq.gz", # data
+    output : 
+        "data/assemblies/flye_polish_{assembler_to_polish}_{run}/polished_1.fasta"
+    shell : 
+        "./{input.script} {wildcards.run} {input.run} {input.assembly} {output}"
+
+path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
+reference_genomes = get_files_in_folder(path_to_reference_genomes)
+rule assembly_quality_check :
+    input : 
+        script = "scripts/assembly_quality_checker.sh", #script
+        assembly = "../data/assemblies/{assembly}/assembly.fasta", #data
+    output :
+        directory("../data/assemblies_quality_check/{assembly}/summary/TSV/")
+    shell : 
+        "./assembly_quality_checker.sh {input.assembly} ../data/assemblies_QC/{assembly} {reference_genomes}"
+
+rule assembly_stats :
+    input : 
+        quality_check = "data/assemblies_quality_check/{assembly}_{run}/summary/TSV/", 
+        coverage_information = "../data/merged_reference_genom/coverage_information_{run}.tsv",
+        script = "scripts/stats.py"
+    output : 
+        "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_report.txt"
+    shell : 
+        "python3 {input.script} {input.quality_check} {input.coverage_information}  > {output}" 
+
+
+
