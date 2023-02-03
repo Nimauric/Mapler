@@ -20,4 +20,7 @@ case $sequencer in
         ;;
 esac
 
+mkdir "$4"
 flye "$sequencer_arguments" "$2"  --polish-target "$3" --out-dir "$4"
+mv "$4"polished_1.fasta "$4"assembly.fasta
+

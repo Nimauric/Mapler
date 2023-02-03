@@ -2,9 +2,6 @@ configfile : "../config/config.yaml"
 
 rule all :
     input :
-        # Test
-        "../data/hello.txt",
-       
         #Once : 
         "../data/merged_reference_genome/merged_reference.fasta",
 
@@ -14,6 +11,10 @@ rule all :
 
         # For each assembler-run pair :
         expand("../data/assemblies/{assembler}_{read}/assembly.fasta", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
+        expand("../data/assemblies_quality_check/{assembler}_{read}/summary/TSV", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
+        expand("../data/stats_reports/{assembler}_{read}/{assembler}_{read}_report.txt", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
+             
+
 
 def get_files_in_folder(path):
     files = os.listdir(path)
@@ -21,20 +22,6 @@ def get_files_in_folder(path):
         files[i] = path + files[i]
     arguments = " ".join(files)
     return arguments
-
-rule say_hello :
-    input : 
-    output :
-        "../data/hello.txt"
-    message :
-        "This is a test rule to showcase what the Snakefile can do"
-    resources :
-        slurm_extra="--mem=1G"
-    shell : 
-        """
-        echo hello > ../data/hello.txt
-        sleep 5
-        """
 
 rule reads_quality_check :
     input :
@@ -68,7 +55,7 @@ rule coverage_calculator :
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
     resources :
-        mem_mb=10000
+        mem_mb_per_cpu=10000
     shell :
         "{input.script} {wildcards.run} {input.run} {input.reference} ../data/tmp/ {output}"
 
@@ -81,7 +68,7 @@ rule metaflye_assembly :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
         cpus_per_task=4,
-        mem_mb=100000
+        mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
 
@@ -95,7 +82,7 @@ rule canu_assembly :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
         cpus_per_task=4,
-        mem_mb=100000
+        mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ 50000" 
 
@@ -108,7 +95,7 @@ rule miniasm_assembly :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     resources :
         cpus_per_task=4,
-        mem_mb=100000
+        mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
 
@@ -118,7 +105,7 @@ rule flye_polishing :
         assembly = "../data/assemblies/{assembler_to_polish}_{run}/assembly.fasta", #data
         run = "../data/input_reads/{run}.fastq.gz", # data
     output : 
-        "data/assemblies/flye_polish_{assembler_to_polish}_{run}/polished_1.fasta"
+        "../data/assemblies/flye_polish_{assembler_to_polish}_{run}/assembly.fasta"
     shell : 
         "./{input.script} {wildcards.run} {input.run} {input.assembly} {output}"
 
@@ -131,12 +118,12 @@ rule assembly_quality_check :
     output :
         directory("../data/assemblies_quality_check/{assembly}/summary/TSV/")
     shell : 
-        "./assembly_quality_checker.sh {input.assembly} ../data/assemblies_QC/{assembly} {reference_genomes}"
+        "{input.script} {input.assembly} ../data/assemblies_quality_check/{wildcards.assembly} {reference_genomes}"
 
 rule assembly_stats :
     input : 
-        quality_check = "data/assemblies_quality_check/{assembly}_{run}/summary/TSV/", 
-        coverage_information = "../data/merged_reference_genom/coverage_information_{run}.tsv",
+        quality_check = "../data/assemblies_quality_check/{assembly}_{run}/summary/TSV/", 
+        coverage_information = "../data/merged_reference_genome/coverage_information_{run}.tsv",
         script = "scripts/stats.py"
     output : 
         "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_report.txt"

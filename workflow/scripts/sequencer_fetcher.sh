@@ -1,11 +1,18 @@
 #!/bin/sh
 # This scipt fetches the metadata to get the sequencer used to produce a run, from its SRA accession number
+# "$1" : SRA accession number
 
 INPUT=$1
-
 if [ "$INPUT" == Toy ]; then
     echo "PacBio RS II"
     exit 0
+fi
+
+# If the information was already fetched, retrieve it
+if [ -f ../data/runs_metadata/"$INPUT".txt ] ; then
+    cat ../data/runs_metadata/"$INPUT".txt
+    exit 0
+ 
 fi
 
 # search the element from its accession name
@@ -24,5 +31,10 @@ PLATFORM=$(eval "$PLATFORM")
 
 
 # return the sequencer
-echo $PLATFORM
+if [  -z "${PLATFORM}"  ] ; then
+    echo "No sequencer was retrieved !"
+    exit 0
+fi
 
+echo $PLATFORM > ../data/runs_metadata/"$1".txt
+echo $PLATFORM
