@@ -25,4 +25,4 @@ esac
 # Run Canu
 #useGrid=flase means canu doesn't use the cluster
 canu -p "$1" -d "$3" "$sequencer_arguments" "$2" "$generic_arguments" useGrid=false
-mv "$3""$filename".contigs.fasta "$3"assembly.fasta
+mv "$3""$1".contigs.fasta "$3"assembly.fasta
