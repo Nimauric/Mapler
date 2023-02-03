@@ -23,7 +23,16 @@ case $sequencer in
 esac
 
 # Run minimap2
-minimap2 -ax "$sequencer_arguments" "$3" "$2" > "$4"mapping_"$filename".sam
+echo ""
+echo "Running minimap2..."
+echo ""
+minimap2 -ax "$sequencer_arguments" "$3" "$2" > "$4"mapping_"$1".sam
 # Run SAMtools
-samtools sort -l 1 "$4"mapping_"$filename".sam -o "$4"mapping_"$filename".bam
-samtools coverage "$4"mapping_"$filename".bam > "$5"
+echo ""
+echo "Running samtools sort..."
+echo ""
+samtools sort -l 1 "$4"mapping_"$1".sam -o "$4"mapping_"$1".bam
+echo ""
+echo "Running samtools coverage..."
+echo ""
+samtools coverage "$4"mapping_"$1".bam > "$5"
