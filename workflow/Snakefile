@@ -107,7 +107,7 @@ rule flye_polishing :
     output : 
         "../data/assemblies/flye_polish_{assembler_to_polish}_{run}/assembly.fasta"
     shell : 
-        "./{input.script} {wildcards.run} {input.run} {input.assembly} {output}"
+        "./{input.script} {wildcards.run} {input.run} {input.assembly} ../data/assemblies/flye_polish_{wildcards.assembler_to_polish}_{wildcards.run}/"
 
 path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
 reference_genomes = get_files_in_folder(path_to_reference_genomes)
@@ -118,17 +118,17 @@ rule assembly_quality_check :
     output :
         directory("../data/assemblies_quality_check/{assembly}/summary/TSV/")
     shell : 
-        "{input.script} {input.assembly} ../data/assemblies_quality_check/{wildcards.assembly} {reference_genomes}"
+        "{input.script} {input.assembly} ../data/assemblies_quality_check/{wildcards.assembly}/ {reference_genomes}"
 
 rule assembly_stats :
     input : 
-        quality_check = "../data/assemblies_quality_check/{assembly}_{run}/summary/TSV/", 
+        quality_check = "../data/assemblies_quality_check/{assembly}_{run}/summary/TSV", 
         coverage_information = "../data/merged_reference_genome/coverage_information_{run}.tsv",
         script = "scripts/stats.py"
     output : 
         "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_report.txt"
     shell : 
-        "python3 {input.script} {input.quality_check} {input.coverage_information}  > {output}" 
+        "python3 {input.script} {input.quality_check}/ {input.coverage_information}  > {output}" 
 
 
 
