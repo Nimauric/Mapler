@@ -40,3 +40,4 @@ samtools fastq -F 4 "$path_to_sam_align" > "$path_to_output"
 
 # Subsample the toy example
 ./script/subsampler $path_to_output 5x $path_to_merged_reference  $path_to_output
+
