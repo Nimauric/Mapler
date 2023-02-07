@@ -9,7 +9,7 @@
 # "${@:5}" : paths to reference genomes
 
 # Create merged reference
-path_to_references=( "../data/input_reference_genomes/Halomonassp_3.fasta" "../data/input_reference_genomes/MarspLV10R5108_2.fasta")
+path_to_references=( "../data/input_reference_genomes/Halomonassp_3.fasta" "../data/input_reference_genomes/MurspES050.fasta")
 path_to_merged_reference=../data/merged_reference_genome/toy_merge.fasta
 ./scripts/references_merger.sh $path_to_merged_reference ${path_to_references}
 
@@ -41,6 +41,9 @@ samtools fastq -F 4 "$path_to_sam_align" > "$path_to_output"
 # Index the merged reference
 path_to_indexed_reference="../data/tmp/indexed_toySRR8073713.fai"
 samtools fqidx $path_to_merged_reference --output $path_to_indexed_reference
-# Subsample the toy example
 
-./scripts/subsampler.sh $path_to_output 5x $path_to_indexed_reference  "$path_to_output".gz
+# Subsample the toy example (goal is 10X, but 2 species => aim for 20X to have 10X per sample)
+scripts/subsampler.sh $path_to_output 20x $path_to_indexed_reference "$path_to_output".gz
+
+# Test how well it actually subsampled
+scripts/coverage_calculator.sh run_name "$path_to_output".gz ../data/merged_reference_genome/merged_reference.fasta ../data/tmp/ ../data/merged_reference_genome/toySRR13.tsv
