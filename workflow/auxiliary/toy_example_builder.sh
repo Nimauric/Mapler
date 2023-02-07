@@ -10,7 +10,7 @@
 
 # Create merged reference
 path_to_references=( "../data/input_reference_genomes/Halomonassp_3.fasta" "../data/input_reference_genomes/MarspLV10R5108_2.fasta")
-path_to_merged_reference=(../data/merged_reference_genome/toy_merge.fasta)
+path_to_merged_reference=../data/merged_reference_genome/toy_merge.fasta
 ./scripts/references_merger.sh $path_to_merged_reference ${path_to_references}
 
 # Fetch the sequencer used for this run
@@ -35,9 +35,12 @@ path_to_sam_align="../data/tmp/toy_mapping_SRR8073713.sam"
 minimap2 -ax "$sequencer_arguments" "$path_to_merged_reference" "$path_to_run" > "$path_to_sam_align"
 
 # Get reads from the sam
-path_to_output="../data/input_reads/toy_SRR8073713.fastq.gz"
+path_to_output="../data/input_reads/toy_SRR8073713.fastq"
 samtools fastq -F 4 "$path_to_sam_align" > "$path_to_output"
 
+# Index the merged reference
+path_to_indexed_reference="../data/tmp/indexed_toySRR8073713.fai"
+samtools fqidx $path_to_merged_reference --output $path_to_indexed_reference
 # Subsample the toy example
-./script/subsampler $path_to_output 5x $path_to_merged_reference  $path_to_output
 
+./scripts/subsampler.sh $path_to_output 5x $path_to_indexed_reference  "$path_to_output".gz
