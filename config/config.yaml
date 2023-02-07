@@ -2,7 +2,7 @@
 long_reads :
 # - Toy
  - SRR8073714
- - SRR8073713
+# - SRR8073713
 
 long_reads_assemblers :
  - metaflye

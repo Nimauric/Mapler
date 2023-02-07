@@ -30,8 +30,8 @@ def message_generator(table,abundance) :
 
 # Sort the genomes depending on their coverage
 def abundance_sorter(row) :
-    if(row["meandepth"] < 5) : return "low"
-    if(row["meandepth"] > 20) : return "high"
+    if(row["meandepth"] < 10) : return "low"
+    if(row["meandepth"] > 50) : return "high"
     return "mid"
 
 ############### MAIN ###############
@@ -49,6 +49,9 @@ table = import_and_merge_metric(table, str(sys.argv[1]+"NGA50.tsv"), "NGA50")
 
 # Generate the output
 print(table.to_string())
+print()
+print("Low coverage : <10")
+print("High coverage : >50")
 print()
 message_generator(table,"low")
 message_generator(table,"mid")
