@@ -31,14 +31,10 @@ case $sequencer in
 esac
 # Run minimap2
 path_to_run="../data/input_reads/SRR8073713.fastq.gz"
-path_to_sam_align="../data/tmp/toy_mapping_SRR8073713.sam
-minimap2 -ax "$sequencer_arguments" $path_to_merged_reference" "$path_to_run" > "$path_to_sam_align"
-
-
-# Filter the mapped reads
-#samtools view -b -F 4 file.bam > mapped.bam
-#samtools view -F 4 file.sam > mapped.sam
+path_to_sam_align="../data/tmp/toy_mapping_SRR8073713.sam"
+#minimap2 -ax "$sequencer_arguments" "$path_to_merged_reference" "$path_to_run" > "$path_to_sam_align"
 
 # Get reads from the sam
 path_to_output="../data/input_reads/toy_SRR8073713.fastq.gz"
-samtools fastq -F 4 "$path_to_sam_align" "$path_to_output"
+samtools fastq -F 4 "$path_to_sam_align" > "$path_to_output"
+
