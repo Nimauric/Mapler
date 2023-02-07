@@ -32,9 +32,11 @@ esac
 # Run minimap2
 path_to_run="../data/input_reads/SRR8073713.fastq.gz"
 path_to_sam_align="../data/tmp/toy_mapping_SRR8073713.sam"
-#minimap2 -ax "$sequencer_arguments" "$path_to_merged_reference" "$path_to_run" > "$path_to_sam_align"
+minimap2 -ax "$sequencer_arguments" "$path_to_merged_reference" "$path_to_run" > "$path_to_sam_align"
 
 # Get reads from the sam
 path_to_output="../data/input_reads/toy_SRR8073713.fastq.gz"
 samtools fastq -F 4 "$path_to_sam_align" > "$path_to_output"
 
+# Subsample the toy example
+./script/subsampler $path_to_output 5x $path_to_merged_reference  $path_to_output
