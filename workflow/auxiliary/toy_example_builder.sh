@@ -8,11 +8,11 @@
 # "$4" : path to the folder to store temporary files ("/" included)
 # "${@:5}" : paths to reference genomes
 
-path_to_references=( "../../data/input_reference_genomes/Halomonassp_3.fasta" "../../data/input_reference_genomes/MarspLV10R5108_2.fasta")
-path_to_merged_reference=(../../data/merged_reference_genome/toy_merge.fasta)
+path_to_references=( "../data/input_reference_genomes/Halomonassp_3.fasta" "../data/input_reference_genomes/MarspLV10R5108_2.fasta")
+path_to_merged_reference=(../data/merged_reference_genome/toy_merge.fasta)
 
 # Create merged reference
-../scripts/references_merger.sh $path_to_merged_reference ${path_to_references}
+./scripts/references_merger.sh $path_to_merged_reference ${path_to_references}
 
 # Fetch the sequencer used for this run
 
