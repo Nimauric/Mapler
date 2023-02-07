@@ -30,8 +30,8 @@ def message_generator(table,abundance) :
 
 # Sort the genomes depending on their coverage
 def abundance_sorter(row) :
-    if(row["meandepth"] < 5) : return "low"
-    if(row["meandepth"] > 20) : return "high"
+    if(row["meandepth"] < 10) : return "low"
+    if(row["meandepth"] > 50) : return "high"
     return "mid"
 
 ############### MAIN ###############
@@ -41,14 +41,17 @@ table = table.rename(columns={"#rname" : "Assemblies"})
 table["Abundance"] =  table.apply (lambda row: abundance_sorter(row), axis=1)
 
 # Import and merge metrics
-table = import_and_merge_metric(table, str(sys.argv[1]+"/Genome_fraction.tsv"), "genome_fraction")
-table = import_and_merge_metric(table, str(sys.argv[1]+"/num_mismatches_per_100_kbp.tsv"), "mismatches")
-table = import_and_merge_metric(table, str(sys.argv[1]+"/num_misassemblies.tsv"), "misassemblies")
-table = import_and_merge_metric(table, str(sys.argv[1]+"/Duplication_ratio.tsv"), "duplication_ratio")
-table = import_and_merge_metric(table, str(sys.argv[1]+"/NGA50.tsv"), "NGA50")
+table = import_and_merge_metric(table, str(sys.argv[1]+"Genome_fraction.tsv"), "genome_fraction")
+table = import_and_merge_metric(table, str(sys.argv[1]+"num_mismatches_per_100_kbp.tsv"), "mismatches")
+table = import_and_merge_metric(table, str(sys.argv[1]+"num_misassemblies.tsv"), "misassemblies")
+table = import_and_merge_metric(table, str(sys.argv[1]+"Duplication_ratio.tsv"), "duplication_ratio")
+table = import_and_merge_metric(table, str(sys.argv[1]+"NGA50.tsv"), "NGA50")
 
 # Generate the output
 print(table.to_string())
+print()
+print("Low coverage : <10")
+print("High coverage : >50")
 print()
 message_generator(table,"low")
 message_generator(table,"mid")
