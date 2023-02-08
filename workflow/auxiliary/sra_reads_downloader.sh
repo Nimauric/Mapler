@@ -23,7 +23,7 @@ do
     fi
 
     # Once it'd done, move the archive to the fastq folder for the rest of the pipeline
-    mv "$line".fastq.gz data/raw_reads/
+    #mv "$line".fastq.gz data/raw_reads/
 
 done < "$input"
 

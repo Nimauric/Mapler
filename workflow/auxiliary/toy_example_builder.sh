@@ -1,49 +1,32 @@
 #!/bin/sh
 # This script builds a toy example : from a run of reads, select those that align to some reference genomes, 
 # then subsample them to reach a desired coverage
-
-# "$1" : name of the run (SRA accession number)
-# "$2" : path/to/the/run/to/sumbsample/from.fastq.gz
-# "$3" : desired coverage
-# "$4" : path to the folder to store temporary files ("/" included)
-# "${@:5}" : paths to reference genomes
-
-# Create merged reference
-path_to_references=( "../data/input_reference_genomes/Halomonassp_3.fasta" "../data/input_reference_genomes/MurspES050.fasta")
-path_to_merged_reference=../data/merged_reference_genome/toy_merge.fasta
-./scripts/references_merger.sh $path_to_merged_reference ${path_to_references}
-
-# Fetch the sequencer used for this run
 run_name="SRR8073713"
-sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
-case $sequencer in
-    "PacBio RS II")
-        sequencer_arguments="map-pb"
-        ;;
-    "MinION")
-        sequencer_arguments="map-ont"
-        ;;
-    *)
-        echo "Unsupported or unrecognized read sequencer !"
-        echo $metadata
-        exit 1
-        ;;
-esac
-# Run minimap2
-path_to_run="../data/input_reads/SRR8073713.fastq.gz"
-path_to_sam_align="../data/tmp/toy_mapping_SRR8073713.sam"
-minimap2 -ax "$sequencer_arguments" "$path_to_merged_reference" "$path_to_run" > "$path_to_sam_align"
-
-# Get reads from the sam
+path_to_mapping="../data/tmp/mapping_SRR8073713.bam"
+path_to_filtered_mapping="../data/tmp/toy_mapping_SRR8073713.bam"
 path_to_output="../data/input_reads/toy_SRR8073713.fastq"
-samtools fastq -F 4 "$path_to_sam_align" > "$path_to_output"
+path_to_reference_genomes="../data/merged_reference_genome/merged_reference.fasta"
+path_to_output_tsv="../data/merged_reference_genome/toy_SRR13.tsv"
+combined_genome_size=7832317
+#0 : Align reads to the reference genomes
+scripts/coverage_calculator.sh SRR8073713 ../data/input_reads/SRR8073713.fastq.gz ../data/merged_reference_genome/merged_reference.fasta ../data/tmp/ ../data/merged_reference_genome/coverage_information_SRR8073713.tsv
 
-# Index the merged reference
-path_to_indexed_reference="../data/tmp/indexed_toySRR8073713.fai"
-samtools fqidx $path_to_merged_reference --output $path_to_indexed_reference
+#1 : Sort and filter reads to get those that map to Halomonassp_3 or MurspES050
+#1.1 Index mapping
+echo "indexing mapping..."
+samtools index $path_to_mapping
+#1.2 : Filter mapping
+echo "Filtering mapping..."
+samtools view $path_to_mapping Halomonassp_3 MurspES050 --output $path_to_filtered_mapping
+#1.3 : Convert mapping to fastq
+echo "Convertirg mapping to fastq..."
+samtools fastq $path_to_filtered_mapping > "$path_to_output"
 
-# Subsample the toy example (goal is 10X, but 2 species => aim for 20X to have 10X per sample)
-scripts/subsampler.sh $path_to_output 20x $path_to_indexed_reference "$path_to_output".gz
+#2 : Subsample those reads to reach the desired coverage
+echo "Subsampling reads..."
+scripts/subsampler.sh $path_to_output 10x $combined_genome_size "$path_to_output".gz
 
-# Test how well it actually subsampled
-scripts/coverage_calculator.sh run_name "$path_to_output".gz ../data/merged_reference_genome/merged_reference.fasta ../data/tmp/ ../data/merged_reference_genome/toySRR13.tsv
+#3 : Test if everything worked
+echo "Testing if everything worked..."
+scripts/coverage_calculator.sh $run_name "$path_to_output".gz $path_to_reference_genomes ../data/tmp/ $path_to_output_tsv
+
