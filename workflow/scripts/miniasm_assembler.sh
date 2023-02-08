@@ -13,6 +13,9 @@ case $sequencer in
     "MinION")
         sequencer_arguments="ava-ont"
         ;;
+    "pacbio-hifi")
+        exit 1
+        ;;
     *)
         echo "Unsupported or unrecognized read sequencer !"
         echo $sequencer

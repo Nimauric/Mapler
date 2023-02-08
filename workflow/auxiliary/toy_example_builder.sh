@@ -9,7 +9,7 @@ path_to_reference_genomes="../data/merged_reference_genome/merged_reference.fast
 path_to_output_tsv="../data/merged_reference_genome/toy_SRR13.tsv"
 combined_genome_size=7832317
 #0 : Align reads to the reference genomes
-scripts/coverage_calculator.sh SRR8073713 ../data/input_reads/SRR8073713.fastq.gz ../data/merged_reference_genome/merged_reference.fasta ../data/tmp/ ../data/merged_reference_genome/coverage_information_SRR8073713.tsv
+#scripts/coverage_calculator.sh SRR8073713 ../data/input_reads/SRR8073713.fastq.gz ../data/merged_reference_genome/merged_reference.fasta ../data/tmp/ ../data/merged_reference_genome/coverage_information_SRR8073713.tsv
 
 #1 : Sort and filter reads to get those that map to Halomonassp_3 or MurspES050
 #1.1 Index mapping

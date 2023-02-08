@@ -13,6 +13,9 @@ case $sequencer in
     "MinION")
         sequencer_arguments="--nano-raw"
         ;;
+    "pacbio-hifi")
+        sequencer_arguments="--pacbio-hifi"
+        ;;
     *)
         echo "Unsupported or unrecognized read sequencer !"
         echo $sequencer
