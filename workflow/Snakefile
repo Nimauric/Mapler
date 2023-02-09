@@ -115,6 +115,8 @@ rule assembly_quality_check :
     input : 
         script = "scripts/assembly_quality_checker.sh", #script
         assembly = "../data/assemblies/{assembly}/assembly.fasta", #data
+    resources :
+        mem_mb_per_cpu=10000
     output :
         directory("../data/assemblies_quality_check/{assembly}/summary/TSV/")
     shell : 

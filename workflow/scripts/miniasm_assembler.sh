@@ -14,6 +14,7 @@ case $sequencer in
         sequencer_arguments="ava-ont"
         ;;
     "pacbio-hifi")
+        echo "Hifi reads not supported by miniasm !"
         exit 1
         ;;
     *)
