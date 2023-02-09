@@ -15,6 +15,9 @@ case $sequencer in
     "MinION")
         sequencer_arguments="map-ont"
         ;;
+    "pacbio-hifi")
+        sequencer_arguments="map-hifi"
+        ;;
     *)
         echo "Unsupported or unrecognized read sequencer !"
         echo $metadata
