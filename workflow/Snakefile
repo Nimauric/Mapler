@@ -5,15 +5,17 @@ rule all :
         #Once : 
         "../data/merged_reference_genome/merged_reference.fasta",
 
-        # For each run of reads : 
+        # For each run of long-reads : 
         expand("../data/reads_quality_check/{run}/{run}_fastqc.html", run=config["long_reads"]),
         expand("../data/merged_reference_genome/coverage_information_{run}.tsv", run=config["long_reads"]),
 
-        # For each assembler-run pair :
+        # For each long-reads assembler pair :
         expand("../data/assemblies/{assembler}_{read}/assembly.fasta", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
         expand("../data/assemblies_quality_check/{assembler}_{read}/summary/TSV", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
         expand("../data/stats_reports/{assembler}_{read}/{assembler}_{read}_report.txt", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
-             
+
+        # For each long-reads short-reads hybrid-assembler trio : 
+        expand("../data/assemblies/{assembler}_{short}_{long}/assembly.fasta", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"]),
 
 
 def get_files_in_folder(path):
@@ -67,7 +69,7 @@ rule metaflye_assembly :
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
-        cpus_per_task=4,
+        cpus_per_task=20,
         mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
@@ -81,7 +83,7 @@ rule canu_assembly :
     output :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
-        cpus_per_task=4,
+        cpus_per_task=20,
         mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ 50000" 
@@ -94,10 +96,32 @@ rule miniasm_assembly :
     output :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     resources :
-        cpus_per_task=4,
+        cpus_per_task=20,
         mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
+
+rule operams_assembly :
+    # scripts/opera_ms_assembler.sh 
+    #../data/input_reads/SRR8073716-1.fastq
+    #../data/input_reads/SRR8073716-2.fastq 
+    #../data/input_reads/SRR8073713.fastq 
+    #../data/assemblies/opearams_SRR8073716_SRR8073713/
+
+    input : 
+        script = "scripts/opera_ms_assembler.sh"
+        r1 = "../data/input_reads/{short}-1.fastq"
+        r1 = "../data/input_reads/{short}-2.fastq"
+        long = "../data/input_reads/{long}.fastq "
+    output :
+        "../data/assemblies/opearams_{wildcards.short}_{wildcards.long}/assembly.fasta",
+    resources :
+        cpus_per_task=20,
+        mem_mb_per_cpu=25000  
+    shell : 
+        "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/opearams_{wildcards.short}_{wildcards.long}/sss"
+
+
 
 rule flye_polishing : 
     input :
