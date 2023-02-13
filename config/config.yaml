@@ -1,10 +1,10 @@
 ---
 long_reads :
- - toy-SRR8073713
+ - toySRR8073713
 # - SRR8073714
 # - SRR8073713
 
-short reads : 
+short_reads : 
  - SRR8073716
 
 long_reads_assemblers :
