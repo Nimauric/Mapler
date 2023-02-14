@@ -10,9 +10,12 @@ using namespace std;
 int main(int argc, char *argv[]) {
     fstream assembly;
     string line;
+
     int threshold = stoi(argv[2]);
     assembly.open (argv[1], std::fstream::in);
+
     int total_length = 0;
+    int filtered out = 0;
     vector<int> contig_lengths;
     contig_lengths.push_back(0);
 
@@ -22,6 +25,8 @@ int main(int argc, char *argv[]) {
             if (contig_lengths.back() > threshold ) {
                 total_length += contig_lengths.back();
                 contig_lengths.push_back(0);         
+            } else {
+                filtered_out += 1;
             }
             contig_lengths.back() = 0;
         } else {
@@ -52,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
     std::cout << '\n';
 
-    std::cout << "After filtering contigs of " << threshold << "bp or less : \n";
+    std::cout << "After filtering contigs of " << threshold << "bp or less (" << filtered_out << " were filtered out): \n";
     std::cout << "Total assembly length : " << total_length << "\n";
     std::cout << "Numbers of contigs : " << contig_lengths.size() << "\n";
     std::cout << "N50 : " << N50 << "\n";

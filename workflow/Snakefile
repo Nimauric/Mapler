@@ -132,5 +132,24 @@ rule assembly_references_based_stats :
     shell : 
         "python3 {input.script} {input.quality_check}/ {input.coverage_information}  > {output}" 
 
+rule compile_cpp : 
+    input : 
+        "{file}.cpp"
+    output : 
+        "{file}.out"
+    shell : 
+        "g++ {input} -std=c++11 -o {output}"
 
+rule assembly_references_free_stats :
+    input : 
+        assembly = "../data/assemblies/{assembly}/assembly.fasta",
+        script = "scripts/references_free_stats.out"
+    output : 
+        "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_references_free_report.txt"
+    shell : 
+        "{input.script} {input.assembly} 50000  > {output}" 
+
+
+
+    
 
