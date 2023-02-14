@@ -1,20 +1,45 @@
-
 #!/bin/sh
-assembly="../data/assemblies/metaflye_SRR8073713/assembly.fasta"
+assembly="../data/assemblies/miniasm_toy-SRR8073713/assembly.fasta"
+run="../data/input_reads/toy-SRR8073713.fastq"
+assembly_name="miniasm_toy-SRR8073713"
+run_name="toy-SRR8073713"
 
-# 0 : Preprocessing : Sort contigs from highest to lowest, discard those that are too small
+# Fetch the sequencer used for this run
+sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
+case $sequencer in
+    "PacBio RS II")
+        sequencer_arguments="map-pb"
+        ;;
+    "MinION")
+        sequencer_arguments="map-ont"
+        ;;
+    "pacbio-hifi")
+        sequencer_arguments="map-hifi"
+        ;;
+    *)
+        echo "Unsupported or unrecognized read sequencer !"
+        echo $metadata
+        exit 1
+        ;;
+esac
 
-# 1 : Calculate total assembly length
+# Run minimap2
+echo ""
+echo "Running minimap2..."
+echo ""
+minimap2 -ax "$sequencer_arguments" "$assembly" "$run" -o ../data/tmp/mapping_"$assembly_name".bam
 
-# 2 : Calculate N50
+# Running samtools view
+echo ""
+echo "Counting mapped reads..."
+echo ""
+mapped_reads=$(samtools view -c -F 4 ../data/tmp/mapping_"$assembly_name".bam)
+echo ""
+echo "Counting unmapped reads..."
+echo ""
+unmapped_reads=$(samtools view -c -f 4 ../data/tmp/mapping_"$assembly_name".bam)
+mapped_ratio=$(bc <<< "scale=2; 100*$mapped_reads / ($mapped_reads + $unmapped_reads)")
 
-# 3 : Calculate % of reads mapped to assembly
-coverage_calculator.sh SRR8073713 ../data/input_reads/SRR8073713.fastq.gz ../data/assemblies/metaflye_SRR8073713/assembly.fasta ../data/ ../data
-# "$1" : name of the run (SRA accession number)
-# "$2" : path to the read to align
-# "$3" : path to the merged_reference.fasta
-# "$4" : path to the folder to store temporary files ("/" included)
-# "$5" : path to the output tsv
-
-samtools coverage ../data/mapping_SRR8073713.bam > ../data/percent.tsv
-
+echo "Mapped reads : $mapped_reads"
+echo "Unmapped reads : $unmapped_reads"
+echo "Mapped ratio : "$mapped_ratio"%"
