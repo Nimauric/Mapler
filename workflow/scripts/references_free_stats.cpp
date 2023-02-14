@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     assembly.open (argv[1], std::fstream::in);
 
     int total_length = 0;
-    int filtered out = 0;
+    int filtered_out = 0;
     vector<int> contig_lengths;
     contig_lengths.push_back(0);
 
@@ -57,9 +57,9 @@ int main(int argc, char *argv[]) {
     }
     std::cout << '\n';
 
-    std::cout << "After filtering contigs of " << threshold << "bp or less (" << filtered_out << " were filtered out): \n";
+    std::cout << "After filtering contigs of " << threshold << "bp or less (" << filtered_out << " filtered out): \n";
     std::cout << "Total assembly length : " << total_length << "\n";
-    std::cout << "Numbers of contigs : " << contig_lengths.size() << "\n";
+    std::cout << "Number of contigs : " << contig_lengths.size() << "\n";
     std::cout << "N50 : " << N50 << "\n";
     std::cout << "L50 : " << L50 << "\n";
 
