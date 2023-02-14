@@ -6,7 +6,7 @@
 
 # "$4" : path/to/the/output/folder
 
-generic_arguments = "--no-ref-clustering"
+generic_arguments = "--no-ref-clustering --num-processors=10"
 mkdir "$4"
 perl dependencies/OPERA-MS/OPERA-MS.pl \
     --short-read1 "$1" \

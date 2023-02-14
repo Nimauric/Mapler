@@ -69,7 +69,7 @@ rule metaflye_assembly :
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
-        cpus_per_task=20,
+        cpus_per_task=10,
         mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
@@ -83,7 +83,7 @@ rule canu_assembly :
     output :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
-        cpus_per_task=20,
+        cpus_per_task=10,
         mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ 50000" 
@@ -96,7 +96,7 @@ rule miniasm_assembly :
     output :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     resources :
-        cpus_per_task=20,
+        cpus_per_task=10,
         mem_mb_per_cpu=25000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
@@ -106,15 +106,15 @@ rule operams_assembly :
         script = "scripts/opera_ms_assembler.sh",
         r1 = "../data/input_reads/{short}-1.fastq",
         r2 = "../data/input_reads/{short}-2.fastq",
-        long = "../data/input_reads/{long}.fastq",
+        long = "../data/input_reads/{long}.fastq"
     output :
-        "../data/assemblies/operams_{wildcards.short}_{wildcards.long}/assembly.fasta"
+        "../data/assemblies/operams_{short}_{long}/assembly.fasta",
+        
     resources :
-        cpus_per_task=20,
+        cpus_per_task=10,
         mem_mb_per_cpu=25000  
     shell : 
-        #"./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/opearams_{wildcards.short}_{wildcards.long}/"
-        "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/opearams_SRR8073716_{wildcards.long}/"
+        "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/opearams_{wildcards.short}_{wildcards.long}/"
 
 
 
