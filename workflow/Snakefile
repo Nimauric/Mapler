@@ -68,8 +68,8 @@ rule metaflye_assembly :
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
-        cpus_per_task=4,
-        mem_mb_per_cpu=25000
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
 
@@ -82,8 +82,8 @@ rule canu_assembly :
     output :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
-        cpus_per_task=4,
-        mem_mb_per_cpu=25000
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ 50000" 
 
