@@ -27,7 +27,7 @@ def get_files_in_folder(path):
 rule reads_quality_check :
     input :
         script = "scripts/reads_quality_checker.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/reads_quality_check/{run}/{run}_fastqc.html",
         "../data/reads_quality_check/{run}/{run}_fastqc.zip"
@@ -52,7 +52,7 @@ rule coverage_calculator :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/coverage_calculator.sh", # script
         reference = "../data/merged_reference_genome/merged_reference.fasta", #data
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
     resources :
@@ -64,7 +64,7 @@ rule metaflye_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/metaflye_assembler.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
@@ -78,7 +78,7 @@ rule canu_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/canu_assembler.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
@@ -91,7 +91,7 @@ rule miniasm_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/miniasm_assembler.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     resources :
@@ -104,7 +104,7 @@ rule flye_polishing :
     input :
         script = "scripts/flye_polisher.sh", #script
         assembly = "../data/assemblies/{assembler_to_polish}_{run}/assembly.fasta", #data
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output : 
         "../data/assemblies/flye_polish_{assembler_to_polish}_{run}/assembly.fasta"
     shell : 
