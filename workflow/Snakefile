@@ -143,12 +143,14 @@ rule compile_cpp :
 
 rule assembly_references_free_stats :
     input : 
-        assembly = "../data/assemblies/{assembly}/assembly.fasta",
-        script = "scripts/references_free_stats.out"
+        assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
+        run = "../data/input_reads/{run}.fastq",
+        script = "scripts/references_free_stats.sh"
+        auxiliary_script = "scripts/references_free_stats.out"
     output : 
-        "../data/stats_reports/{assembly}/{assembly}_references_free_report.txt"
+        "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_references_free_report.txt"
     shell : 
-        "{input.script} {input.assembly} 50000  > {output}" 
+        "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 {output}" 
 
 
 
