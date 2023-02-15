@@ -13,6 +13,10 @@ case $sequencer in
     "MinION")
         sequencer_arguments="ava-ont"
         ;;
+    "pacbio-hifi")
+        echo "Hifi reads not supported by miniasm !"
+        exit 1
+        ;;
     *)
         echo "Unsupported or unrecognized read sequencer !"
         echo $sequencer
