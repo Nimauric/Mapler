@@ -33,27 +33,27 @@ case $sequencer in
         ;;
 esac
 
-# Run minimap2
 echo ""
 echo "Running minimap2..."
 echo ""
 minimap2 -ax "$sequencer_arguments" "$assembly" "$run" -o ../data/tmp/mapping_"$assembly_name".bam
 
-# Running samtools view
 echo ""
 echo "Counting mapped reads..."
 echo ""
 mapped_reads=$(samtools view -c -F 4 ../data/tmp/mapping_"$assembly_name".bam)
+
 echo ""
 echo "Counting unmapped reads..."
 echo ""
 unmapped_reads=$(samtools view -c -f 4 ../data/tmp/mapping_"$assembly_name".bam)
 mapped_ratio=$(bc <<< "scale=2; 100*$mapped_reads / ($mapped_reads + $unmapped_reads)")
 
-echo "Mapped reads : $mapped_reads" > output
-echo "Unmapped reads : $unmapped_reads" >> output
-echo "Mapped ratio : "$mapped_ratio"%" >> output
+echo "Mapped reads : $mapped_reads" > $output
+echo "Unmapped reads : $unmapped_reads" >> $output
+echo "Mapped ratio : "$mapped_ratio"%" >> $output
+
 echo ""
 echo "Calculating length based metrics..."
 echo ""
-scripts/references_free_stats.out $assemblies $threshold >> output
+scripts/references_free_stats.out "$assembly" "$threshold" >> $output
