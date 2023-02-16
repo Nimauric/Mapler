@@ -1,7 +1,7 @@
 #!/bin/sh
 # This script polishes an assembly, using flye
 # "$1" : name of the run (SRA accession number)
-# "$2" : path/to/the/run.fastq.gz
+# "$2" : path/to/the/run.fastq
 # "$3" : path/to/the/assembly/to/polish.fasta
 # "$4" : path/to/the/output/folder
 
