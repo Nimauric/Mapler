@@ -31,8 +31,6 @@ rule reads_quality_check :
     output :
         "../data/reads_quality_check/{run}/{run}_fastqc.html",
         "../data/reads_quality_check/{run}/{run}_fastqc.zip"
-    message :
-        "This rule checks the quality of every read and produces a human readable report"
     shell : 
         "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
 
@@ -68,7 +66,7 @@ rule metaflye_assembly :
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
-        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//7000000000)),
         mem_mb_per_cpu=10000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
@@ -117,6 +115,7 @@ rule assembly_quality_check :
         script = "scripts/assembly_quality_checker.sh", #script
         assembly = "../data/assemblies/{assembly}/assembly.fasta", #data
     resources :
+        cpus_per_task = lambda wildcards, input : (max(2,input.assembly.size//7000000)),
         mem_mb_per_cpu=10000
     output :
         directory("../data/assemblies_quality_check/{assembly}/summary/TSV/")
