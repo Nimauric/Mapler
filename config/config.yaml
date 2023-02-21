@@ -1,14 +1,23 @@
 ---
 long_reads :
-# - SRR8073714
+# - toy-SRR8073713
+ - SRR8073714
 # - SRR8073713
- - toy-SRR8073713
  - subsampled-SRR8073713
- - SRR15275210
+
 long_reads_assemblers :
  - metaflye
-# - canu
  - miniasm
+# - flye_polish_miniasm
+# - canu
 # - flye_polish_canu
- - flye_polish_miniasm
 
+hifi_reads : 
+ - SRR15275210
+
+hifi_assemblers :
+  - metaflye
+
+metrics : 
+ - references-based
+ - references-free

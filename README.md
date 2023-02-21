@@ -2,20 +2,33 @@
 ## Description
 The aim of this repository is to compare long-reads metagenomic assemblers.
 
+## Installation
+Clone the repository in a cluster with slurm and conda support, then run initialise_environnement.sh
+
+## Usage
+Place your runs.fastq in the data/input_reads/ folder. If your file names aren't a SRA reference, write, for each run, a new file in ../data/runs_metadata called <name_of_the_run(without the .fastq extension)>.txt, and containing the name of the sequencing technology used : either "PacBio RS II", "MinION", or "pacbio-hifi".
+
+If you want references based metrics, place your reference_genomes.fasta in the data/input_reference_genomes/ folder.
+
+Edit the config/config.yaml file to both indicate which assemblers and metrics you wish to use, and to indicate to the pipeline which runs to process. Then, run (or schedule with sbatch) pipeline.sh
+## Pipeline 
+
+![dag](dag.pdf)
+
 ## Files
-### config : 
+#### config : 
  - config.yaml : used to tell the pipeline which reads to assemble with which assemblers
  - initialise_environnement.sh : creates folders and sets up a conda environement
  - activate_environement.sh : activates the aforementioned conda environement 
 
-### workflow :
+#### workflow :
  - Snakefile : the pipeline itself
  - pipeline.sh : activates the environement, then calls snakemake
 
-### workflow/auxiliary : 
+#### workflow/auxiliary : 
 Unsupported files that are not directly involved in the pipeline, but might be (or have been) useful to prepare or analyze data
 
-### workflow/scripts :
+#### workflow/scripts :
  - reads_quality_checker.sh : checks the reads quality using fastQC
  - sequencer_fetcher.sh : fetches the sequencer used by a run, either from a file or from the sra database
  - metaflye_assembler.sh : assemble metagenomes using metaflye
@@ -28,16 +41,5 @@ Unsupported files that are not directly involved in the pipeline, but might be (
  - coverage_calculator.sh : map reads to reference genomes to infer their sequencing debth
  - assembly_quality_checker.sh : checks the quality of the assemblies using metaquast
  - references_based_stats.py : aggregates metaquast metrics and group them depending on the species abudance.
-
-
-## Usage
-Clone the repository in a genouest environnement, then run initialise_environnement.sh (once).
-
-For each dataset, place your runs.fastq in the data/input_reads/ folder, and edit the config/config.yaml file in order for the pipeline to take into acount the newly placed files. If your file names aren't a SRA reference, write, for each run, a new file in ../data/runs_metadata calles <name_of_the_run(without the .fastq extension)>.txt, and containing the name of the sequencing technology used : either "PacBio RS II", "MinION", or "pacbio-hifi".
-
-If you want references based metrics, place your reference_genomes.fasta in the data/input_reference_genomes/ folder.
-
-Then, run (or schedule with sbatch) pipeline.sh
-
 
 
