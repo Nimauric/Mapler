@@ -25,4 +25,4 @@ esac
 
 # Run metaflye
 mkdir "$3"
-flye --meta --out-dir "$3" "$sequencer_arguments" "$2"
+flye --resume --meta --out-dir "$3" "$sequencer_arguments" "$2"
