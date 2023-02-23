@@ -151,6 +151,22 @@ rule miniasm_assembly :
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
 
+########## RULE HIFIASM_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of hifi reads, using hifiasm_meta.
+""" 
+rule hifiasm_assembly :
+    input :
+        script = "scripts/hifiasm_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq", # data
+    output :
+        "../data/assemblies/hifiasm_{run}/assembly.fasta",
+    resources :
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
+    shell :
+        "./{input.script} {wildcards.run} ../data/assemblies/hifiasm_{wildcards.run}/" 
+
 
 ########## RULE FLYE_POLISHING ##########
 """

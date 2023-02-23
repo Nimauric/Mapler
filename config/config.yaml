@@ -17,6 +17,7 @@ hifi_reads :
 
 hifi_assemblers :
   - metaflye
+  - hifiasm
 
 metrics : 
  - references-based
