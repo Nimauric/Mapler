@@ -7,6 +7,7 @@ using namespace std;
 
 // argv[1] : "../data/assemblies/metaflye_SRR8073713/assembly.fasta"
 // argv[2] : 50000
+// argv[3] "../data/stats_reports/metaflye_SRR8073713/contigs_length.csv"
 
 int main(int argc, char *argv[]) {
     fstream assembly;
@@ -17,9 +18,11 @@ int main(int argc, char *argv[]) {
 
     // Store the contigs length in a vector
     vector<int> contig_lengths;
+    vector<string> contig_names;
     while (getline(assembly, line)){
         if (line[0] == '>'){ 
             contig_lengths.push_back(0);
+            contig_names.push_back(line);
         } else {
             contig_lengths.back() += line.size();
         }
@@ -29,7 +32,13 @@ int main(int argc, char *argv[]) {
     sort(contig_lengths.begin(), contig_lengths.end(), greater<int>());
 
     // Save the results as a CSV
-    // TO DO
+    ofstream csv;
+    csv.open (argv[3]);
+    for (int i = 0; i < contig_lengths.size(); i ++){
+        csv << contig_names[i] << "," << contig_lengths[i] << "\n";
+    }
+    csv.close();
+
 
     // calculate total length and filter small contigs
     int total_length = 0;
