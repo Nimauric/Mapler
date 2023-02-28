@@ -165,7 +165,7 @@ rule hifiasm_assembly :
         cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
         mem_mb_per_cpu=10000
     shell :
-        "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/" 
+        "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
 
 
 ########## RULE FLYE_POLISHING ##########
