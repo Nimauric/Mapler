@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     // Save the stats
     ofstream out;
     out.open(argv[4]);
-    file << stats_report["#rname"] << endl;
+    file << stats_report["#rname"] << 't' << "gccontent" << endl;
     for (auto value : stats_report){
         if(value.first != "#rname"){
             out << value.second << endl;
