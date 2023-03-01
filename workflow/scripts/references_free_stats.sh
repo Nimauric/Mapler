@@ -1,17 +1,23 @@
 #!/bin/sh
-#assembly="../data/assemblies/miniasm_toy-SRR8073713/assembly.fasta"
-#run="../data/input_reads/toy-SRR8073713.fastq"
-#assembly_name="miniasm_toy-SRR8073713"
-#run_name="toy-SRR8073713"
-#threshold=50000
-#output="../data/stats_reports/miniasm_toy-SRR8073713/miniasm_toy-SRR8073713_references_free_report.txt"
+#SBATCH --ntasks=4
+#SBATCH --mem-per-cpu=10000
 
-assembly="$1"
-run="$2"
-assembly_name="$3"
-run_name="$4"
-threshold="$5"
-output="$6"
+
+assembly="../data/assemblies/metaflye_SRR8073714/assembly.fasta"
+run="../data/input_reads/SRR8073714.fastq"
+assembly_name="metaflye_SRR8073714"
+run_name="SRR8073714"
+threshold=50000
+output_folder="../data/stats_reports/metaflye_SRR8073714/"
+alignements_folder="../data/alignements/metaflye_SRR8073714/"
+
+#assembly="$1"
+#run="$2"
+#assembly_name="$3"
+#run_name="$4"
+#threshold="$5"
+#output_folder="$6"
+#alignements_folder="$7"
 
 
 # Fetch the sequencer used for this run
@@ -33,27 +39,30 @@ case $sequencer in
         ;;
 esac
 
-echo ""
-echo "Running minimap2..."
-echo ""
-minimap2 -ax "$sequencer_arguments" "$assembly" "$run" -o ../data/tmp/mapping_"$assembly_name".bam
+if [ ! -f "$alignements_folder"reads_on_contigs.bam ] ; then
+    mkdir "$alignements_folder"
+    echo ""
+    echo "Running minimap2..."
+    minimap2 -ax "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.bam
+
+    echo ""
+    echo "Running samtools sort..."
+    samtools sort -l 1 "$alignements_folder"reads_on_contigs.bam -o "$alignements_folder"reads_on_contigs.bam
+fi
+
 
 echo ""
-echo "Counting mapped reads..."
-echo ""
-mapped_reads=$(samtools view -c -F 4 ../data/tmp/mapping_"$assembly_name".bam)
+echo "Running samtools coverage..."
+samtools coverage "$alignements_folder"reads_on_contigs.bam > "$output_folder"contigs_stats.tsv
 
 echo ""
 echo "Counting unmapped reads..."
-echo ""
-unmapped_reads=$(samtools view -c -f 4 ../data/tmp/mapping_"$assembly_name".bam)
-mapped_ratio=$(bc <<< "scale=2; 100*$mapped_reads / ($mapped_reads + $unmapped_reads)")
-
-echo "Mapped reads : $mapped_reads" > $output
-echo "Unmapped reads : $unmapped_reads" >> $output
-echo "Mapped ratio : "$mapped_ratio"%" >> $output
+unmapped_reads=$(samtools view -c -f 4 "$alignements_folder"reads_on_contigs.bam)
 
 echo ""
-echo "Calculating length based metrics..."
+echo "Calculating GC content..."
+scripts/references_free_stats.out "$assembly" "$threshold" "$output_folder"contigs_stats.tsv "$output_folder"contigs_stats_with_GC_content.tsv 
+
 echo ""
-scripts/references_free_stats.out "$assembly" "$threshold" >> $output
+echo "Producting a report..."
+# "$output_folder"references_free_text_report.txt

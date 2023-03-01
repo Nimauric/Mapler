@@ -1,10 +1,77 @@
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 #include <vector> 
 #include <algorithm>
 
 using namespace std;
 
+// argv[1] : "../data/assemblies/metaflye_SRR8073713/assembly.fasta"
+// argv[2] : 50000
+// argv[3] "../data/stats_reports/metaflye_SRR8073714/contigs_stats.tsv"
+// argv[4] "../data/stats_reports/metaflye_SRR8073714/contigs_stats_with_GC_content.tsv"
+
+int main(int argc, char *argv[]) {
+    int threshold = stoi(argv[2]);
+
+    unordered_map<string, string> stats_report; // <contig name, stats_report>;
+
+    // Retrieve stats from the contigs_stats file
+    fstream file;
+    string line;
+    file.open (argv[3]);
+    while (getline(file, line)){
+        string key = line.substr(0, line.find('\t'));
+        stats_report[key] = line;
+    }
+    file.close();
+
+    // Add the GC content of each contig
+    stats_report["#rname"] += "\tGC content";
+    file.open (argv[1]);
+
+    getline(file, line);
+    string key = line.substr(1);
+    int nGC = 0;
+    int nACTG = 0;
+
+    while (getline(file, line)){
+        if (line[0] == '>'){ 
+            stats_report[key] = stats_report[key] + '\t' + to_string((float) nGC / nACTG);
+            
+            key = line.substr(1);
+            nGC = 0;
+            nACTG = 0;
+        } else {
+            for(int i = 0; i < line.size(); i++){
+                if(line[i]=='G' || line[i] == 'C'){
+                    nGC += 1;
+                }
+                nACTG += 1;
+            }
+        }
+    }
+    file.close();
+    stats_report[key] = stats_report[key] + '\t' + to_string((float) nGC / nACTG);
+    
+    // Save the stats
+    ofstream out;
+    out.open(argv[4]);
+    file << stats_report["#rname"] << endl;
+    for (auto value : stats_report){
+        if(value.first != "#rname"){
+            out << value.second << endl;
+        }   
+    }
+    out.close();
+
+
+
+    return 0;
+}
+
+
+/*
 // argv[1] : "../data/assemblies/metaflye_SRR8073713/assembly.fasta"
 // argv[2] : 50000
 // argv[3] "../data/stats_reports/metaflye_SRR8073713/contigs_length.csv"
@@ -86,3 +153,5 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
+
+*/
