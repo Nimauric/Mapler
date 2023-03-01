@@ -6,7 +6,7 @@ long_reads :
  - subsampled-SRR8073713
 
 long_reads_assemblers :
- - metaflye
+# - metaflye
  - miniasm
 # - flye_polish_miniasm
 # - canu
@@ -16,7 +16,8 @@ hifi_reads :
  - SRR15275210
 
 hifi_assemblers :
-  - metaflye
+#  - metaflye
+  - hifiasm
 
 metrics : 
  - references-based
