@@ -39,6 +39,8 @@ case $sequencer in
         ;;
 esac
 
+# If needed, align the reads on the contigs
+# Probably better to make it a separate snakerule, that way if check if exist or if the inputs were modified
 if [ ! -f "$alignements_folder"reads_on_contigs.bam ] ; then
     mkdir "$alignements_folder"
     echo ""
@@ -50,19 +52,29 @@ if [ ! -f "$alignements_folder"reads_on_contigs.bam ] ; then
     samtools sort -l 1 "$alignements_folder"reads_on_contigs.bam -o "$alignements_folder"reads_on_contigs.bam
 fi
 
-
 echo ""
 echo "Running samtools coverage..."
 samtools coverage "$alignements_folder"reads_on_contigs.bam > "$output_folder"contigs_stats.tsv
 
 echo ""
+echo "Counting mapped reads..."
+mapped_reads=$(samtools view -c -F 4 "$alignements_folder"reads_on_contigs.bam)
+
+echo ""
 echo "Counting unmapped reads..."
 unmapped_reads=$(samtools view -c -f 4 "$alignements_folder"reads_on_contigs.bam)
+mapped_ratio=$(bc <<< "scale=2; 100*$mapped_reads / ($mapped_reads + $unmapped_reads)")
+
+echo "Mapped reads : $mapped_reads" > "$output_folder"references_free_text_report.txt
+echo "Unmapped reads : $unmapped_reads" >>"$output_folder"references_free_text_report.txt
+echo "Mapped ratio : "$mapped_ratio"%" >>"$output_folder"references_free_text_report.txt
 
 echo ""
-echo "Calculating GC content..."
-scripts/references_free_stats.out "$assembly" "$threshold" "$output_folder"contigs_stats.tsv "$output_folder"contigs_stats_with_GC_content.tsv 
+echo "Calculating length based metrics and GC content..."
+scripts/references_free_stats.out "$assembly" "$threshold" "$output_folder"contigs_stats.tsv "$output_folder"contigs_stats_with_GC_content.tsv >> "$output_folder"references_free_text_report.txt
+echo ""
+echo "Producting plots..."
+python3 scripts/references_free_stats.py "$output_folder"contigs_stats_with_GC_content.tsv "$unmapped_reads"
 
 echo ""
-echo "Producting a report..."
-# "$output_folder"references_free_text_report.txt
+echo "Done !"
