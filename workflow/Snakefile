@@ -224,7 +224,7 @@ rule assembly_references_free_stats :
         assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
         run = "../data/input_reads/{run}.fastq",
         script = "scripts/references_free_stats.sh",
-        cpp_script = "scripts/references_free_stats.out"
+        cpp_script = "scripts/references_free_stats.out",
         py_script = "scripts/references_free_stats.py"
     output : 
         "../data/stats_reports/{assembly}_{run}/references_free_text_report.txt"
