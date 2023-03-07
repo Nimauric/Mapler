@@ -37,7 +37,7 @@ rule all :
         expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies)
             if("references-based" in config["metrics"]) else "pipeline.sh",
-        expand("../data/stats_reports/{assembly}/{assembly}_references_free_text_report.txt",
+        expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
 
