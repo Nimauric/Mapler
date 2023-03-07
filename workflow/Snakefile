@@ -224,4 +224,4 @@ rule assembly_references_free_stats :
     output : 
         "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_references_free_report.txt"
     shell : 
-        "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 {output}" 
+        "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ ../data/alignements/{wildcards.assembly}_{wildcards.run}/" 

@@ -4,7 +4,7 @@ import pandas as pd
 
 
 path_to_tsv = str(sys.argv[1])
-unmapped_reads = sys.argv[2]
+plot_prefix = sys.argv[2]
 ############### FUNCTIONS ###############
 
 ############### MAIN ###############
@@ -19,7 +19,7 @@ scatterplot = sb.scatterplot(x=table["gccontent"],y=table["meandepth"],size=tabl
 scatterplot.set_xlabel("GC content")
 scatterplot.set_ylabel("Mean depth")
 scatterplot.legend(title="Contig size")
-scatterplot.get_figure().savefig("scatterplot.png")
+scatterplot.get_figure().savefig(plot_prefix+"_GC_abundance_scatterplot.png")
 scatterplot.get_figure().clf()
 
 # Build contigs size boxplot
@@ -27,7 +27,7 @@ print("Building the contigs size violinplot...")
 violinplot = sb.violinplot(y=table["endpos"],inner="point",cut=0)
 violinplot.set(yscale="log")
 violinplot.set_ylabel("Contig size")
-violinplot.get_figure().savefig("violinplot.png") 
+violinplot.get_figure().savefig(plot_prefix+"_contig_size_violinplot.png") 
 
 
 
