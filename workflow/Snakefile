@@ -41,9 +41,6 @@ rule all :
         expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
-        expand("../data/stats_reports/{assembly}/GC_abundance_scatterplot.png",
-            assembly = long_reads_assemblies + hifi_assemblies)
-            if("references-free" in config["metrics"]) else "pipeline.sh",
 
 
 ########## RULE READS_QUALITY_CHECK ##########
@@ -225,10 +222,10 @@ rule assembly_references_free_stats :
         run = "../data/input_reads/{run}.fastq",
         script = "scripts/references_free_stats.sh",
         cpp_script = "scripts/references_free_stats.out",
-        py_script = "scripts/references_free_stats.py"
+        py_script = "scripts/references_free_stats.py",
     output : 
-        "../data/stats_reports/{assembly}_{run}/references_free_text_report.txt"
-        "../data/stats_reports/{assembly}_{run}/GC_abundance_scatterplot.png"
-        "../data/stats_reports/{assembly}_{run}/contig_size_violinplot.png"
+        "../data/stats_reports/{assembly}_{run}/references_free_text_report.txt",
+        "../data/stats_reports/{assembly}_{run}/GC_abundance_scatterplot.png",
+        "../data/stats_reports/{assembly}_{run}/contig_size_violinplot.png",
     shell : 
         "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ ../data/alignements/{wildcards.assembly}_{wildcards.run}/" 
