@@ -37,7 +37,11 @@ rule all :
         expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies)
             if("references-based" in config["metrics"]) else "pipeline.sh",
+
         expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
+            assembly = long_reads_assemblies + hifi_assemblies)
+            if("references-free" in config["metrics"]) else "pipeline.sh",
+        expand("../data/stats_reports/{assembly}/GC_abundance_scatterplot.png",
             assembly = long_reads_assemblies + hifi_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
 
@@ -220,7 +224,8 @@ rule assembly_references_free_stats :
         assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
         run = "../data/input_reads/{run}.fastq",
         script = "scripts/references_free_stats.sh",
-        auxiliary_script = "scripts/references_free_stats.out"
+        cpp_script = "scripts/references_free_stats.out"
+        py_script = "scripts/references_free_stats.py"
     output : 
         "../data/stats_reports/{assembly}_{run}/references_free_text_report.txt"
         "../data/stats_reports/{assembly}_{run}/GC_abundance_scatterplot.png"
