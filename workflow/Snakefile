@@ -16,7 +16,7 @@ This rule dictates which output(s) to produce, and is dependant on the config.ya
 """
 # Calculate assembler-run pair
 long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
-hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"]),
+hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"])
 hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
 
 rule all :
@@ -34,12 +34,12 @@ rule all :
 
         # For each assembler-run pair (or trio):
         expand("../data/assemblies/{assembly}/assembly.fasta",
-            assembly = long_reads_assemblies + hifi_assemblies),
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
         expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies)
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-based" in config["metrics"]) else "pipeline.sh",
         expand("../data/stats_reports/{assembly}/{assembly}_references_free_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies)
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
 
 ########## RULE READS_QUALITY_CHECK ##########
