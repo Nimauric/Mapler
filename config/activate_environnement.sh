@@ -3,4 +3,4 @@
 
 echo "setting up the conda environnement..."
 . /local/env/envconda.sh
-conda activate ~/my_env
+conda activate ~/my_env2

@@ -16,6 +16,7 @@ This rule dictates which output(s) to produce, and is dependant on the config.ya
 """
 # Calculate assembler-run pair
 long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
+hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"])
 hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
 
 rule all :
@@ -31,16 +32,15 @@ rule all :
             run=(config["long_reads"]+config["hifi_reads"]))
             if("references-based" in config["metrics"]) else "pipeline.sh",
 
-        # For each assembler-run pair :
+        # For each assembler-run pair (or trio):
         expand("../data/assemblies/{assembly}/assembly.fasta",
-            assembly = long_reads_assemblies + hifi_assemblies),
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
         expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies)
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-based" in config["metrics"]) else "pipeline.sh",
         expand("../data/stats_reports/{assembly}/{assembly}_references_free_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies)
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
-
 
 ########## RULE READS_QUALITY_CHECK ##########
 """
@@ -166,6 +166,26 @@ rule hifiasm_assembly :
         mem_mb_per_cpu=10000
     shell :
         "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
+
+
+########## RULE OPERAMS_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of paired short-reads and a set of long-reads, using opera-MS
+""" 
+rule operams_assembly :
+    input : 
+        script = "scripts/opera_ms_assembler.sh",
+        r1 = "../data/input_reads/{short}-1.fastq",
+        r2 = "../data/input_reads/{short}-2.fastq",
+        long = "../data/input_reads/{long}.fastq"
+    output :
+        "../data/assemblies/operams_{short}_{long}/assembly.fasta",
+        
+    resources :
+        cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//700000000)),
+        mem_mb_per_cpu=10000 
+    shell : 
+        "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/operams_{wildcards.short}_{wildcards.long}/"
 
 
 ########## RULE FLYE_POLISHING ##########
