@@ -6,11 +6,16 @@
 
 # "$4" : path/to/the/output/folder
 
-generic_arguments = "--no-ref-clustering --num-processors=10"
+num_processor=$(nproc)
+echo $num_processor
+generic_arguments="--no-ref-clustering --num-processors "$num_processor" "
+
 mkdir "$4"
 perl dependencies/OPERA-MS/OPERA-MS.pl \
+    $generic_arguments \
     --short-read1 "$1" \
     --short-read2 "$2" \
     --long-read "$3" \
-    "$generic_arguments" \
     --out-dir "$4"
+
+mv "$4"contigs.polished.fasta  "$4"assembly.fasta
