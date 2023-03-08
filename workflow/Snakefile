@@ -24,7 +24,6 @@ if(not config["short_reads"] is None) :
     for sr in config["short_reads"] : 
         runs.append(sr + "-1")
         runs.append(sr + "-2")
-print(runs)
 
 # Calculate assembler-run pair
 long_reads_assemblies = []
@@ -37,9 +36,9 @@ if(
 ) :
     long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
 if(
-    (config["short_reads"] is None) and 
-    (config["long_reads"] is None) and 
-    (config["hybrid_assemblers"] is None)
+    (not config["short_reads"] is None) and 
+    (not config["long_reads"] is None) and 
+    (not config["hybrid_assemblers"] is None)
 ) :
     hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"])
 if(
