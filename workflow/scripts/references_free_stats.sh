@@ -15,29 +15,33 @@ output_folder="$6"
 alignements_folder="$7"
 
 
-# Fetch the sequencer used for this run
-sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
-case $sequencer in
-    "PacBio RS II")
-        sequencer_arguments="map-pb"
-        ;;
-    "MinION")
-        sequencer_arguments="map-ont"
-        ;;
-    "pacbio-hifi")
-        sequencer_arguments="map-hifi"
-        ;;
-    *)
-        echo "Unsupported or unrecognized read sequencer !"
-        echo $metadata
-        exit 1
-        ;;
-esac
+
 
 # If needed, align the reads on the contigs
 # Probably better to make it a separate snakerule, that way if check if exist or if the inputs were modified
 if [ ! -f "$alignements_folder"reads_on_contigs.bam ] ; then
+    # Fetch the sequencer used for this run
+    sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
+    case $sequencer in
+        "PacBio RS II")
+            sequencer_arguments="map-pb"
+            ;;
+        "MinION")
+            sequencer_arguments="map-ont"
+            ;;
+        "pacbio-hifi")
+            sequencer_arguments="map-hifi"
+            ;;
+        *)
+            echo "Unsupported or unrecognized read sequencer !"
+            echo $metadata
+            exit 1
+            ;;
+    esac
+    
     mkdir "$alignements_folder"
+
+
     echo ""
     echo "Running minimap2..."
     minimap2 -ax "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.bam
