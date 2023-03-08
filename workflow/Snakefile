@@ -14,10 +14,39 @@ def get_files_in_folder(path):
 """
 This rule dictates which output(s) to produce, and is dependant on the config.yaml file
 """
+runs=[]
+if(not config["long_reads"] is None) :
+    runs += config["long_reads"]
+if(not config["hifi_reads"] is None) :
+    runs += config["hifi_reads"]
+if(not config["short_reads"] is None) :
+    print(config["short_reads"])
+    for sr in config["short_reads"] : 
+        runs.append(sr + "-1")
+        runs.append(sr + "-2")
+print(runs)
+
 # Calculate assembler-run pair
-long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
-hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"])
-hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
+long_reads_assemblies = []
+hybrid_assemblies = []
+hifi_assemblies = []
+
+if(
+    (not config["long_reads"] is None) and 
+    (not config["long_reads_assemblers"] is None)
+) :
+    long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
+if(
+    (config["short_reads"] is None) and 
+    (config["long_reads"] is None) and 
+    (config["hybrid_assemblers"] is None)
+) :
+    hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"])
+if(
+    (not config["hifi_reads"] is None) and
+    (not config["hifi_assemblers"] is None)
+) :
+    hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
 
 rule all :
     input :
@@ -27,9 +56,9 @@ rule all :
 
         # For each run of read :
         expand("../data/reads_quality_check/{run}/{run}_fastqc.html", 
-            run = config["long_reads"] + config["hifi_reads"]),
+            run = runs),
         expand("../data/merged_reference_genome/coverage_information_{run}.tsv",
-            run=(config["long_reads"]+config["hifi_reads"]))
+            run=runs)
             if("references-based" in config["metrics"]) else "pipeline.sh",
 
         # For each assembler-run pair (or trio):
