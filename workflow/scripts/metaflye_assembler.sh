@@ -1,7 +1,7 @@
 #!/bin/sh
 # This script assemble a set of reads into a metagenome, using metaflye
 # "$1" : name of the run (SRA accession number)
-# "$2" : path/to/the/run.fastq.gz
+# "$2" : path/to/the/run.fastq
 # "$3" : path/to/the/output/folder
 
 # Fetch the sequencer used for this run
@@ -25,4 +25,4 @@ esac
 
 # Run metaflye
 mkdir "$3"
-flye --meta --out-dir "$3" "$sequencer_arguments" "$2"
+flye --resume --meta --out-dir "$3" "$sequencer_arguments" "$2"

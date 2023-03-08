@@ -4,11 +4,13 @@ long_reads :
 # - SRR8073713
 # - toy-SRR8073713
 # - subsampled-SRR8073713
-# - SRR15275210
 
 short_reads : 
  - SRR8073716
 
+hifi_reads : 
+ - SRR15275210
+ 
 long_reads_assemblers :
  - metaflye
 # - canu
@@ -18,3 +20,11 @@ long_reads_assemblers :
 
 hybrid_assemblers : 
  - operams
+
+hifi_assemblers :
+#  - metaflye
+  - hifiasm
+
+metrics : 
+ - references-based
+ - references-free

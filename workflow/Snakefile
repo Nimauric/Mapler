@@ -1,26 +1,8 @@
+########## FUNCTIONS AND CONSTANTS ##########
+# This constant determines which runs, assemblers and metrics are processed
 configfile : "../config/config.yaml"
 
-rule all :
-    input :
-        #Once : 
-        "../data/merged_reference_genome/merged_reference.fasta",
-
-        # For each run of long-reads : 
-        expand("../data/reads_quality_check/{run}/{run}_fastqc.html", run=config["long_reads"]),
-        expand("../data/merged_reference_genome/coverage_information_{run}.tsv", run=config["long_reads"]),
-
-        # For each long-reads assembler pair :
-        expand("../data/assemblies/{assembler}_{read}/assembly.fasta", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
-        expand("../data/assemblies_quality_check/{assembler}_{read}/summary/TSV", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
-        expand("../data/stats_reports/{assembler}_{read}/{assembler}_{read}_references_based_report.txt", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
-        expand("../data/stats_reports/{assembler}_{read}/{assembler}_{read}_references_free_report.txt", read=config["long_reads"], assembler = config["long_reads_assemblers"]),
-
-
-        # For each long-reads short-reads hybrid-assembler trio : 
-        expand("../data/assemblies/{assembler}_{short}_{long}/assembly.fasta", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"]),
-
-
-
+# This function is used to get a string containing the path to every file in a folder, separated by " "
 def get_files_in_folder(path):
     files = os.listdir(path)
     for i in range(len(files)) :
@@ -28,10 +10,46 @@ def get_files_in_folder(path):
     arguments = " ".join(files)
     return arguments
 
+########## RULE ALL ##########
+"""
+This rule dictates which output(s) to produce, and is dependant on the config.yaml file
+"""
+# Calculate assembler-run pair
+long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
+hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"]),
+hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
+
+rule all :
+    input :
+	# Once :
+        "../data/merged_reference_genome/merged_reference.fasta"
+            if("references-based" in config["metrics"]) else "pipeline.sh",
+
+        # For each run of read :
+        expand("../data/reads_quality_check/{run}/{run}_fastqc.html", 
+            run = config["long_reads"] + config["hifi_reads"]),
+        expand("../data/merged_reference_genome/coverage_information_{run}.tsv",
+            run=(config["long_reads"]+config["hifi_reads"]))
+            if("references-based" in config["metrics"]) else "pipeline.sh",
+
+        # For each assembler-run pair (or trio):
+        expand("../data/assemblies/{assembly}/assembly.fasta",
+            assembly = long_reads_assemblies + hifi_assemblies),
+        expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
+            assembly = long_reads_assemblies + hifi_assemblies)
+            if("references-based" in config["metrics"]) else "pipeline.sh",
+        expand("../data/stats_reports/{assembly}/{assembly}_references_free_report.txt",
+            assembly = long_reads_assemblies + hifi_assemblies)
+            if("references-free" in config["metrics"]) else "pipeline.sh",
+
+########## RULE READS_QUALITY_CHECK ##########
+"""
+This rule uses fastQC to analyse a run of reads and produce a human-readable html report
+"""
 rule reads_quality_check :
     input :
         script = "scripts/reads_quality_checker.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/reads_quality_check/{run}/{run}_fastqc.html",
         "../data/reads_quality_check/{run}/{run}_fastqc.zip"
@@ -40,6 +58,11 @@ rule reads_quality_check :
     shell : 
         "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
 
+
+########## RULE REFERENCES_MERGER ##########
+"""
+This rule merges multiple reference genome into one fasta file, used for references-based metrics
+"""
 path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
 reference_genomes = get_files_in_folder(path_to_reference_genomes)
 rule references_merger :
@@ -51,12 +74,19 @@ rule references_merger :
     shell :
         "{input.script} {output} {reference_genomes}"
 
+
+
+########## RULE COVERAGE_CALCULATOR ##########
+"""
+This rule uses minimap and samtools to estimate the debth of coverage of each species in the reads of a run,
+References-based
+"""
 rule coverage_calculator :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/coverage_calculator.sh", # script
         reference = "../data/merged_reference_genome/merged_reference.fasta", #data
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
     resources :
@@ -64,46 +94,84 @@ rule coverage_calculator :
     shell :
         "{input.script} {wildcards.run} {input.run} {input.reference} ../data/tmp/ {output}"
 
+
+########## RULE METAFLYE_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of long or hifi reads, using metaFlye.
+"""   
 rule metaflye_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/metaflye_assembler.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     resources :
-        cpus_per_task=10,
-        mem_mb_per_cpu=25000
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
 
+
+########## RULE CANU_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of long or hifi reads, using Canu.
+Not maintained
+"""  
 average_genome_size = 500000
 rule canu_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/canu_assembler.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/assemblies/canu_{run}/assembly.fasta",
     resources :
-        cpus_per_task=10,
-        mem_mb_per_cpu=25000
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
     shell :
-        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ 50000" 
+        "./{input.script} {wildcards.run} {input.run} ../data/assemblies/canu_{wildcards.run}/ {average_genome_size}" 
 
+
+
+########## RULE MINIASM_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of long reads, using minimap2 and miniasm.
+""" 
 rule miniasm_assembly :
     input :
         "scripts/sequencer_fetcher.sh", # script
         script = "scripts/miniasm_assembler.sh", # script
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     resources :
-        cpus_per_task=10,
-        mem_mb_per_cpu=25000
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
 
+########## RULE HIFIASM_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of hifi reads, using hifiasm_meta.
+""" 
+rule hifiasm_assembly :
+    input :
+        script = "scripts/hifiasm_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq", # data
+    output :
+        "../data/assemblies/hifiasm_{run}/assembly.fasta",
+    resources :
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
+    shell :
+        "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
+
+
+########## RULE OPERAMS_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of paired short-reads and a set of long-reads, using opera-MS
+""" 
 rule operams_assembly :
     input : 
         script = "scripts/opera_ms_assembler.sh",
@@ -114,23 +182,32 @@ rule operams_assembly :
         "../data/assemblies/operams_{short}_{long}/assembly.fasta",
         
     resources :
-        cpus_per_task=10,
-        mem_mb_per_cpu=25000  
+        cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//700000000)),
+        mem_mb_per_cpu=10000 
     shell : 
         "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/operams_{wildcards.short}_{wildcards.long}/"
 
 
-
+########## RULE FLYE_POLISHING ##########
+"""
+This rule polishes an assembly. Recommended after Canu or Miniasm
+"""
 rule flye_polishing : 
     input :
         script = "scripts/flye_polisher.sh", #script
         assembly = "../data/assemblies/{assembler_to_polish}_{run}/assembly.fasta", #data
-        run = "../data/input_reads/{run}.fastq.gz", # data
+        run = "../data/input_reads/{run}.fastq", # data
     output : 
         "../data/assemblies/flye_polish_{assembler_to_polish}_{run}/assembly.fasta"
     shell : 
         "./{input.script} {wildcards.run} {input.run} {input.assembly} ../data/assemblies/flye_polish_{wildcards.assembler_to_polish}_{wildcards.run}/"
 
+
+########## RULE ASSEMBLY_QUALITY_CHECK ##########
+"""
+This rule uses metaQuast to analyse the quality of an assembly
+references based
+"""
 path_to_reference_genomes = "../data/input_reference_genomes/" # /!\ The "/" at the end is important
 reference_genomes = get_files_in_folder(path_to_reference_genomes)
 rule assembly_quality_check :
@@ -144,6 +221,12 @@ rule assembly_quality_check :
     shell : 
         "{input.script} {input.assembly} ../data/assemblies_quality_check/{wildcards.assembly}/ {reference_genomes}"
 
+
+########## RULE ASSEMBLY_REFERENCES_BASED_STATS ##########
+"""
+This rule uses the results from 'rule assembly_quality_check' to produces a text report
+references based
+"""
 rule assembly_references_based_stats :
     input : 
         quality_check = "../data/assemblies_quality_check/{assembly}_{run}/summary/TSV", 
@@ -162,6 +245,12 @@ rule compile_cpp :
     shell : 
         "g++ {input} -std=c++11 -o {output}"
 
+
+########## RULE ASSEMBLY_REFERENCES_FREE_STATS ##########
+"""
+This rule uses minimap and c++ to produce a text report of the quality of an assembly
+Doesn't use references
+"""
 rule assembly_references_free_stats :
     input : 
         assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
@@ -172,8 +261,3 @@ rule assembly_references_free_stats :
         "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_references_free_report.txt"
     shell : 
         "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 {output}" 
-
-
-
-    
-

@@ -1,6 +1,6 @@
 #!/bin/sh
 # This script analyses a run and generates a quality report
-# $1 : path/to/a/run.fastq.gz
+# $1 : path/to/a/run.fastq
 # $2 : path/to/the/output/folder
 
 # Sets up java parameters so that fastQC works on big files
