@@ -30,6 +30,9 @@ violinplot.get_figure().savefig(output_folder+"contig_size_violinplot.png")
 #echo "Mapped reads : $mapped_reads" > "$output_folder"references_free_text_report.txt
 #echo "Unmapped reads : $unmapped_reads" >>"$output_folder"references_free_text_report.txt
 #echo "Mapped ratio : "$mapped_ratio"%" >>"$output_folder"references_free_text_report.txt
+print()
+print("Without filtering : ")
+print()
 mapped_reads = table["numreads"].sum()
 mapped_ratio = mapped_reads / (mapped_reads + unmapped_reads)
 print("Mapped reads : " + str(mapped_reads ))
