@@ -2,9 +2,6 @@ import sys
 import seaborn as sb
 import pandas as pd
 
-#
-#
-#
 path_to_tsv = str(sys.argv[1])
 output_folder = str(sys.argv[2])
 unmapped_reads= int(sys.argv[3])
@@ -33,8 +30,18 @@ violinplot.get_figure().savefig(output_folder+"contig_size_violinplot.png")
 #echo "Mapped reads : $mapped_reads" > "$output_folder"references_free_text_report.txt
 #echo "Unmapped reads : $unmapped_reads" >>"$output_folder"references_free_text_report.txt
 #echo "Mapped ratio : "$mapped_ratio"%" >>"$output_folder"references_free_text_report.txt
-print("Mapped reads : " + table["numreads"].sum())
-print("unmapped reads : " + unmapped_reads)
+mapped_reads = table["numreads"].sum()
+mapped_ratio = mapped_reads / (mapped_reads + unmapped_reads)
+print("Mapped reads : " + str(mapped_reads ))
+print("Unmapped reads : " + str(unmapped_reads))
+print("Mapped ratio : " + str(mapped_ratio))
+print()
+mapped_bases = table["covbases"].sum()
+unmapped_bases = table["endpos"].sum() - mapped_bases
+mapped_ratio = mapped_bases / (mapped_bases + unmapped_bases)
+print("Mapped bases : " + str(mapped_bases))
+print("Unmapped bases : " + str(unmapped_bases))
+print("Mapped ratio : " + str(mapped_ratio))
 
 
 # Build Mapped reads, unmapped_rterds, contigs, L50, N50, contigs and length plot depending on filter size
@@ -58,6 +65,5 @@ while(i < len(table)) :
     print(i/j)
 """
 
-print("Done")
 
 
