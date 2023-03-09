@@ -14,9 +14,38 @@ def get_files_in_folder(path):
 """
 This rule dictates which output(s) to produce, and is dependant on the config.yaml file
 """
+runs=[]
+if(not config["long_reads"] is None) :
+    runs += config["long_reads"]
+if(not config["hifi_reads"] is None) :
+    runs += config["hifi_reads"]
+if(not config["short_reads"] is None) :
+    print(config["short_reads"])
+    for sr in config["short_reads"] : 
+        runs.append(sr + "-1")
+        runs.append(sr + "-2")
+
 # Calculate assembler-run pair
-long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
-hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
+long_reads_assemblies = []
+hybrid_assemblies = []
+hifi_assemblies = []
+
+if(
+    (not config["long_reads"] is None) and 
+    (not config["long_reads_assemblers"] is None)
+) :
+    long_reads_assemblies = expand("{assembler}_{read}", read=config["long_reads"], assembler = config["long_reads_assemblers"])
+if(
+    (not config["short_reads"] is None) and 
+    (not config["long_reads"] is None) and 
+    (not config["hybrid_assemblers"] is None)
+) :
+    hybrid_assemblies = expand("{assembler}_{short}_{long}", short=config["short_reads"], long=config["long_reads"], assembler = config["hybrid_assemblers"])
+if(
+    (not config["hifi_reads"] is None) and
+    (not config["hifi_assemblers"] is None)
+) :
+    hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
 
 rule all :
     input :
@@ -26,22 +55,20 @@ rule all :
 
         # For each run of read :
         expand("../data/reads_quality_check/{run}/{run}_fastqc.html", 
-            run = config["long_reads"] + config["hifi_reads"]),
+            run = runs),
         expand("../data/merged_reference_genome/coverage_information_{run}.tsv",
-            run=(config["long_reads"]+config["hifi_reads"]))
+            run=runs)
             if("references-based" in config["metrics"]) else "pipeline.sh",
 
-        # For each assembler-run pair :
+        # For each assembler-run pair (or trio):
         expand("../data/assemblies/{assembly}/assembly.fasta",
-            assembly = long_reads_assemblies + hifi_assemblies),
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
         expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies)
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-based" in config["metrics"]) else "pipeline.sh",
-
-        expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies)
+        expand("../data/stats_reports/{assembly}/{assembly}_references_free_report.txt",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
-
 
 ########## RULE READS_QUALITY_CHECK ##########
 """
@@ -151,6 +178,42 @@ rule miniasm_assembly :
         mem_mb_per_cpu=10000
     shell :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/miniasm_{wildcards.run}/" 
+
+########## RULE HIFIASM_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of hifi reads, using hifiasm_meta.
+""" 
+rule hifiasm_assembly :
+    input :
+        script = "scripts/hifiasm_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq", # data
+    output :
+        "../data/assemblies/hifiasm_{run}/assembly.fasta",
+    resources :
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
+    shell :
+        "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
+
+
+########## RULE OPERAMS_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of paired short-reads and a set of long-reads, using opera-MS
+""" 
+rule operams_assembly :
+    input : 
+        script = "scripts/opera_ms_assembler.sh",
+        r1 = "../data/input_reads/{short}-1.fastq",
+        r2 = "../data/input_reads/{short}-2.fastq",
+        long = "../data/input_reads/{long}.fastq"
+    output :
+        "../data/assemblies/operams_{short}_{long}/assembly.fasta",
+        
+    resources :
+        cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//700000000)),
+        mem_mb_per_cpu=10000 
+    shell : 
+        "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/operams_{wildcards.short}_{wildcards.long}/"
 
 
 ########## RULE FLYE_POLISHING ##########
