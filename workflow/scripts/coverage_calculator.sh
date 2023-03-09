@@ -1,5 +1,5 @@
 #!/bin/sh
-#This script align thepassed as an argument, to reference genomes, and find out how many map to each genome
+#This script align the reads passed as an argument, to reference genomes, and find out how many map to each genome
 # "$1" : name of the run (SRA accession number)
 # "$2" : path to the read to align
 # "$3" : path to the merged_reference.fasta
