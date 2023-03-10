@@ -22,8 +22,8 @@ hybrid_assemblers :
 # - operams
 
 hifi_assemblers :
-  - metaflye
-  - hifiasm
+#  - metaflye
+#  - hifiasm
   - metamdbg
 
 metrics : 
