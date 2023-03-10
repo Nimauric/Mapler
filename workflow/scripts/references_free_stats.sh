@@ -63,6 +63,7 @@ unmapped_reads=$(samtools view -c -f 4 "$alignements_folder"reads_on_contigs.bam
 echo ""
 echo "Calculating length based metrics and GC content..."
 scripts/references_free_stats.out "$assembly" "$threshold" "$output_folder"contigs_stats.tsv "$output_folder"contigs_stats_with_GC_content.tsv > "$output_folder"references_free_text_report.txt
+
 echo ""
 echo "Producting plots and text report..."
 python3 scripts/references_free_stats.py "$output_folder"contigs_stats_with_GC_content.tsv "$output_folder" "$unmapped_reads" >>"$output_folder"references_free_text_report.txt
