@@ -206,7 +206,7 @@ rule meta_mdbg_assembly :
     output :
         "../data/assemblies/metamdbg_{run}/assembly.fasta",
     resources :
-        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//7000000000)),
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
         mem_mb_per_cpu=10000
     shell :
         "./{input.script} {input.run} ../data/assemblies/metamdbg_{wildcards.run}/" 
