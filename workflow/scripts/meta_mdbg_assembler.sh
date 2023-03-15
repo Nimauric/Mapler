@@ -8,4 +8,4 @@ output_folder="$2",
 num_processor=$(nproc)
 
 mkdir "$2"
-dependencies/metaMDBG/build/bin/metaMDBG asm $output_folder $reads -t $num_processor
+./dependencies/metaMDBG/build/bin/metaMDBG asm $output_folder $reads -t $num_processor
