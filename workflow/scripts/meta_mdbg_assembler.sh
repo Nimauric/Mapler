@@ -9,3 +9,9 @@ num_processor=$(nproc)
 
 mkdir "$2"
 ./dependencies/metaMDBG/build/bin/metaMDBG asm $output_folder $reads -t $num_processor
+
+
+gzip -d "$output_folder",/contigs.fasta.gz
+mv "$output_folder",/contigs.fasta "$output_folder"assembly.fasta
+
+
