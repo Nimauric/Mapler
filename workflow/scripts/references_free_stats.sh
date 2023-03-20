@@ -38,7 +38,7 @@ esac
 mkdir "$alignements_folder"
 echo ""
 echo "Running minimap2..."
-#minimap2 -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.paf
+minimap2 -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.paf
 
 echo ""
 echo "Calculating metrics : "
