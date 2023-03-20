@@ -195,6 +195,25 @@ rule hifiasm_assembly :
     shell :
         "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
 
+########## RULE META_MDBG_ASSEMBLY ##########
+"""
+This rule assemble a metagenome from a set of hifi reads, using meta mdbg.
+""" 
+rule meta_mdbg_assembly :
+    input :
+        script = "scripts/meta_mdbg_assembler.sh", # script
+        run = "../data/input_reads/{run}.fastq", # data
+    output :
+        "../data/assemblies/metamdbg_{run}/assembly.fasta",
+    conda : 
+       	"../config/env/metamdbg.yaml"
+    resources :
+        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
+        mem_mb_per_cpu=10000
+    shell :
+        "./{input.script} {input.run} ../data/assemblies/metamdbg_{wildcards.run}/" 
+
+
 
 ########## RULE OPERAMS_ASSEMBLY ##########
 """
@@ -208,7 +227,6 @@ rule operams_assembly :
         long = "../data/input_reads/{long}.fastq"
     output :
         "../data/assemblies/operams_{short}_{long}/assembly.fasta",
-        
     resources :
         cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//700000000)),
         mem_mb_per_cpu=10000 
