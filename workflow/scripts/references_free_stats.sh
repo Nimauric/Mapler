@@ -16,57 +16,36 @@ threshold="$5"
 output_folder="$6"
 alignements_folder="$7"
 
+# Fetch the sequencer used for this run
+sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
+case $sequencer in
+    "PacBio RS II")
+        sequencer_arguments="map-pb"
+        ;;
+    "MinION")
+        sequencer_arguments="map-ont"
+        ;;
+    "pacbio-hifi")
+        sequencer_arguments="map-hifi"
+        ;;
+    *)
+        echo "Unsupported or unrecognized read sequencer !"
+        echo $metadata
+        exit 1
+        ;;
+esac
 
-
-# If needed, align the reads on the contigs
-# Probably better to make it a separate snakerule, that way if check if exist or if the inputs were modified
-if [ ! -f "$alignements_folder"reads_on_contigs.bam ] ; then
-    # Fetch the sequencer used for this run
-    sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
-    case $sequencer in
-        "PacBio RS II")
-            sequencer_arguments="map-pb"
-            ;;
-        "MinION")
-            sequencer_arguments="map-ont"
-            ;;
-        "pacbio-hifi")
-            sequencer_arguments="map-hifi"
-            ;;
-        *)
-            echo "Unsupported or unrecognized read sequencer !"
-            echo $metadata
-            exit 1
-            ;;
-    esac
-    
-    mkdir "$alignements_folder"
-
-
-    echo ""
-    echo "Running minimap2..."
-    minimap2 -ax "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.bam
-
-    echo ""
-    echo "Running samtools sort..."
-    samtools sort -l 1 "$alignements_folder"reads_on_contigs.bam -o "$alignements_folder"reads_on_contigs.bam
-fi
+mkdir "$alignements_folder"
+echo ""
+echo "Running minimap2..."
+#minimap2 -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.paf
 
 echo ""
-echo "Running samtools coverage..."
-samtools coverage "$alignements_folder"reads_on_contigs.bam > "$output_folder"contigs_stats.tsv
+echo "Calculating metrics : "
+./scripts/references_free_stats.out "$alignements_folder"reads_on_contigs.paf $run $assembly "$output_folder"contigs_stats.csv "$output_folder"references_free_text_report.txt $threshold
 
 echo ""
-echo "Counting unmapped reads..."
-unmapped_reads=$(samtools view -c -f 4 "$alignements_folder"reads_on_contigs.bam)
+echo "Producing plots..."
+python3 scripts/references_free_stats.py "$output_folder"contigs_stats.csv $output_folder
 
-echo ""
-echo "Calculating length based metrics and GC content..."
-scripts/references_free_stats.out "$assembly" "$threshold" "$output_folder"contigs_stats.tsv "$output_folder"contigs_stats_with_GC_content.tsv > "$output_folder"references_free_text_report.txt
-
-echo ""
-echo "Producting plots and text report..."
-python3 scripts/references_free_stats.py "$output_folder"contigs_stats_with_GC_content.tsv "$output_folder" "$unmapped_reads" >>"$output_folder"references_free_text_report.txt
-
-echo ""
 echo "Done !"
