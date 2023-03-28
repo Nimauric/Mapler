@@ -321,7 +321,7 @@ rule maxbin :
     input : 
         assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
         run = "../data/input_reads/{run}.fastq",
-        prefix = "../data/contigs/{assembly}_{run}",
+        prefix = "../data/bins/{assembly}_{run}/{assembly}_{run}",
         script = "scripts/maxbin.sh",
     output : 
         "input.prefix}.001.fasta",
