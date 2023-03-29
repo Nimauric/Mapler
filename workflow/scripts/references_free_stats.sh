@@ -42,7 +42,7 @@ minimap2 -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"r
 
 echo ""
 echo "Calculating metrics : "
-./scripts/references_free_stats.out "$alignements_folder"reads_on_contigs.paf $run $assembly "$output_folder"contigs_stats.csv "$output_folder"references_free_text_report.txt $threshold
+./scripts/references_free_stats.out "$alignements_folder"reads_on_contigs.paf $run $assembly "$output_folder"contigs_stats.csv "$output_folder"filtered_stats.csv "$output_folder"references_free_text_report.txt $threshold
 
 echo ""
 echo "Producing plots..."
