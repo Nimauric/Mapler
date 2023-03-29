@@ -3,15 +3,10 @@ import seaborn as sb
 import pandas as pd
 
 
-"""
 path_to_contigs_info_csv = str(sys.argv[1])
 path_to_filtered_stats_csv = str(sys.argv[2])
-output_folder = str(sys.argv[2])
-"""
+output_folder = str(sys.argv[3])
 
-path_to_contigs_info_csv = "contigs_info.csv"
-path_to_filtered_stats_csv = "filtered_stats.csv"
-output_folder = "./"
 
 ############### FUNCTIONS ###############
 

@@ -4,7 +4,7 @@
 #run="../data/input_reads/SRR8073714.fastq"
 #assembly_name="metaflye_SRR8073714"
 #run_name="SRR8073714"
-#threshold=50000
+#threshold=10000
 #output_folder="../data/stats_reports/metaflye_SRR8073714/"
 #alignements_folder="../data/alignements/metaflye_SRR8073714/"
 
