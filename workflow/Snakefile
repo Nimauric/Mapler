@@ -69,6 +69,10 @@ rule all :
         expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
+        expand("../data/bins/{assembly}/{assembly}.001.fasta",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("binning-based" in config["metrics"]) else "pipeline.sh",
+
 
 ########## RULE READS_QUALITY_CHECK ##########
 """
@@ -321,9 +325,9 @@ rule maxbin :
     input : 
         assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
         run = "../data/input_reads/{run}.fastq",
-        prefix = "../data/bins/{assembly}_{run}/{assembly}_{run}",
         script = "scripts/maxbin.sh",
     output : 
-        "input.prefix}.001.fasta",
+        "../data/bins/{assembly}_{run}/{assembly}_{run}.001.fasta",
     shell : 
-        "{input.script} {input.assembly} {input.run} {input.prefix}"
+        "{input.script} {input.assembly} {input.run} ../data/bins/{wildcards.assembly}_{wildcards.run}/ {wildcards.assembly}_{wildcards.run}"
+

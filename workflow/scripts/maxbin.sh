@@ -6,6 +6,8 @@
 
 assembly="$1"
 reads="$2"
-prefix="$3" # Path to folder + prefix of each file
+outfolder="$3"
+prefix="$4" #prefix of each file
 
-run_MaxBin.pl -contig "$assembly" -reads "$reads" -out "$prefix"
+mkdir "$outfolder"
+run_MaxBin.pl -contig "$assembly" -reads "$reads" -out "$outfolder""$prefix"
