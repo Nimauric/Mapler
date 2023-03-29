@@ -326,6 +326,8 @@ rule maxbin :
         assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
         run = "../data/input_reads/{run}.fastq",
         script = "scripts/maxbin.sh",
+    resources :
+        mem_mb_per_cpu=10000
     output : 
         "../data/bins/{assembly}_{run}/{assembly}_{run}.001.fasta",
     shell : 
