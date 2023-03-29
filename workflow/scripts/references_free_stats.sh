@@ -46,6 +46,6 @@ echo "Calculating metrics : "
 
 echo ""
 echo "Producing plots..."
-python3 scripts/references_free_stats.py "$output_folder"contigs_stats.csv $output_folder
+python3 scripts/references_free_stats.py "$output_folder"contigs_stats.csv "$output_folder"filtered_stats.csv $output_folder
 
 echo "Done !"
