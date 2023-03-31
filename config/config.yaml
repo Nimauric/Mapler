@@ -1,6 +1,6 @@
 ---
 long_reads :
-# - SRR8073714
+ - SRR8073714
 # - SRR8073713
 # - toy-SRR8073713
 # - subsampled-SRR8073713
@@ -9,10 +9,10 @@ short_reads :
 # - SRR8073716
 
 hifi_reads : 
- - SRR15275210
+# - SRR15275210
  
 long_reads_assemblers :
-# - metaflye
+ - metaflye
 # - canu
 # - miniasm
 # - flye_polish_canu
@@ -24,8 +24,9 @@ hybrid_assemblers :
 hifi_assemblers :
 #  - metaflye
 #  - hifiasm
-  - metamdbg
+#  - metamdbg
 
 metrics : 
 # - references-based
  - references-free
+ - binning-based

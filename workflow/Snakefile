@@ -69,6 +69,10 @@ rule all :
         expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
+        expand("../data/bins/{assembly}/{assembly}.001.fasta",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("binning-based" in config["metrics"]) else "pipeline.sh",
+
 
 ########## RULE READS_QUALITY_CHECK ##########
 """
@@ -294,7 +298,8 @@ rule compile_cpp :
 
 ########## RULE ASSEMBLY_REFERENCES_FREE_STATS ##########
 """
-This rule uses minimap and c++ to produce a text report of the quality of an assembly
+This rule uses minimap2 and c++ to produce a text report of the quality of an assembly, 
+as well as some python to produce graphs
 Doesn't use references
 """
 rule assembly_references_free_stats :
@@ -310,3 +315,21 @@ rule assembly_references_free_stats :
         "../data/stats_reports/{assembly}_{run}/contig_size_violinplot.png",
     shell : 
         "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ ../data/alignements/{wildcards.assembly}_{wildcards.run}/" 
+
+
+########## RULE MAXBIN ##########
+"""
+This rule uses maxbin to group contigs into bins
+"""
+rule maxbin : 
+    input : 
+        assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
+        run = "../data/input_reads/{run}.fastq",
+        script = "scripts/maxbin.sh",
+    resources :
+        mem_mb_per_cpu=10000
+    output : 
+        "../data/bins/{assembly}_{run}/{assembly}_{run}.001.fasta",
+    shell : 
+        "{input.script} {input.assembly} {input.run} ../data/bins/{wildcards.assembly}_{wildcards.run}/ {wildcards.assembly}_{wildcards.run}"
+

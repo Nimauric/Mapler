@@ -10,6 +10,7 @@ mkdir ../data/input_reference_genomes
 mkdir ../data/merged_reference_genome
 mkdir ../data/runs_metadata
 mkdir ../data/tmp
+mkdir ../data/bins
 mkdir ../data/reads_quality_check
 mkdir ../data/assemblies
 mkdir ../data/assemblies_quality_check
