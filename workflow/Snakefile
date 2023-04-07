@@ -349,8 +349,11 @@ rule metabat2 :
         "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}.1.fa",
     shell : 
         "{input.script} {wildcards.run} {wildcards.assembly}_{wildcards.run} {input.run} {input.assembly} ../data/bins/{wildcards.assembly}_{wildcards.run}/ metabat2_{wildcards.assembly}_{wildcards.run}"
-        
-        
+
+########## RULE CHECKM ##########
+"""
+This rule uses checkM to evaluate bins
+"""   
         
 
 
