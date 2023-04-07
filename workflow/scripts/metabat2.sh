@@ -16,7 +16,7 @@ prefix="$6"
 
 mkdir "$output_folder"
 # Fetch the sequencer used for this run
-sequencer=$(../scripts/sequencer_fetcher.sh "$run_name")
+sequencer=$(./scripts/sequencer_fetcher.sh "$run_name")
 case $sequencer in
     "PacBio RS II")
         sequencer_arguments="map-pb"
@@ -51,4 +51,4 @@ echo ""
 
 jgi_summarize_bam_contig_depths --outputDepth "$output_folder"depth.txt "$output_folder"reads_on_contigs_"$assembly_name".bam --percentIdentity 90
 
-metabat2 -i "$assembly" -a "$output_folder"depth.txt -o "$output_folder"
+metabat2 -i "$assembly" -a "$output_folder"depth.txt -o "$output_folder""$prefix"
