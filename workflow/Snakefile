@@ -69,7 +69,7 @@ rule all :
         expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("references-free" in config["metrics"]) else "pipeline.sh",
-        expand("../data/bins/{assembly}/{assembly}.001.fasta",
+        expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("binning-based" in config["metrics"]) else "pipeline.sh",
 
@@ -145,7 +145,7 @@ rule metaflye_assembly :
         "./{input.script} {wildcards.run} {input.run} ../data/assemblies/metaflye_{wildcards.run}/" 
 
 
-########## RULE CANU_ASSEMBLY ##########
+########## RULE CANU_ASSEMBLY (depreciated) ##########
 """
 This rule assemble a metagenome from a set of long or hifi reads, using Canu.
 Not maintained
@@ -317,7 +317,7 @@ rule assembly_references_free_stats :
         "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ ../data/alignements/{wildcards.assembly}_{wildcards.run}/" 
 
 
-########## RULE MAXBIN ##########
+########## RULE MAXBIN (depreciated) ##########
 """
 This rule uses maxbin to group contigs into bins
 """
@@ -329,7 +329,28 @@ rule maxbin :
     resources :
         mem_mb_per_cpu=10000
     output : 
-        "../data/bins/{assembly}_{run}/{assembly}_{run}.001.fasta",
+        "../data/bins/{assembly}_{run}/maxbin_{assembly}_{run}.001.fasta",
     shell : 
-        "{input.script} {input.assembly} {input.run} ../data/bins/{wildcards.assembly}_{wildcards.run}/ {wildcards.assembly}_{wildcards.run}"
+        "{input.script} {input.assembly} {input.run} ../data/bins/{wildcards.assembly}_{wildcards.run}/ maxbin_{wildcards.assembly}_{wildcards.run}"
+
+########## RULE METABAT2 ##########
+"""
+This rule uses metabat to group contigs into bins
+"""
+rule metabat2 : 
+    input : 
+        assembly = "../data/assemblies/{assembly}_{run}/assembly.fasta",
+        run = "../data/input_reads/{run}.fastq",
+        script = "scripts/metabat2.sh",
+    resources :
+        cpus_per_task = 4,
+        mem_mb_per_cpu = 20000,
+    output : 
+        "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}.1.fa",
+    shell : 
+        "{input.script} {wildcards.run} {wildcards.assembly}_{wildcards.run} {input.run} {input.assembly} ../data/bins/{wildcards.assembly}_{wildcards.run}/ metabat2_{wildcards.assembly}_{wildcards.run}"
+        
+        
+        
+
 
