@@ -354,6 +354,15 @@ rule metabat2 :
 """
 This rule uses checkM to evaluate bins
 """   
-        
-
+rule checkm : 
+    input :
+        script = "scripts/checkm.sh",
+        bins = "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}",
+    resources :
+        cpus_per_task = 4,
+        mem_mb_per_cpu = 20000,
+    output : 
+        "../data/stats_reports/{assembly}_{run}/ bins_report.tsv"
+    shell : 
+        "{input.script} fa {input.bins} ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ bins_report.tsv"
 
