@@ -232,7 +232,7 @@ rule operams_assembly :
     output :
         "../data/assemblies/operams_{short}_{long}/assembly.fasta",
     resources :
-        cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//700000000)),
+        cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//7000000000)),
         mem_mb_per_cpu=10000 
     shell : 
         "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/operams_{wildcards.short}_{wildcards.long}/"
