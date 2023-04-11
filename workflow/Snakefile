@@ -358,7 +358,7 @@ This rule uses checkM to evaluate bins
 rule checkm : 
     input :
         script = "scripts/checkm.sh",
-        bins = "../data/bins/{assembly}_{run}/",
+        bins = "../data/bins/{assembly}_{run}",
         example_bin = "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}.1.fa", # to make sure the binning was successful
     resources :
         cpus_per_task = 4,
@@ -366,5 +366,5 @@ rule checkm :
     output : 
         "../data/stats_reports/{assembly}_{run}/bins_report.tsv"
     shell : 
-        "{input.script} fa {input.bins} ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ bins_report.tsv"
+        "{input.script} fa {input.bins}/ ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ bins_report.tsv"
 
