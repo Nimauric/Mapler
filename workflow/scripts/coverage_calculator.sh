@@ -18,6 +18,11 @@ case $sequencer in
     "pacbio-hifi")
         sequencer_arguments="map-hifi"
         ;;
+    "Illumina HiSeq 2500")
+        sequencer_arguments="sr"
+        ;;
+
+
     *)
         echo "Unsupported or unrecognized read sequencer !"
         echo $metadata
@@ -39,3 +44,4 @@ echo ""
 echo "Running samtools coverage..."
 echo ""
 samtools coverage "$4"mapping_"$1".bam > "$5"
+
