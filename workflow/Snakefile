@@ -72,8 +72,9 @@ rule all :
         expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("binning-based" in config["metrics"]) else "pipeline.sh",
-
-
+        expand("../data/stats_reports/{assembly}/bins_report.tsv",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("binning-based" in config["metrics"]) else "pipeline.sh",
 ########## RULE READS_QUALITY_CHECK ##########
 """
 This rule uses fastQC to analyse a run of reads and produce a human-readable html report
