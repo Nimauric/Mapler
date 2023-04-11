@@ -358,7 +358,7 @@ This rule uses checkM to evaluate bins
 rule checkm : 
     input :
         script = "scripts/checkm.sh",
-        bins = "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}",
+        bins = "../data/bins/{assembly}_{run}/",
     resources :
         cpus_per_task = 4,
         mem_mb_per_cpu = 20000,
