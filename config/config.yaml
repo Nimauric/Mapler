@@ -1,6 +1,6 @@
 ---
 long_reads :
- - SRR8073714
+# - SRR8073714
 # - SRR8073713
 # - toy-SRR8073713
 # - subsampled-SRR8073713
@@ -27,6 +27,6 @@ hifi_assemblers :
 #  - metamdbg
 
 metrics : 
-# - references-based
+ - references-based
 # - references-free
- - binning-based
+# - binning-based
