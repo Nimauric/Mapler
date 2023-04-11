@@ -117,43 +117,85 @@ vector<tuple<string, int, float, float>> import_contigs_data(string &path_to_con
     return contigs;
 }
 
+void produce_filtered_stats_csv(string path_to_filtered_stats_csv_output, vector<tuple<string, int, float, float>> contigs){
+    int shortest_contig;
+    int number_of_contigs = 0;
+    long int assembly_length = 0;
+    float GC_content = 0.0;
+    float mean_depth = 0.0;
+    int N50;
+    int L50 = 0;
+    int assembly_length_50 = 0;
 
+    ofstream out;
+    out.open(path_to_filtered_stats_csv_output);
+
+    out << "shortest contig,assembly length,number of contigs,gc content,mean depth,N50,L50" << endl;
+    while(number_of_contigs  < contigs.size()){
+        shortest_contig = get<1>(contigs[number_of_contigs]);
+        GC_content = (GC_content*number_of_contigs + get<2>(contigs[number_of_contigs]))/(number_of_contigs+1);
+        mean_depth = (mean_depth*number_of_contigs + get<3>(contigs[number_of_contigs]))/(number_of_contigs+1);
+        assembly_length += shortest_contig;
+        number_of_contigs +=1;
+
+        if(shortest_contig == get<1>(contigs[number_of_contigs])){
+            continue; // Skip over if the next contig has the same length
+        }
+
+        while(assembly_length_50 < 0.5*assembly_length){
+            N50 = get<1>(contigs[L50]);
+            assembly_length_50 += N50;
+            L50 +=1;
+        }
+
+        out << shortest_contig << ',' << assembly_length << ',' << number_of_contigs << ',' << GC_content << ',' << mean_depth << ',' << N50 << ',' << L50 << endl;
+    }
+    out.close();
+}
 int main(int argc, char *argv[]) {
     /*
     string path_to_paf = "../data/alignements/metaflye_SRR8073714/reads_on_contigs.paf";
     string path_to_reads = "../data/input_reads/SRR8073714.fastq";
     string path_to_contigs = "../data/assemblies/metaflye_SRR8073714/assembly.fasta";
-    string path_to_csv_output = "output.csv";
+    string path_to_contigs_info_csv_output = "contigs_info.csv";
+    string path_to_filtered_stats_csv_output = "filtered_stats.csv";
     string path_to_txt_output = "output.txt";
-    int threshold = 5000;
+    int threshold = 1000;
     */
+
+
     string path_to_paf = argv[1];
     string path_to_reads = argv[2];
     string path_to_contigs = argv[3];
-    string path_to_csv_output = argv[4];
-    string path_to_txt_output = argv[5];
-    int threshold = stoi(argv[6]);
+    string path_to_contigs_info_csv_output = argv[4];
+    string path_to_filtered_stats_csv_output = argv[5];
+    string path_to_txt_output = argv[6];
+    int threshold = stoi(argv[7]);
 
+    
     // Alignements
     cout << "reading alignements..." << endl;
     // "read_name", "read_length", "contig_name", "contig_length", "aligned_bases"
     vector<tuple<string, int, string, int, int>> alignements = import_alignements (path_to_paf);
     
+    
     // Reads
     cout << "reading reads..." << endl;
     // "read_name", "read_length"
     unordered_map<string, int> reads = import_reads(path_to_reads);
-
+    
     // Contigs
     cout << "reading contigs..." << endl;
     // "contig_name", "contig_length", "GC_content", " mean_depth"
     vector<tuple<string, int, float, float>> contigs = import_contigs_data(path_to_contigs, alignements);
-
+    
     
 
     // Loop over alignements;
     cout << "analizing alignements..." << endl;
-    unordered_set<string> unique_aligned_reads;
+    produce_filtered_stats_csv(path_to_filtered_stats_csv_output, contigs);
+
+     unordered_set<string> unique_aligned_reads;
     long int total_alignement_length = 0;
     for (auto row : alignements){
         total_alignement_length += get<4>(row);
@@ -177,7 +219,7 @@ int main(int argc, char *argv[]) {
     int discarded_contigs_number = 0;
 
     ofstream out;
-    out.open(path_to_csv_output);
+    out.open(path_to_contigs_info_csv_output);
     out << "contig_name,contig_length,GC_content,mean_depth" << endl;
     for (auto row : contigs){
         int length = get<1>(row);
@@ -226,6 +268,9 @@ int main(int argc, char *argv[]) {
     out << "N50 : " << N50 << endl;
     out << "L50 : " << L50 << endl;
     out.close();
+    
+
+
     
 }
 

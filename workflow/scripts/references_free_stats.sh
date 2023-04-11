@@ -4,7 +4,7 @@
 #run="../data/input_reads/SRR8073714.fastq"
 #assembly_name="metaflye_SRR8073714"
 #run_name="SRR8073714"
-#threshold=50000
+#threshold=10000
 #output_folder="../data/stats_reports/metaflye_SRR8073714/"
 #alignements_folder="../data/alignements/metaflye_SRR8073714/"
 
@@ -42,10 +42,10 @@ minimap2 -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"r
 
 echo ""
 echo "Calculating metrics : "
-./scripts/references_free_stats.out "$alignements_folder"reads_on_contigs.paf $run $assembly "$output_folder"contigs_stats.csv "$output_folder"references_free_text_report.txt $threshold
+./scripts/references_free_stats.out "$alignements_folder"reads_on_contigs.paf $run $assembly "$output_folder"contigs_stats.csv "$output_folder"filtered_stats.csv "$output_folder"references_free_text_report.txt $threshold
 
 echo ""
 echo "Producing plots..."
-python3 scripts/references_free_stats.py "$output_folder"contigs_stats.csv $output_folder
+python3 scripts/references_free_stats.py "$output_folder"contigs_stats.csv "$output_folder"filtered_stats.csv $output_folder
 
 echo "Done !"
