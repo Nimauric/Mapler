@@ -17,7 +17,7 @@ mkdir ../data/assemblies_quality_check
 mkdir ../data/stats_reports
 
 echo "installing conda..."
-conda create -p ~/snakemake_env snakemake
+mamba create -y -p ~/snakemake_env -c bioconda -c conda-forge snakemake=7.20 mamba
 
 echo "installing opera MS..."
 #../config/opera_ms_installer.sh 

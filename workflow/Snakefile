@@ -59,22 +59,23 @@ rule all :
         expand("../data/merged_reference_genome/coverage_information_{run}.tsv",
             run=runs)
             if("references-based" in config["metrics"]) else "pipeline.sh",
-
+        
         # For each assembler-run pair (or trio):
-        expand("../data/assemblies/{assembly}/assembly.fasta",
-            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
-        expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-            if("references-based" in config["metrics"]) else "pipeline.sh",
-        expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
-            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-            if("references-free" in config["metrics"]) else "pipeline.sh",
-        expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
-            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-            if("binning-based" in config["metrics"]) else "pipeline.sh",
-        expand("../data/stats_reports/{assembly}/bins_report.tsv",
-            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-            if("binning-based" in config["metrics"]) else "pipeline.sh",
+#        expand("../data/assemblies/{assembly}/assembly.fasta",
+#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
+#        expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
+#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+#            if("references-based" in config["metrics"]) else "pipeline.sh",
+#        expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
+#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+#            if("references-free" in config["metrics"]) else "pipeline.sh",
+#        expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
+#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+#            if("binning-based" in config["metrics"]) else "pipeline.sh",
+#        expand("../data/stats_reports/{assembly}/bins_report.tsv",
+#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+#            if("binning-based" in config["metrics"]) else "pipeline.sh",
+        
 ########## RULE READS_QUALITY_CHECK ##########
 """
 This rule uses fastQC to analyse a run of reads and produce a human-readable html report
@@ -86,8 +87,8 @@ rule reads_quality_check :
     output :
         "../data/reads_quality_check/{run}/{run}_fastqc.html",
         "../data/reads_quality_check/{run}/{run}_fastqc.zip"
-    message :
-        "This rule checks the quality of every read and produces a human readable report"
+    conda :
+        "../config/env/reads_quality_check.yaml",
     shell : 
         "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
 
