@@ -23,6 +23,6 @@ echo "installing opera MS..."
 #../config/opera_ms_installer.sh 
 
 echo "installing metaMDBG..."
-#../config/meta_mdbg_installer.sh
+../config/meta_mdbg_installer.sh
 
 echo "Done !"
