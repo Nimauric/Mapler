@@ -128,7 +128,8 @@ rule coverage_calculator :
     conda :
         "../config/env/coverage_calculator.yaml",
     resources :
-        mem_mb=10000
+        mem_mb=10000,
+	runtime=6*60, # 6h = 6*60mn
     shell :
         "{input.script} {wildcards.run} {input.run} {input.reference} ../data/tmp/ {output}"
 
