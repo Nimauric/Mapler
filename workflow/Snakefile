@@ -76,7 +76,7 @@ rule all :
 #            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
 #            if("binning-based" in config["metrics"]) else "pipeline.sh",
         
-########## RULE READS_QUALITY_CHECK ##########
+########## RULE READS_QUALITY_CHECK ########## V
 """
 This rule uses fastQC to analyse a run of reads and produce a human-readable html report
 """
@@ -89,6 +89,8 @@ rule reads_quality_check :
         "../data/reads_quality_check/{run}/{run}_fastqc.zip"
     conda :
         "../config/env/reads_quality_check.yaml",
+    ressources : 
+        mem_mb=5000,
     shell : 
         "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
 
@@ -104,10 +106,9 @@ rule references_merger :
         path_to_reference_genomes, # data
         script = "scripts/references_merger.sh", # script
     output : 
-        "../data/merged_reference_genome/merged_reference.fasta"
+        "../data/merged_reference_genome/merged_reference.fasta",
     shell :
         "{input.script} {output} {reference_genomes}"
-
 
 
 ########## RULE COVERAGE_CALCULATOR ##########
@@ -124,7 +125,7 @@ rule coverage_calculator :
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
     resources :
-        mem_mb_per_cpu=10000
+        mem_mb=10000
     shell :
         "{input.script} {wildcards.run} {input.run} {input.reference} ../data/tmp/ {output}"
 
