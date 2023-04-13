@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH --ntasks=10
+#SBATCH --ntasks=20
 #SBATCH --mem-per-cpu=100000
 
 # This script lanches the Snakefile with its correct arguments
