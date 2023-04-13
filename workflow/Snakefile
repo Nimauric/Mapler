@@ -61,20 +61,20 @@ rule all :
             if("references-based" in config["metrics"]) else "pipeline.sh",
         
         # For each assembler-run pair (or trio):
-#        expand("../data/assemblies/{assembly}/assembly.fasta",
-#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
-#        expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
-#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-#            if("references-based" in config["metrics"]) else "pipeline.sh",
-#        expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
-#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-#            if("references-free" in config["metrics"]) else "pipeline.sh",
-#        expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
-#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-#            if("binning-based" in config["metrics"]) else "pipeline.sh",
-#        expand("../data/stats_reports/{assembly}/bins_report.tsv",
-#            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
-#            if("binning-based" in config["metrics"]) else "pipeline.sh",
+        expand("../data/assemblies/{assembly}/assembly.fasta",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies),
+        expand("../data/stats_reports/{assembly}/{assembly}_references_based_report.txt",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("references-based" in config["metrics"]) else "pipeline.sh",
+        expand("../data/stats_reports/{assembly}/references_free_text_report.txt",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("references-free" in config["metrics"]) else "pipeline.sh",
+        expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("binning-based" in config["metrics"]) else "pipeline.sh",
+        expand("../data/stats_reports/{assembly}/bins_report.tsv",
+            assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
+            if("binning-based" in config["metrics"]) else "pipeline.sh",
         
 ########## RULE READS_QUALITY_CHECK ########## V
 """
@@ -206,6 +206,7 @@ rule hifiasm_assembly :
     shell :
         "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
 
+
 ########## RULE META_MDBG_ASSEMBLY ##########
 """
 This rule assemble a metagenome from a set of hifi reads, using meta mdbg.
@@ -219,8 +220,9 @@ rule meta_mdbg_assembly :
     conda : 
        	"../config/env/metamdbg.yaml"
     resources :
-        cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
-        mem_mb_per_cpu=10000
+        cpus_per_task = 8,
+        mem_mb=32*1000, # 32 giga = 32*100 mega
+        runtime=24*60,
     shell :
         "./{input.script} {input.run} ../data/assemblies/metamdbg_{wildcards.run}/" 
 
@@ -271,8 +273,11 @@ rule assembly_quality_check :
     input : 
         script = "scripts/assembly_quality_checker.sh", #script
         assembly = "../data/assemblies/{assembly}/assembly.fasta", #data
+    conda : 
+       	"../config/env/assembly_quality_check.yaml"
     resources :
-        mem_mb_per_cpu=10000
+        mem_mb=10*1000, # 10 giga = 10*100 mega
+        runtime=24*60,
     output :
         directory("../data/assemblies_quality_check/{assembly}/summary/TSV/")
     shell : 
@@ -289,6 +294,8 @@ rule assembly_references_based_stats :
         quality_check = "../data/assemblies_quality_check/{assembly}_{run}/summary/TSV", 
         coverage_information = "../data/merged_reference_genome/coverage_information_{run}.tsv",
         script = "scripts/references_based_stats.py"
+    conda : 
+       	"../config/env/reference_based_stats.yaml"
     output : 
         "../data/stats_reports/{assembly}_{run}/{assembly}_{run}_references_based_report.txt"
     shell : 

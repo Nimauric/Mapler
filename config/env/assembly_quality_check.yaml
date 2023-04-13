@@ -1,0 +1,6 @@
+channels :
+  - bioconda
+  - conda-forge
+
+dependencies :
+ - metaquast=5.2
