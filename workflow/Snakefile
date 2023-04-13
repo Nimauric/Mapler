@@ -95,7 +95,7 @@ rule reads_quality_check :
         "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
 
 
-########## RULE REFERENCES_MERGER ##########
+########## RULE REFERENCES_MERGER ########## V
 """
 This rule merges multiple reference genome into one fasta file, used for references-based metrics
 """
@@ -111,7 +111,7 @@ rule references_merger :
         "{input.script} {output} {reference_genomes}"
 
 
-########## RULE COVERAGE_CALCULATOR ##########
+########## RULE COVERAGE_CALCULATOR ########## V
 """
 This rule uses minimap and samtools to estimate the debth of coverage of each species in the reads of a run,
 References-based
@@ -124,6 +124,9 @@ rule coverage_calculator :
         run = "../data/input_reads/{run}.fastq", # data
     output :
         "../data/merged_reference_genome/coverage_information_{run}.tsv"
+
+    conda :
+        "../config/env/coverage_calculator.yaml",
     resources :
         mem_mb=10000
     shell :
