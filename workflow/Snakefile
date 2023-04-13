@@ -89,7 +89,7 @@ rule reads_quality_check :
         "../data/reads_quality_check/{run}/{run}_fastqc.zip"
     conda :
         "../config/env/reads_quality_check.yaml",
-    ressources : 
+    resources : 
         mem_mb=5000,
     shell : 
         "{input.script} {input.run} ../data/reads_quality_check/{wildcards.run}"
