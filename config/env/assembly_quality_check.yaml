@@ -3,4 +3,4 @@ channels :
   - conda-forge
 
 dependencies :
- - metaquast=5.2
+ - quast=5.2
