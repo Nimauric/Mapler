@@ -3,4 +3,4 @@ channels :
   - conda-forge
 
 dependencies :
- - hifiasm_meta=0.3-r063.2
+ - hifiasm_meta

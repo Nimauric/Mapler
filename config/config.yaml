@@ -23,12 +23,12 @@ hybrid_assemblers :
 # - operams
 
 hifi_assemblers :
-#  - metaflye
+  - metaflye
 #  - hifiasm
-  - metamdbg
+#  - metamdbg
 
 metrics : 
- - references-based
-# - references-free
+# - references-based
+ - references-free
 # - binning-based
  - none
