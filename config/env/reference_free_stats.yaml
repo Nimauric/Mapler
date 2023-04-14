@@ -5,4 +5,5 @@ channels :
 dependencies :
  - xmlstarlet=1.6
  - minimap2=2.24
- - samtools=1.17
+ - pandas=1.5
+ - seaborn=0.12.2

@@ -3,6 +3,4 @@ channels :
   - conda-forge
 
 dependencies :
- - xmlstarlet=1.6
- - minimap2=2.24
- - samtools=1.17
+ - hifiasm_meta=0.3-r063.2
