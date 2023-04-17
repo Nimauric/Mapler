@@ -150,7 +150,7 @@ rule metaflye_assembly :
     resources :
         cpus_per_task = 48,
         mem_mb=320*1000, # 1 giga = 1000 mega
-        runtime=24*60,
+        runtime=3*24*60,
         
     resources :
         cpus_per_task = lambda wildcards, input : (max(2,input.run.size//700000000)),
@@ -212,7 +212,7 @@ rule hifiasm_assembly :
     resources :
         cpus_per_task = 48,
         mem_mb=160*1000, # 256 giga = 256*1000 mega
-        runtime=24*60,
+        runtime=5*24*60,
     shell :
         "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
 
@@ -230,9 +230,9 @@ rule meta_mdbg_assembly :
     conda : 
        	"../config/env/metamdbg.yaml"
     resources :
-        cpus_per_task = 8,
+        cpus_per_task = 16,
         mem_mb=32*1000, # 32 giga = 32*1000 mega
-        runtime=24*60,
+        runtime=3*24*60,
     shell :
         "./{input.script} {input.run} ../data/assemblies/metamdbg_{wildcards.run}/" 
 
