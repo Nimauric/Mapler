@@ -15,6 +15,7 @@ mkdir ../data/reads_quality_check
 mkdir ../data/assemblies
 mkdir ../data/assemblies_quality_check
 mkdir ../data/stats_reports
+mkdir ../data/alignements
 
 echo "installing conda..."
 mamba create -y -p ~/snakemake_env -c bioconda -c conda-forge snakemake=7.20 mamba
