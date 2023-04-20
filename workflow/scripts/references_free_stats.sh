@@ -35,6 +35,7 @@ case $sequencer in
         ;;
 esac
 
+mkdir "$output_folder"
 mkdir "$alignements_folder"
 echo ""
 echo "Running minimap2..."
