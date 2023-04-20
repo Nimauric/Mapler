@@ -265,6 +265,12 @@ rule flye_polishing :
         script = "scripts/flye_polisher.sh", #script
         assembly = "../data/assemblies/{assembler_to_polish}_{run}/assembly.fasta", #data
         run = "../data/input_reads/{run}.fastq", # data
+    conda :
+        "../config/env/metaflye.yaml"
+    resources :
+        cpus_per_task = 24,
+        mem_mb=320*1000, # 1 giga = 1000 mega
+        runtime=3*24*60,
     output : 
         "../data/assemblies/flye_polish_{assembler_to_polish}_{run}/assembly.fasta"
     shell : 
