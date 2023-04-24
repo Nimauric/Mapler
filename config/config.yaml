@@ -1,16 +1,15 @@
 ---
 long_reads :
-# - SRR8073714
-# - SRR8073713
-# - toy-SRR8073713
-# - subsampled-SRR8073713
+# - Bmock-PacBio
+# - Bmock-ONT-full
 
 short_reads : 
-# - SRR8073716
+# - Bmock-Illumina
 
 hifi_reads : 
-# - SRR15275210
  - SRR13128014 
+# - concombre_rhizo.fastq
+# - concombre_irg.fastq
 
 long_reads_assemblers :
 # - metaflye
@@ -25,10 +24,10 @@ hybrid_assemblers :
 hifi_assemblers :
   - metaflye
 #  - hifiasm
-#  - metamdbg
+  - metamdbg
 
 metrics : 
-# - references-based
+ - references-based
  - references-free
-# - binning-based
- - none
+ - binning-based
+# - none

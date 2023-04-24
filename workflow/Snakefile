@@ -210,7 +210,7 @@ rule hifiasm_assembly :
        	"../config/env/hifiasm.yaml"
     resources :
         cpus_per_task = 48,
-        mem_mb=160*1000, # 256 giga = 256*1000 mega
+        mem_mb=160*1000, # 160 giga
         runtime=3*24*60,
     shell :
         "./{input.script} {input.run} ../data/assemblies/hifiasm_{wildcards.run}/ hifiasm_{wildcards.run}" 
