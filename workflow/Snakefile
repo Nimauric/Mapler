@@ -420,6 +420,6 @@ rule binning_stats :
     output : 
         "../data/stats_reports/{assembly}_{run}/bins_report.txt"
     shell : 
-        "python 3 {input.script} {input.checkm_results}../data/bins/{wildcards.assembly}_{wildcards.run}/ > {output}"
+        "python3 {input.script} {input.checkm_results} ../data/bins/{wildcards.assembly}_{wildcards.run}/ > {output}"
 
 

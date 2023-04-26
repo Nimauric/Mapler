@@ -45,7 +45,7 @@ def contig_stats(path) :
 # Import data
 table = pd.read_csv(path_to_checm_tsv,
     delim_whitespace=True,
-    names=["Bin ID","Marker","lineage","genomes","markers","marker set","0","1","2","3","4","5+","Completeness","Contamination","Strain heterogeneity"],
+    names=["Bin ID","Marker","lineage","genomes","markers","sets","0","1","2","3","4","5+","Completeness","Contamination","Strain hetero"],
     skiprows=1
     )
 
@@ -71,7 +71,7 @@ for index, row in table.iterrows() : #Theorically slow, but small enough datafra
         LQ +=1
 
 
-print(table)
+print(table.to_string())
 print()
 print("Near complete MAGs (>=99 Completness, <=1 Contamination, >= 0.9 N50/Size) : " + str(NC))
 print("High quality MAGs (>=90 Completness, <=5 Contamination, >= 0.2 N50/Size) : " + str(HQ))
