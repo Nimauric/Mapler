@@ -18,10 +18,10 @@ mkdir ../data/stats_reports
 mkdir ../data/alignements
 
 echo "installing conda..."
-mamba create -y -p ~/snakemake_env -c bioconda -c conda-forge snakemake=7.20 perl-app-cpanminus mamba
+#mamba create -y -p ~/snakemake_env -c bioconda -c conda-forge snakemake=7.20 mamba
 
 echo "installing opera MS..."
-#source ../config/opera_ms_installer.sh 
+../config/opera_ms_installer.sh 
 
 echo "installing metaMDBG..."
 #../config/meta_mdbg_installer.sh

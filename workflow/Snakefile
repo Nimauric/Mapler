@@ -249,9 +249,13 @@ rule operams_assembly :
         long = "../data/input_reads/{long}.fastq"
     output :
         "../data/assemblies/operams_{short}_{long}/assembly.fasta",
+    conda :
+        "../config/env/operams.yaml"
+    threads : 16
     resources :
-        cpus_per_task = lambda wildcards, input : (max(2,(input.long.size + input.r1.size + input.r2.size)//7000000000)),
-        mem_mb_per_cpu=10000 
+        cpus_per_task=16,
+        mem_mb=160*1000, # 1 giga = 1000 mega
+        runtime=3*24*60,
     shell : 
         "./{input.script} {input.r1} {input.r2} {input.long} ../data/assemblies/operams_{wildcards.short}_{wildcards.long}/"
 
@@ -269,7 +273,7 @@ rule flye_polishing :
         "../config/env/metaflye.yaml"
     resources :
         cpus_per_task = 24,
-        mem_mb=320*1000, # 1 giga = 1000 mega
+        mem_mb=160*1000, # 1 giga = 1000 mega
         runtime=3*24*60,
     output : 
         "../data/assemblies/flye_polish_{assembler_to_polish}_{run}/assembly.fasta"
