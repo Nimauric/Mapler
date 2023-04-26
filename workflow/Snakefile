@@ -72,7 +72,7 @@ rule all :
         expand("../data/bins/{assembly}/metabat2_{assembly}.1.fa",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("binning-based" in config["metrics"]) else "pipeline.sh",
-        expand("../data/stats_reports/{assembly}/bins_report.tsv",
+        expand("../data/stats_reports/{assembly}/bins_report.txt",
             assembly = long_reads_assemblies + hifi_assemblies + hybrid_assemblies)
             if("binning-based" in config["metrics"]) else "pipeline.sh",
         
@@ -404,4 +404,22 @@ rule checkm :
         "../data/stats_reports/{assembly}_{run}/bins_report.tsv"
     shell : 
         "{input.script} fa ../data/bins/{wildcards.assembly}_{wildcards.run}/ ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ bins_report.tsv"
+
+########## RULE BINNING_STATS ##########
+"""
+This classify bins into quality categories and produces a text output
+"""   
+rule binning_stats : 
+    input :
+        script = "scripts/binning_based_stats.py",
+        checkm_results = "../data/stats_reports/{assembly}_{run}/bins_report.tsv"
+
+    resources :
+        mem_mb=1*1000, # 1 giga = 1000 mega
+        runtime=1*60,
+    output : 
+        "../data/stats_reports/{assembly}_{run}/bins_report.txt"
+    shell : 
+        "python 3 {input.script} {input.checkm_results}../data/bins/{wildcards.assembly}_{wildcards.run}/ > {output}"
+
 

@@ -1,9 +1,11 @@
 import sys
 import pandas as pd
 
-#path_to_checm_tsv = str(sys.argv[1])
-path_to_checm_tsv = "../data/stats_reports/metamdbg_SRR13128014/bins_report.tsv"
-path_to_bins = "../data/bins/metamdbg_SRR13128014/"
+path_to_checm_tsv = str(sys.argv[1])
+path_to_bins = str(sys.argv[2])
+
+#path_to_checm_tsv = "../data/stats_reports/metamdbg_SRR13128014/bins_report.tsv"
+#path_to_bins = "../data/bins/metamdbg_SRR13128014/"
 
 ############### FUNCTIONS ###############
 def contig_counter(path) :
