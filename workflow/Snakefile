@@ -146,6 +146,7 @@ rule metaflye_assembly :
         "../data/assemblies/metaflye_{run}/assembly.fasta",
     conda : 
        	"../config/env/metaflye.yaml"
+    threads : 48
     resources :
         cpus_per_task = 48,
         mem_mb=320*1000, # 1 giga = 1000 mega
@@ -188,6 +189,7 @@ rule miniasm_assembly :
         "../data/assemblies/miniasm_{run}/assembly.fasta",
     conda :
         "../config/env/miniasm.yaml"
+    threads : 48
     resources :
         cpus_per_task = 48,
         mem_mb=320*1000, # 1 giga = 1000 mega
@@ -208,6 +210,7 @@ rule hifiasm_assembly :
         "../data/assemblies/hifiasm_{run}/assembly.fasta",
     conda : 
        	"../config/env/hifiasm.yaml"
+    threads : 48
     resources :
         cpus_per_task = 48,
         mem_mb=160*1000, # 160 giga
@@ -228,6 +231,7 @@ rule meta_mdbg_assembly :
         "../data/assemblies/metamdbg_{run}/assembly.fasta",
     conda : 
        	"../config/env/metamdbg.yaml"
+    threads : 16
     resources :
         cpus_per_task = 16,
         mem_mb=32*1000, # 32 giga = 32*1000 mega
@@ -251,9 +255,9 @@ rule operams_assembly :
         "../data/assemblies/operams_{short}_{long}/assembly.fasta",
     conda :
         "../config/env/operams.yaml"
-    threads : 16
+    threads : 48
     resources :
-        cpus_per_task=16,
+        cpus_per_task=48,
         mem_mb=160*1000, # 1 giga = 1000 mega
         runtime=3*24*60,
     shell : 
@@ -271,6 +275,7 @@ rule flye_polishing :
         run = "../data/input_reads/{run}.fastq", # data
     conda :
         "../config/env/metaflye.yaml"
+    threads : 24
     resources :
         cpus_per_task = 24,
         mem_mb=160*1000, # 1 giga = 1000 mega
@@ -385,7 +390,7 @@ rule metabat2 :
         "../config/env/metabat2.yaml",
     resources :
         mem_mb=10*1000, #10 Giga
-        runtime=6*60, # 6h = 6*60mn
+        runtime=12*60, # 1h = 60mn
     output : 
         "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}.1.fa",
     shell : 
