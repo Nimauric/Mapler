@@ -396,6 +396,7 @@ rule metabat2 :
         runtime=12*60, # 1h = 60mn
     output : 
         "../data/bins/{assembly}_{run}/metabat2_{assembly}_{run}.1.fa",
+        directory("../data/bins/{assembly}_{run}/"),
     shell : 
         "{input.script} {wildcards.run} {wildcards.assembly}_{wildcards.run} {input.run} {input.assembly} ../data/bins/{wildcards.assembly}_{wildcards.run}/ metabat2_{wildcards.assembly}_{wildcards.run}"
 
