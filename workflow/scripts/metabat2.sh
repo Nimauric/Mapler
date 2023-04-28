@@ -34,11 +34,12 @@ case $sequencer in
         ;;
 esac
 
+Ncpu=$(nproc)
 
 echo ""
 echo "Running minimap2..."
 echo ""
-minimap2 -ax "$sequencer_arguments" "$assembly" "$reads" -o "$output_folder"reads_on_contigs_"$assembly_name".bam
+minimap2 -t "$Ncpu" -ax "$sequencer_arguments" "$assembly" "$reads" -o "$output_folder"reads_on_contigs_"$assembly_name".bam
 
 echo ""
 echo "Running samtools sort..."

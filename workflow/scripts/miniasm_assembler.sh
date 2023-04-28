@@ -24,9 +24,11 @@ case $sequencer in
         ;;
 esac
 
+Ncpu=$(nproc)
+
 # Align the reads against themselves with minimap2
 mkdir "$3"
-minimap2 -x "$sequencer_arguments" "$2" "$2" > "$3"minimap.paf
+minimap2 -t "$Ncpu" -x "$sequencer_arguments" "$2" "$2" > "$3"minimap.paf
 
 # Assemble the metagenome with miniasm
 miniasm -f "$2" "$3"minimap.paf > "$3"assembly.gfa
