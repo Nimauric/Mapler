@@ -20,7 +20,6 @@ if(not config["long_reads"] is None) :
 if(not config["hifi_reads"] is None) :
     runs += config["hifi_reads"]
 if(not config["short_reads"] is None) :
-    print(config["short_reads"])
     for sr in config["short_reads"] : 
         runs.append(sr + "-1")
         runs.append(sr + "-2")
@@ -353,13 +352,13 @@ rule assembly_references_free_stats :
     resources :
         cpus_per_task = 8,
         mem_mb=1*1000, # 1 giga = 1000 mega
-        runtime=6*60,
+        runtime=24*60,
     output : 
         "../data/stats_reports/{assembly}_{run}/references_free_text_report.txt",
         "../data/stats_reports/{assembly}_{run}/GC_abundance_scatterplot.png",
         "../data/stats_reports/{assembly}_{run}/contig_size_violinplot.png",
     shell : 
-        "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 5000 ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ ../data/alignements/{wildcards.assembly}_{wildcards.run}/" 
+        "{input.script} {input.assembly} {input.run} {wildcards.assembly}_{wildcards.run} {wildcards.run} 1000 ../data/stats_reports/{wildcards.assembly}_{wildcards.run}/ ../data/alignements/{wildcards.assembly}_{wildcards.run}/" 
 
 
 ########## RULE MAXBIN (depreciated) ##########
@@ -412,7 +411,7 @@ rule checkm :
         "../config/env/checkm.yaml",
     resources :
         mem_mb=10*1000, #10 Giga
-        runtime=6*60, # 6h = 6*60mn
+        runtime=24*60, # 1h = 60mn
     output : 
         "../data/stats_reports/{assembly}_{run}/bins_report.tsv"
     shell : 

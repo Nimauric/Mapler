@@ -1,35 +1,35 @@
 ---
 long_reads :
-# - Bmock-PacBio
-# - Bmock-ONT-full
-# - Bmock-ONT-subsampled
+ - Bmock-PacBio
+ - Bmock-ONT-full
+ - Bmock-ONT-subsampled
 
 short_reads : 
-# - Bmock-Illumina
+ - Bmock-Illumina
 
 hifi_reads : 
 # - SRR13128014
 # - vegan-gut
 # - concombre-rhizo
- - concombre-irg
+# - concombre-irg
 
 long_reads_assemblers :
-# - metaflye
+ - metaflye
 # - canu
-# - miniasm
+ - miniasm
 # - flye_polish_canu
-# - flye_polish_miniasm
+ - flye_polish_miniasm
 
 hybrid_assemblers : 
  - operams
 
 hifi_assemblers :
-  - metaflye
-  - hifiasm
-  - metamdbg
+#  - metaflye
+#  - hifiasm
+#  - metamdbg
 
 metrics : 
-# - references-based
- - references-free
- - binning-based
+ - references-based
+# - references-free
+# - binning-based
 # - none
