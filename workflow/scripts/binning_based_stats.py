@@ -61,11 +61,11 @@ HQ=0
 MQ=0
 LQ=0
 for index, row in table.iterrows() : #Theorically slow, but small enough dataframes it doesn't really matter
-    if(row["Completeness"] >=99 and row["Contamination"] <= 1 and row["N50/Size"] >= 0.9) :
+    if(row["Completeness"] >=99 and row["Contamination"] <= 1 and row["Contigs"] ==1) :
         NC +=1
-    elif(row["Completeness"] >=90 and row["Contamination"] <= 5 and row["N50/Size"] >= 0.2) :
+    elif(row["Completeness"] >=90 and row["Contamination"] <= 5) :
         HQ +=1
-    elif(row["Completeness"] >=50 and row["Contamination"] <= 10 and row["N50/Size"] >= 0.1) :
+    elif(row["Completeness"] >=50 and row["Contamination"] <= 10) :
         MQ +=1
     else :
         LQ +=1
@@ -73,7 +73,7 @@ for index, row in table.iterrows() : #Theorically slow, but small enough datafra
 
 print(table.to_string())
 print()
-print("Near complete MAGs (>=99 Completness, <=1 Contamination, >= 0.9 N50/Size) : " + str(NC))
-print("High quality MAGs (>=90 Completness, <=5 Contamination, >= 0.2 N50/Size) : " + str(HQ))
-print("Medium quality MAGs (>=50 Completness, <=10 Contamination, >= 0.1 N50/Size) : " + str(MQ))
+print("Near complete MAGs (>=99 Completness, <=1 Contamination, 1 Contig) : " + str(NC))
+print("High quality MAGs (>=90 Completness, <=5 Contamination) : " + str(HQ))
+print("Medium quality MAGs (>=50 Completness, <=10 Contamination) : " + str(MQ))
 print("Low quality MAGs : " + str(LQ))
