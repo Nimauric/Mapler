@@ -46,7 +46,6 @@ if(
 ) :
     hifi_assemblies = expand("{assembler}_{read}", read=config["hifi_reads"], assembler = config["hifi_assemblers"])
 
-print(long_reads_assemblies)
 rule all :
     input :
 	# Once :
