@@ -5,7 +5,7 @@ long_reads :
  - Bmock-ONT-subsampled
 
 short_reads : 
- - Bmock-Illumina
+# - Bmock-Illumina
 
 hifi_reads : 
 # - SRR13128014
@@ -14,11 +14,11 @@ hifi_reads :
 # - concombre-irg
 
 long_reads_assemblers :
- - metaflye
+# - metaflye
 # - canu
  - miniasm
 # - flye_polish_canu
- - flye_polish_miniasm
+# - flye-polish-miniasm
 
 hybrid_assemblers : 
  - operams
@@ -29,7 +29,7 @@ hifi_assemblers :
 #  - metamdbg
 
 metrics : 
- - references-based
+# - references-based
 # - references-free
-# - binning-based
+ - binning-based
 # - none
