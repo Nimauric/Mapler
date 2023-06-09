@@ -25,4 +25,6 @@ esac
 
 # Run metaflye
 mkdir "$3"
-flye --resume --meta --out-dir "$3" "$sequencer_arguments" "$2"
+Ncpu=$(nproc)
+echo flye --meta -t "$Ncpu" --out-dir "$3" "$sequencer_arguments" "$2"
+flye --meta -t "$Ncpu" --out-dir "$3" "$sequencer_arguments" "$2"

@@ -8,8 +8,7 @@ mkdir "$2"
 
 # Assembly
 Ncpu=$(nproc)
-echo hifiasm_meta -o "$2" -t"$Ncpu" "$1"
-hifiasm_meta -o "$2" -t"$Ncpu" "$1"
+hifiasm_meta -o "$2""$3" -t" $Ncpu" "$1"
 
 # "$2" and "$3" in the awk command have nothing to do with the parameters, they're special characters for awk
 awk '/^S/{print ">"$2"\n"$3}' "$2""$3".p_utg.gfa > "$2"assembly.fasta

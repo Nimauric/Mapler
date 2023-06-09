@@ -35,10 +35,14 @@ case $sequencer in
         ;;
 esac
 
+mkdir "$output_folder"
 mkdir "$alignements_folder"
+
+Ncpu=$(nproc)
+
 echo ""
 echo "Running minimap2..."
-minimap2 -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.paf
+minimap2 -t "$Ncpu" -cx "$sequencer_arguments" "$assembly" "$run" -o "$alignements_folder"reads_on_contigs.paf
 
 echo ""
 echo "Calculating metrics : "

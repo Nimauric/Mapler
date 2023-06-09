@@ -60,7 +60,7 @@ unordered_map<string, int> import_reads(string &path_to_reads){
     string read_name;
     int read_size;
     while (getline(file, line)){
-        if(line[0] == '+' && line.substr(1) == read_name){ // '+' and '@' can be found in the quality score, I use both the @read_name and +read_name to ensure I don't pick out false positives
+        if(line[0] == '+' && (line.substr(1) == read_name) || line == "+"){ // '+' and '@' can be found in the quality score, I use both the @read_name and +read_name to ensure I don't pick out false positives
             reads[read_name] = read_size;
         } else if (line[0] == '@'){
             read_name = line.substr(1);
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
     cout << "reading reads..." << endl;
     // "read_name", "read_length"
     unordered_map<string, int> reads = import_reads(path_to_reads);
-    
+
     // Contigs
     cout << "reading contigs..." << endl;
     // "contig_name", "contig_length", "GC_content", " mean_depth"
