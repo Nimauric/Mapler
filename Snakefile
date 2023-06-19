@@ -3,7 +3,7 @@
 runs = config["long-reads-hi-fi"]
 
 # Read runs-assemblers pair
-hifi_assemblies = expand("{assembler}_{run}", 
+hifi_assemblies = expand("{run}/{assembler}", 
     run = config["long-reads-hi-fi"], 
     assembler = config["long-reads-hi-fi-assemblers"])
 
@@ -14,11 +14,21 @@ rule all :
         # For each run
 
         # For each run-assembler pair
-        expand("../data/assemblies/{assembly}/assembly.fasta", assembly = assemblies) 
+        expand("outputs/{assembly}/assembly.fasta", assembly = assemblies) 
 
-        expand("../data/stats_reports/{assembly}/reference_based_report.txt", assembly = assemblies) 
+        expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies) 
             if("reference-based" in config["metrics"]) else None,
 
+# Initialise folder
+rule directory_creation : 
+    output : 
+        "outputs/{run}/",
+        "outputs/{run}/{assembler}/",
+    shell :
+        """
+        mkdir outputs/{run}/
+        mkdir outputs/{run}/{assembler}/
+        """
 
 # Assembly
 
