@@ -3,13 +3,13 @@
 
 ##### Reads #####
 long-reads-hi-fi : 
- - name : SRR13128014
-   path : ../data/test...
+ - name : test_hifi
+   path : ../Hi-Fi/data/input_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
 
 ##### Assemblers #####
 long-reads-hi-fi-assemblers :
-#  - MetaMDBG
-  - Metaflye
+#  - metaMDBG
+  - metaflye
 
 ##### Evaluation #####
 reference-genomes : ../data/test...
