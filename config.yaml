@@ -1,0 +1,19 @@
+---
+# No "_" in the names
+
+##### Reads #####
+long-reads-hi-fi : 
+ - SRR13128014 : ../data/test...
+
+##### Assemblers #####
+long-reads-hi-fi-assemblers :
+  - MetaMDBG
+
+##### Evaluation #####
+reference-genomes : ../data/test...
+abundance-information : ../data/test...
+
+metrics : 
+ -reference-based
+
+
