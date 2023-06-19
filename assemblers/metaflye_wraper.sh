@@ -1,19 +1,17 @@
 #!/bin/sh
 # This script assemble a set of reads into a metagenome, using metaflye
-# "$1" : read type
-# "$2" : path/to/the/run.fastq
-# "$3" : path/to/the/output/folder
+read_type="$1"
+run="$2"
+output_directory="$3"
 
-# 
-sequencer=$(./scripts/sequencer_fetcher.sh "$1")
-case $sequencer in
-    "PacBio RS II")
+case $read_type in
+    "PacBio-CLR")
         sequencer_arguments="--pacbio-raw"
         ;;
-    "MinION")
+    "ONT")
         sequencer_arguments="--nano-raw"
         ;;
-    "pacbio-hifi")
+    "PacBio-Hi-Fi")
         sequencer_arguments="--pacbio-hifi"
         ;;
     *)
@@ -23,9 +21,13 @@ case $sequencer in
         ;;
 esac
 
+Ncpu=$(nproc)
 
 # Run metaflye
-mkdir "$3"
-Ncpu=$(nproc)
-echo flye --meta -t "$Ncpu" --out-dir "$3" "$sequencer_arguments" "$2"
+mkdir "$output_directory"
+mkdir "$output_directory"/tmp
+
+echo flye --meta -t "$Ncpu" --out-dir "$output_directory"/tmp/ "$sequencer_arguments" "$run"
+mv "$output_directory"/tmp/assembly.fasta "$output_directory"
+rm  "$output_directory"/tmp/*
 

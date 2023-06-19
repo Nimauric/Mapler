@@ -3,7 +3,8 @@
 
 ##### Reads #####
 long-reads-hi-fi : 
- - SRR13128014 : ../data/test...
+ - name : SRR13128014
+   path : ../data/test...
 
 ##### Assemblers #####
 long-reads-hi-fi-assemblers :
