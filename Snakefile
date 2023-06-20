@@ -1,5 +1,6 @@
 ########## INCLUSIONS ##########
 include : "rules/assembly.smk"
+include : "rules/reference_based_evaluation.smk"
 
 
 # Read runs-assemblers pair
@@ -26,4 +27,4 @@ rule all :
         #    if("reference-based" in config["metrics"]) else None,
 
 
-        #"test.txt",
+        "test.txt",

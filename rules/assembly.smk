@@ -19,6 +19,7 @@ def get_run_type(wildcards) :
 ########## HI-FI ASSEMBLERS ##########
 
 rule metaMDBG_installation : 
+    conda : "../env/metaMDBG.yaml"
     resources : 
         mem_mb=10*1000, # 1 giga = 1000 mega
         runtime=6*60,
