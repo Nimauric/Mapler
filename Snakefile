@@ -1,4 +1,7 @@
-########## RULE ALL ##########
+########## INCLUSIONS ##########
+include : "rules/assembly.smk"
+
+
 # Read runs
 runs = config["long-reads-hi-fi"]
 runs_names = [r["name"] for r in runs]
@@ -10,6 +13,7 @@ hifi_assemblies = expand("{run}/{assembler}",
 
 assemblies = hifi_assemblies
 
+########## RULE ALL ##########
 rule all :
     input :
         # For each run-assembler pair

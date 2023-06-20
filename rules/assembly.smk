@@ -1,8 +1,15 @@
+
+# Read runs
+hi-fi_runs = config["long-reads-hi-fi"]
+hi-fi_runs_names = [r["name"] for r in hi-fi_runs]
+hi-fi_runs_paths = [r["path"] for r in hi-fi_runs]
+
+
 rule metaflye_assembly : 
     params : runs = config["long-reads-hi-fi"]
     input :
         script = "assemblers/metaflye_wraper.sh",
-        run_path = expand("{run_path}", run_path = [r["path"] for r in runs])
+        run_path = expand("{run_path}", run_path = hi-fi_runs_paths)
     conda : "env/flye.yaml"
     threads : 48
     resources :
@@ -10,8 +17,7 @@ rule metaflye_assembly :
         mem_mb=320*1000, # 1 giga = 1000 mega
         runtime=3*24*60,
     output :   
-        directory = expand("outputs/{run_name}/metaflye/", run_name = [r["name"] for r in runs]),
-        file = expand("outputs/{run_name}/metaflye/assembly.fasta", run_name = [r["name"] for r in runs])
+        directory = expand("outputs/{run_name}/metaflye/", run_name = hi-fi_runs_names),
+        file = expand("outputs/{run_name}/metaflye/assembly.fasta", run_name = hi-fi_runs_names)
     shell :
-        "echo test"
-#./{input.script} PacBio-Hi-Fi {input.run_path} {output.directory}
+        "./{input.script} PacBio-Hi-Fi {input.run_path} {output.directory}"
