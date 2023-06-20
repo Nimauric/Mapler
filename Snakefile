@@ -2,16 +2,17 @@
 include : "rules/assembly.smk"
 
 
-# Read runs
-runs = config["long-reads-hi-fi"]
-runs_names = [r["name"] for r in runs]
-
 # Read runs-assemblers pair
 hifi_assemblies = expand("{run}/{assembler}", 
-    run = [r["name"] for r in config["long-reads-hi-fi"]], 
-    assembler = config["long-reads-hi-fi-assemblers"])
+    run = [r["name"] for r in config["pacbio-hifi"]], 
+    assembler = config["pacbio-hifi-assemblers"])
 
-assemblies = hifi_assemblies
+lofi_assemblies = expand("{run}/{assembler}", 
+    run = [r["name"] for r in config["pacbio-clr"]], 
+    assembler = config["pacbio-clr-assemblers"])
+
+
+assemblies = hifi_assemblies + lofi_assemblies
 
 ########## RULE ALL ##########
 rule all :
@@ -24,15 +25,3 @@ rule all :
 
 
         #"test.txt",
-
-
-# Assembly
-import rules/assembly.smk
-
-# Metaquast
-
-# Abundance calculator
-
-# Reference-based report writer
-
-

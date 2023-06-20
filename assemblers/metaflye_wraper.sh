@@ -7,13 +7,13 @@ run="$2"
 output_directory="$3"
 
 case $read_type in
-    "PacBio-CLR")
+    "pacbio-clr")
         sequencer_arguments="--pacbio-raw"
         ;;
-    "ONT")
+    "ont")
         sequencer_arguments="--nano-raw"
         ;;
-    "PacBio-Hi-Fi")
+    "pacbio-hifi")
         sequencer_arguments="--pacbio-hifi"
         ;;
     *)

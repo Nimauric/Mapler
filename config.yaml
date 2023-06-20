@@ -2,13 +2,21 @@
 # No "_" in the names
 
 ##### Reads #####
-long-reads-hi-fi : 
- - name : test_hifi
+pacbio-hifi : 
+ - name : test-hifi
    path : ../Hi-Fi/data/input_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
 
+pacbio-clr : 
+ - name : test-lofi
+   path : ../Hi-Fi/data/input_reads/SRR8073713.fastq
+
+
 ##### Assemblers #####
-long-reads-hi-fi-assemblers :
+pacbio-hifi-assemblers :
 #  - metaMDBG
+  - metaflye
+
+pacbio-clr-assemblers :
   - metaflye
 
 ##### Evaluation #####
