@@ -1,5 +1,6 @@
 
 mkdir outputs/
+mkdir dependencies/
 mkdir env/
 
 . /local/env/envconda.sh

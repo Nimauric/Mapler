@@ -11,6 +11,8 @@ lofi_assemblies = expand("{run}/{assembler}",
     run = [r["name"] for r in config["pacbio-clr"]], 
     assembler = config["pacbio-clr-assemblers"])
 
+if(config["pacbio-hifi-assemblers"] == None) : hifi_assemblies = []
+if(config["pacbio-clr-assemblers"] == None) : lofi_assemblies = []
 
 assemblies = hifi_assemblies + lofi_assemblies
 
