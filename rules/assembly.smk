@@ -19,11 +19,11 @@ def get_run_type(wildcards) :
 ########## HI-FI ASSEMBLERS ##########
 
 rule metaMDBG_installation : 
-    ressources : 
+    resources : 
         mem_mb=10*1000, # 1 giga = 1000 mega
         runtime=6*60,
-    output : directory("dependencies/metaMDBG")
-    shell : "./initialisation/metaMDBG_installer.sh"
+    output : directory("dependencies/metaMDBG/")
+    shell : "assemblers/metaMDBG_installer.sh"
 
 #conda : "env/metaMDBG.yaml"
 rule metaMDBG_assembly :
@@ -34,7 +34,7 @@ rule metaMDBG_assembly :
         runtime=3*24*60,
     input : 
         script = "assemblers/metaMDBG_wraper.sh",
-        dependencies : "dependencies/metaMDBG",
+        dependencies = "dependencies/metaMDBG/",
         run_path = get_run_path,
     output : "outputs/{run_name}/metaMDBG/assembly.fasta",
     shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/metaMDBG"
@@ -42,7 +42,7 @@ rule metaMDBG_assembly :
 rule metaflye_assembly :
     params : 
         run_type = get_run_type
-    conda : "env/flye.yaml"
+    conda : "../env/flye.yaml"
     threads : 48
     resources :
         cpus_per_task = 48,
@@ -55,7 +55,7 @@ rule metaflye_assembly :
     shell : "./{input.script} {params.run_type} {input.run_path} outputs/{wildcards.run_name}/metaflye"
 
 rule hifiasm_meta_assembly :
-    conda : "env/hifiasm_meta.yaml"
+    conda : "../env/hifiasm_meta.yaml"
     threads : 48
     resources :
         cpus_per_task = 48,
@@ -64,5 +64,5 @@ rule hifiasm_meta_assembly :
     input : 
         script = "assemblers/hifiasm_meta_wraper.sh",
         run_path = get_run_path,
-    output : "outputs/{run_name}/hifiasm_meta/assembly.fasta",
+    output : "outputs/{run_name}/hifiasm-meta/assembly.fasta",
     shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/metaflye"
