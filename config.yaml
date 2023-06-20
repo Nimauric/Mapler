@@ -21,7 +21,8 @@ pacbio-clr-assemblers :
   - metaflye
 
 ##### Evaluation #####
-reference-genomes : ../data/test...
+reference-genomes : ../Hi-Fi/data/input_reference_genomes/
+
 abundance-information : ../data/test...
 
 metrics : 

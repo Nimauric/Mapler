@@ -23,6 +23,8 @@ rule all :
         # For each run-assembler pair
         expand("outputs/{assembly}/assembly.fasta", assembly = assemblies),
         
+        expand("outputs/{assembly}/metaquast_results/summary/TSV/", assembly = assemblies), # temporary for tests
+
         #expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies) 
         #    if("reference-based" in config["metrics"]) else None,
 
