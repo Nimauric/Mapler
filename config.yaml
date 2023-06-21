@@ -23,7 +23,7 @@ pacbio-clr-assemblers :
 ##### Evaluation #####
 reference-genomes : ../Hi-Fi/data/input_reference_genomes/
 
-abundance-information : ../data/test...
+abundance-information : ../abundance_info.csv
 
 metrics : 
  -reference-based
