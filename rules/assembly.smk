@@ -66,4 +66,4 @@ rule hifiasm_meta_assembly :
         script = "assemblers/hifiasm_meta_wraper.sh",
         run_path = get_run_path,
     output : "outputs/{run_name}/hifiasm-meta/assembly.fasta",
-    shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/hifiasm_meta"
+    shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/hifiasm-meta"

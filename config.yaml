@@ -15,10 +15,10 @@ pacbio-clr :
 pacbio-hifi-assemblers :
 #  - metaMDBG
 #  - metaflye
-#  - hifiasm-meta
+  - hifiasm-meta
 
 pacbio-clr-assemblers :
-  - metaflye
+#  - metaflye
 
 ##### Evaluation #####
 reference-genomes : ../Hi-Fi/data/input_reference_genomes/
@@ -26,6 +26,6 @@ reference-genomes : ../Hi-Fi/data/input_reference_genomes/
 abundance-information : ../abundance_info.csv
 
 metrics : 
- -reference-based
+# -reference-based
 
 
