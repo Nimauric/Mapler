@@ -22,9 +22,9 @@ rule metaquast :
 
 rule assembly_references_based_stats :
     input : 
-        script = "reference_based_evaluation/report_writer.py"
-        metaquast_output = "../data/assemblies_quality_check/{assembly}_{run}/summary/TSV", 
-        coverage_information = config["abundance-information"]n
+        script = "reference_based_evaluation/report_writer.py",
+        metaquast_output = "outputs/{run_name}/{assember_name}/metaquast_results/summary/TSV/", 
+        coverage_information = config["abundance-information"],
     conda : "../env/python.yaml"
     output : "outputs/{run_name}/{assember_name}/reference_based_report.txt"
     shell : "python3 {input.script} {input.metaquast_output} {input.coverage_information}" 

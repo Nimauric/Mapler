@@ -13,9 +13,9 @@ pacbio-clr :
 
 ##### Assemblers #####
 pacbio-hifi-assemblers :
-  - metaMDBG
-  - metaflye
-  - hifiasm-meta
+#  - metaMDBG
+#  - metaflye
+#  - hifiasm-meta
 
 pacbio-clr-assemblers :
   - metaflye
