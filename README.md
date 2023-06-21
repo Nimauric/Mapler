@@ -1,11 +1,14 @@
 # metagenomic_benchmark
 ## Description
-The aim of this repository is to compare long-reads metagenomic assemblers.
+The aim of this repository is to compare long-reads metagenomic assemblers, focusing on hi-fi assemblers, but with support for lo-fi long reads assemblers and hybrid assemblers.
 
 ## Installation
-Clone the repository in a cluster with slurm and conda support, then run initialise_environnement.sh
+Clone the repository in a cluster with slurm and conda support, then source initialise_environnement.sh
 
 ## Usage
+Edit the config.yaml file to indicate which assemblers and metrics to use by commenting/uncommenting the relevant lines, and to indicate the name (used for producing output folders) and path to runs of reads.
+
+
 Place your runs.fastq in the data/input_reads/ folder. If your file names aren't a SRA reference, write, for each run, a new file in ../data/runs_metadata called <name_of_the_run(without the .fastq extension)>.txt, and containing the name of the sequencing technology used : either "PacBio RS II", "MinION", or "pacbio-hifi".
 
 If you want references based metrics, place your reference_genomes.fasta in the data/input_reference_genomes/ folder.

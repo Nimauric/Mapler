@@ -4,18 +4,23 @@ include : "rules/reference_based_evaluation.smk"
 
 
 # Read runs-assemblers pair
-hifi_assemblies = expand("{run}/{assembler}",
+pacbio_hifi_assemblies = expand("{run}/{assembler}",
     run = [r["name"] for r in config["pacbio-hifi"]],
     assembler = config["pacbio-hifi-assemblers"])
+if(config["pacbio-hifi-assemblers"] == None) : pacbio_hifi_assemblies = []
 
-lofi_assemblies = expand("{run}/{assembler}",
+
+pacbio_clr_assemblies = expand("{run}/{assembler}",
     run = [r["name"] for r in config["pacbio-clr"]],
     assembler = config["pacbio-clr-assemblers"])
+if(config["pacbio-clr-assemblers"] == None) : pacbio_clr_assemblies = []
 
-if(config["pacbio-hifi-assemblers"] == None) : hifi_assemblies = []
-if(config["pacbio-clr-assemblers"] == None) : lofi_assemblies = []
+ont_assemblies = expand("{run}/{assembler}",
+    run = [r["name"] for r in config["ont"]],
+    assembler = config["ont-assemblers"])
+if(config["ont-assemblers"] == None) : ont_assemblies = []
 
-assemblies = hifi_assemblies + lofi_assemblies
+assemblies = pacbio_hifi_assemblies + pacbio_clr_assemblies + ont_assemblies
 
 ########## RULE ALL ##########
 rule all :
