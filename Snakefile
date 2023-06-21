@@ -26,7 +26,7 @@ rule all :
         expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies)
             if(config["metrics"] and ("reference-based" in config["metrics"])) else "Snakefile",
 
-        "dependencies/metaMDBG/", # Temporary for tests
+        #"dependencies/metaMDBG/", # Temporary for tests
         #"test.txt",
 
 
