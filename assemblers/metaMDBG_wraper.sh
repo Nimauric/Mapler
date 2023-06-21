@@ -12,7 +12,7 @@ echo ./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory"/tmp/ $ru
 
 gzip -d "$output_folder"/tmp/contigs.fasta.gz
 mv "$output_directory"/tmp/contigs.fasta "$output_directory"
-rm -rf "$output_directory"/tmp/
+#rm -rf "$output_directory"/tmp/
 
 
 

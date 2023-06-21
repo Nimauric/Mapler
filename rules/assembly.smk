@@ -60,10 +60,10 @@ rule hifiasm_meta_assembly :
     threads : 48
     resources :
         cpus_per_task = 48,
-        mem_mb=160*1000, # 1 giga = 1000 mega
+        mem_mb=80*1000, # 1 giga = 1000 mega
         runtime=3*24*60,
     input : 
         script = "assemblers/hifiasm_meta_wraper.sh",
         run_path = get_run_path,
     output : "outputs/{run_name}/hifiasm-meta/assembly.fasta",
-    shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/metaflye"
+    shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/hifiasm_meta"
