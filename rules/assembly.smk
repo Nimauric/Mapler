@@ -1,7 +1,7 @@
 
 ########## HELPERS ##########
 def get_run_info(wildcards) :
-    for run_type in ["pacbio-hifi", "pacbio-clr"] :
+    for run_type in config :
         for a in config[run_type] :
             if a["name"] == wildcards.run_name :
                 return a["path"], run_type

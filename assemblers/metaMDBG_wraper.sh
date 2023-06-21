@@ -7,7 +7,7 @@ Ncpu=$(nproc)
 
 mkdir "$2"
 echo ./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory"/tmp/ $run -t $Ncpu
-
+./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory"/tmp/ $run -t $Ncpu
 
 
 gzip -d "$output_folder"/tmp/contigs.fasta.gz
