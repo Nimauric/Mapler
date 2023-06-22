@@ -1,7 +1,6 @@
 ########## INCLUSIONS ##########
 include : "rules/assembly.smk"
-include : "rules/reference_based_evaluation.smk"
-include : "rules/reference_free_evaluation.smk"
+include : "rules/assembly_evaluation.smk"
 
 # Read runs-assemblers pair
 pacbio_hifi_assemblies = expand("{run}/{assembler}",
