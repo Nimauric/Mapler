@@ -37,3 +37,10 @@ rule all :
         #"test.txt",
 
 
+rule compile_cpp : 
+    input : 
+        "{file}.cpp"
+    output : 
+        "{file}.out"
+    shell : 
+        "g++ {input} -std=c++11 -o {output}"
