@@ -31,6 +31,6 @@ flye --meta -t "$Ncpu" --out-dir "$output_directory"/tmp/ "$sequencer_arguments"
 
 
 mv "$output_directory"/tmp/assembly.fasta "$output_directory"
-rm -rf "$output_directory"/tmp/
+#rm -rf "$output_directory"/tmp/
 
 

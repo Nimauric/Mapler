@@ -23,15 +23,15 @@ illumina :
 ##### Assemblers #####
 pacbio-hifi-assemblers :
   - metaMDBG
-#  - metaflye
-#  - hifiasm-meta
+  - metaflye
+  - hifiasm-meta
 
 pacbio-clr-assemblers :
-#  - metaflye
+  - metaflye
 #  - miniasm
 
 ont-assemblers :
-#  - metaflye
+  - metaflye
 #  - miniasm
 
 pacbio-clr-illumina-hybrid-assemblers :
