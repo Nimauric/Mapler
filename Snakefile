@@ -1,7 +1,7 @@
 ########## INCLUSIONS ##########
 include : "rules/assembly.smk"
 include : "rules/reference_based_evaluation.smk"
-
+include : "rules/reference_free_evaluation.smk"
 
 # Read runs-assemblers pair
 pacbio_hifi_assemblies = expand("{run}/{assembler}",
@@ -31,7 +31,9 @@ rule all :
         expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies)
             if(config["metrics"] and ("reference-based" in config["metrics"])) else "Snakefile",
 
-        #"dependencies/metaMDBG/", # Temporary for tests
+        expand("outputs/{assembly}/reference_free_report.txt", assembly = assemblies)
+            if(config["metrics"] and ("reference-free" in config["metrics"])) else "Snakefile",
+
         #"test.txt",
 
 

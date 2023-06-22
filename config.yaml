@@ -22,23 +22,23 @@ illumina :
 
 ##### Assemblers #####
 pacbio-hifi-assemblers :
-  - metaMDBG
-#  - metaflye
-#  - hifiasm-meta
+ - metaMDBG
+# - metaflye
+# - hifiasm-meta
 
 pacbio-clr-assemblers :
-#  - metaflye
-#  - miniasm
+ - metaflye
+# - miniasm
 
 ont-assemblers :
-#  - metaflye
-#  - miniasm
+ - metaflye
+# - miniasm
 
 pacbio-clr-illumina-hybrid-assemblers :
-#  - operaMS
+# - operaMS
 
 ont-illumina-hybrid-assemblers :
-#  - operaMS
+# - operaMS
 
 ##### Evaluation #####
 reference-genomes : ../Hi-Fi/data/input_reference_genomes/
@@ -47,7 +47,7 @@ abundance-information : ../abundance_info.csv
 
 metrics : 
 # -reference-based
-# -reference-free
+ -reference-free
 # -bin-counting
 # -reference-based-binning-evaluation
 

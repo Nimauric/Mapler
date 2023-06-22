@@ -5,14 +5,13 @@ output_directory="$2"
 Ncpu=$(nproc)
 
 
-mkdir "$2"
-echo ./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory"/tmp/ $run -t $Ncpu
-./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory"/tmp/ $run -t $Ncpu
+mkdir -p "$output_directory"
+echo ./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory" "$run" -t $Ncpu
+./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory" "$run" -t $Ncpu
 
-
-gzip -d "$output_folder"/tmp/contigs.fasta.gz
-mv "$output_directory"/tmp/contigs.fasta "$output_directory"
-#rm -rf "$output_directory"/tmp/
+gzip -d "$output_directory"/tmp/contigs_polished.fasta.gz
+mv "$output_directory"/tmp/contigs_polished.fasta "$output_directory"/assembly.fasta
+#rm -rf "$output_directory"/tmp
 
 
 
