@@ -33,6 +33,8 @@ rule reads_on_contigs_mapping :
 
 
 rule assembly_references_free_stats :
+    params : 
+        threshold = "5000"
     input : 
         script = "reference_free_evaluation/report_writer.out",
         assembly = "outputs/{run_name}/{assember_name}/assembly.fasta",
@@ -44,5 +46,5 @@ rule assembly_references_free_stats :
         txt_report = "outputs/{run_name}/{assember_name}/reference_free_report.txt"
 
     shell : 
-        "./{input.script} {input.reads_on_contigs_mapping} {input.run} {input.assembly} {output.contigs_sequence_based_stats} {output.contigs_alignement_based_stats} {output.txt_report}"
+        "./{input.script} {input.reads_on_contigs_mapping} {input.run} {input.assembly} {output.contigs_sequence_based_stats} {output.contigs_alignement_based_stats} {output.txt_report} {params.threshold}"
     
