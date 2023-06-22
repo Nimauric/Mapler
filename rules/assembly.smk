@@ -18,8 +18,8 @@ def get_run_type(wildcards) :
 
 ########## HI-FI ASSEMBLERS ##########
 
-#conda : "../env/metaMDBG.yaml"
 rule metaMDBG_assembly :
+    conda : "../env/metaMDBG.yaml" 
     threads : 16
     resources :
         cpus_per_task = 16,

@@ -22,7 +22,7 @@ illumina :
 
 ##### Assemblers #####
 pacbio-hifi-assemblers :
- - metaMDBG
+# - metaMDBG
 # - metaflye
 # - hifiasm-meta
 
