@@ -12,7 +12,9 @@ def get_run_path(wildcards) :
 def get_run_type(wildcards) :
     _ , run_type = get_run_info(wildcards)
     return run_type
-        
+
+
+##### Binning #####     
 rule metabat2 : 
     params : 
         run_type = get_run_type,
@@ -29,6 +31,7 @@ rule metabat2 :
     output : directory("outputs/{run_name}/{assember_name}/bins"),
     shell : "{input.script} {params.run_type} {input.run} {input.assembly} {output}"
 
+##### Quality-based #####
 rule checkm : 
     params : 
         output_directory = "outputs/{run_name}/{assember_name}/checkm",
@@ -40,5 +43,20 @@ rule checkm :
     resources :
         mem_mb=10*1000, # 1 giga = 1000 mega
         runtime=24*60
-    output : "outputs/{run_name}/{assember_name}/checkm/bins_counting_report.tsv"
+    output : "outputs/{run_name}/{assember_name}/checkm/bins_quality_check.tsv"
     shell : "{input.script} {params.bins_extension} {input.bins} {params.output_directory} {output}"
+
+rule bin_quality_based_stats : 
+    params : 
+        output_directory = 
+    input :
+        script = "binning_and_evaluation/bin_quality_based_report_writer.py",
+        bins = "../data/bins/{assembly}_{run}/",
+        checkm_results = "outputs/{run_name}/{assember_name}/checkm/bins_quality_check.tsv",
+    resources :
+        mem_mb=1*1000, # 1 giga = 1000 mega
+        runtime=1*60,
+    output : "outputs/{run_name}/{assember_name}/bin_quality_based_report.txt"
+    shell : 
+        "python3 {input.script} {input.checkm_results} {input.bins} > {output}"
+

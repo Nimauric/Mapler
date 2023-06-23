@@ -48,7 +48,7 @@ abundance-information: ../abundance_info.csv
 metrics: 
 # - reference-based
 # - reference-free
- - bin-counting
+ - bin-quality-based
 # -reference-based-binning-evaluation
 
 
