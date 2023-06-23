@@ -34,7 +34,7 @@ rule all :
         expand("outputs/{assembly}/reference_free_report.txt", assembly = assemblies)
             if(config["metrics"] and ("reference-free" in config["metrics"])) else "Snakefile",
 
-        expand("outputs/{assembly}/bins", assembly = assemblies)
+        expand("outputs/{assembly}/checkm/bins_counting_report.tsv", assembly = assemblies)
             if(config["metrics"] and ("bin-counting" in config["metrics"])) else "Snakefile",
             
 
