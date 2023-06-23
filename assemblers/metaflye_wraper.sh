@@ -19,7 +19,7 @@ case $read_type in
         ;;
     *)
         echo "Unsupported or unrecognized read sequencer !"
-        echo $sequencer
+        echo "$run_type"
         exit 1
         ;;
 esac
