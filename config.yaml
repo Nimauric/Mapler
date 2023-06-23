@@ -2,19 +2,21 @@
 # No "_" in the names
 
 ##### Reads #####
-pacbio-hifi: 
+pacbio-hifi:
  - name: test-hifi
    path: ../Hi-Fi/data/input_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
 
-pacbio-clr: 
- - name: test-pacbio-clr 
-   path: ../Hi-Fi/data/input_reads/SRR8073714.fastq
+pacbio-clr:
+# - name: test-pacbio-clr
+#   path: ../Hi-Fi/data/input_reads/SRR8073714.fastq
+ - name: Bmock-PacBio
+   path: ../../metagenomic_benchmark/data/input_reads/Bmock-PacBio.fastq
 
-ont: 
+ont:
  - name: test-ont
    path: ../Hi-Fi/data/input_reads/SRR8073713.fastq
 
-illumina: 
+illumina:
  - name: test-illumina
    forward: ../Hi-Fi/data/input_reads/SRR8073716-1.fastq
    reverse: ../Hi-Fi/data/input_reads/SRR8073716-2.fastq
@@ -41,15 +43,13 @@ ont-illumina-hybrid-assemblers:
 # - operaMS
 
 ##### Evaluation #####
-reference-genomes: ../Hi-Fi/data/input_reference_genomes/
+reference-genomes: ../../metagenomic_benchmark/data/input_reference_genomes/zymo/
+#../Hi-Fi/data/input_reference_genomes/
 
 abundance-information: ../abundance_info.csv
 
-metrics: 
+metrics:
 # - reference-based
 # - reference-free
  - bin-quality-based
 # -reference-based-binning-evaluation
-
-
-
