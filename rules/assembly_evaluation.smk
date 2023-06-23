@@ -6,7 +6,7 @@ def get_files_in_folder(path):
     arguments = " ".join(files)
     return arguments
     
-    def get_run_info(wildcards) :
+def get_run_info(wildcards) :
     for run_type in config :
         for a in config[run_type] :
             if a["name"] == wildcards.run_name :

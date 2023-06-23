@@ -11,4 +11,5 @@ echo ./dependencies/metaMDBG/build/bin/metaMDBG asm "$output_directory" "$run" -
 
 gzip -d "$output_directory"/tmp/contigs_polished.fasta.gz
 mv "$output_directory"/tmp/contigs_polished.fasta "$output_directory"/assembly.fasta
-#rm -rf "$output_directory"/tmp
+rm -f "$output_directory"/contigs.fasta.gz
+rm -rf "$output_directory"/tmp
