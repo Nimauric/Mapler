@@ -46,8 +46,8 @@ reference-genomes: ../Hi-Fi/data/input_reference_genomes/
 abundance-information: ../abundance_info.csv
 
 metrics: 
- - reference-based
- - reference-free
+# - reference-based
+# - reference-free
  - bin-counting
 # -reference-based-binning-evaluation
 

@@ -31,8 +31,8 @@ rule metabat2 :
 
 rule checkm : 
     params : 
-        output_directory = "outputs/{run_name}/{assember_name}/checkm"
-        bins_extensions = "fa"
+        output_directory = "outputs/{run_name}/{assember_name}/checkm",
+        bins_extension = "fa",
     input :
         script = "binning_and_evaluation/checkm_wraper.sh",
         bins = "outputs/{run_name}/{assember_name}/bins",
