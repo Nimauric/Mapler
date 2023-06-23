@@ -34,5 +34,4 @@ rule metabat2 :
     output : 
         directory("outputs/{run_name}/{assember_name}/bins"),
     shell : 
-        "{input.script} {params.run_type}"
-        "{input.script} {wildcards.run_name} {wildcards.assembly}_{wildcards.run} {input.run} {input.assembly} ../data/bins/{wildcards.assembly}_{wildcards.run}/ metabat2_{wildcards.assembly}_{wildcards.run}"
+        "{input.script} {params.run_type} {input.run} {input.assembly} {output}"

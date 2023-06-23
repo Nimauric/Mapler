@@ -1,6 +1,7 @@
 ########## INCLUSIONS ##########
 include : "rules/assembly.smk"
 include : "rules/assembly_evaluation.smk"
+include : "rules/binning_evaluation.smk"
 
 # Read runs-assemblers pair
 pacbio_hifi_assemblies = expand("{run}/{assembler}",
@@ -25,7 +26,6 @@ assemblies = pacbio_hifi_assemblies + pacbio_clr_assemblies + ont_assemblies
 rule all :
     input :
 	# For each run-assembler pair
-
         expand("outputs/{assembly}/assembly.fasta", assembly = assemblies),
 
         expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies)
