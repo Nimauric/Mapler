@@ -50,8 +50,8 @@ table = pd.read_csv(path_to_checm_tsv,
     )
 
 # Count contigs per bin
-table["Contigs"] = table.apply(lambda row : contig_counter(path_to_bins+row["Bin ID"] + ".fa"), axis=1)
-table[["Size", "N50", "N50/Size"]] = table.apply(lambda row : contig_stats(path_to_bins+row["Bin ID"] + ".fa"), axis=1)
+table["Contigs"] = table.apply(lambda row : contig_counter(path_to_bins+"/"+row["Bin ID"] + ".fa"), axis=1)
+table[["Size", "N50", "N50/Size"]] = table.apply(lambda row : contig_stats(path_to_bins+"/"+row["Bin ID"] + ".fa"), axis=1)
 
 
 
@@ -70,10 +70,10 @@ for index, row in table.iterrows() : #Theorically slow, but small enough datafra
     else :
         LQ +=1
 
-
-print(table.to_string())
-print()
 print("Near complete MAGs (>=99 Completness, <=1 Contamination, 1 Contig) : " + str(NC))
 print("High quality MAGs (>=90 Completness, <=5 Contamination) : " + str(HQ))
 print("Medium quality MAGs (>=50 Completness, <=10 Contamination) : " + str(MQ))
 print("Low quality MAGs : " + str(LQ))
+print()
+print(table.to_string())
+

@@ -49,8 +49,9 @@ rule checkm :
 rule bin_quality_based_stats : 
     input :
         script = "binning_and_evaluation/bin_quality_based_report_writer.py",
-        bins = "../data/bins/{assembly}_{run}/",
+        bins = "outputs/{run_name}/{assember_name}/bins",
         checkm_results = "outputs/{run_name}/{assember_name}/checkm/bins_quality_check.tsv",
+    conda : "../env/python.yaml",
     resources :
         mem_mb=100*1000, # 1 giga = 1000 mega
         runtime=1*60,
