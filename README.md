@@ -1,6 +1,6 @@
 # metagenomic_benchmark
 ## Description
-The aim of this repository is to compare long-reads metagenomic assemblers.
+The aim of this repository is to compare long-reads metagenomic assemblers, focusing on hi-fi assemblers, but with support for lo-fi long reads assemblers and hybrid assemblers.
 
 ## Installation
 Clone the repository in a cluster with slurm and conda support, then run `source initialise_env.sh`
