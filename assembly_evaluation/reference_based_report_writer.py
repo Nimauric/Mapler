@@ -47,5 +47,5 @@ for category in table["category"].unique() :
     message_generator(table,category)
 
 print("Full table : ")
-print(table)
+print(table.to_string())
 
