@@ -18,7 +18,7 @@ Then run `source activate_env.sh` and, if you want to previsualise the pipeline,
  - initialise_env.sh : create the conda environement required to launch the pipeline and instal external dependencies
  - np_pipeline.sh : a wraper to previsualise the pipeline execution
  - pipeline.sh : a wraper to call the pipeline
- - 
+
 #### assemblers :
 Metagenome assemblers, and eventually polishers, or other programs that help to assemble a metagenome and are called by rules in `assembly.smk`.
 
