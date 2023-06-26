@@ -29,7 +29,7 @@ pacbio-hifi-assemblers:
 # - hifiasm-meta
 
 pacbio-clr-assemblers:
- - metaflye
+# - metaflye
 # - miniasm
 
 ont-assemblers:
@@ -37,7 +37,7 @@ ont-assemblers:
 # - miniasm
 
 pacbio-clr-illumina-hybrid-assemblers:
-# - operaMS
+ - operaMS
 
 ont-illumina-hybrid-assemblers:
 # - operaMS
@@ -52,5 +52,6 @@ abundance-information: ../abundance_info.csv
 metrics:
 # - reference-based
 # - reference-free
- - bin-quality-based
+# - bin-quality-based
 # -reference-based-binning-evaluation
+
