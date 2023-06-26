@@ -3,17 +3,13 @@
 The aim of this repository is to compare long-reads metagenomic assemblers, focusing on hi-fi assemblers, but with support for lo-fi long reads assemblers and hybrid assemblers.
 
 ## Installation
-Clone the repository in a cluster with slurm and conda support, then source initialise_environnement.sh
+Clone the repository in a cluster with slurm and conda support, then run `source initialise_env.sh`
 
 ## Usage
-Edit the config.yaml file to indicate which assemblers and metrics to use by commenting/uncommenting the relevant lines, and to indicate the name (used for producing output folders) and path to runs of reads.
+Edit the `config.yaml`file to specify the name and path of runs of reads you wish to assemble, and comment or uncomment assemblers and metrics you wish to use.
+If you use reference-based metrics, you must specify the path to a folder (reference-genomes) containing reference genomes, and a csv file (abundance-information) containing, for each reference genome, their group (I advice grouping them by abundance)
 
-
-Place your runs.fastq in the data/input_reads/ folder. If your file names aren't a SRA reference, write, for each run, a new file in ../data/runs_metadata called <name_of_the_run(without the .fastq extension)>.txt, and containing the name of the sequencing technology used : either "PacBio RS II", "MinION", or "pacbio-hifi".
-
-If you want references based metrics, place your reference_genomes.fasta in the data/input_reference_genomes/ folder.
-
-Edit the config/config.yaml file to both indicate which assemblers and metrics you wish to use, and to indicate to the pipeline which runs to process. Then, run (or schedule with sbatch) pipeline.sh
+Then run `source activate_env.sh` and, if you want to previsualise the pipeline, `./np_pipeline.sh`, then `sbatch pipeline.sh`
 ## Pipeline 
 
 ![dag](dag.pdf)
