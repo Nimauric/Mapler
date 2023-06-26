@@ -9,7 +9,7 @@ Clone the repository in a cluster with slurm and conda support, then run `source
 Edit the `config.yaml`file to specify the name and path of runs of reads you wish to assemble, and comment or uncomment assemblers and metrics you wish to use.
 If you use reference-based metrics, you must specify the path to a folder (reference-genomes) containing reference genomes, and a csv file (abundance-information) containing, for each reference genome, their group (I advice grouping them by abundance)
 
-Then run `source activate_env.sh` and, if you want to previsualise the pipeline, `./np_pipeline.sh\, then `sbatch pipeline.sh`
+Then run `source activate_env.sh` and, if you want to previsualise the pipeline, `./np_pipeline.sh`, then `sbatch pipeline.sh`
 ## Pipeline 
 
 ![dag](dag.pdf)
