@@ -20,7 +20,17 @@ ont_assemblies = expand("{run}/{assembler}",
     assembler = config["ont-assemblers"])
 if(config["ont-assemblers"] == None) : ont_assemblies = []
 
-assemblies = pacbio_hifi_assemblies + pacbio_clr_assemblies + ont_assemblies
+
+pacbio_clr_illumina_hybrid_assemblies = expand("{pacbio}/hybrid_{illumina}/{assembler}",
+    pacbio = [r["name"] for r in config["pacbio-clr"]],
+    illumina =  [r["name"] for r in config["illumina"]],
+    assembler = config["pacbio-clr-illumina-hybrid-assemblers"])
+if(config["pacbio-clr-illumina-hybrid-assemblers"] == None) : pacbio_clr_illumina_hybrid_assemblies = []
+
+assemblies = ( pacbio_hifi_assemblies 
+             + pacbio_clr_assemblies
+             + ont_assemblies
+             + pacbio_clr_illumina_hybrid_assemblies )
 
 ########## RULE ALL ##########
 rule all :
@@ -49,3 +59,4 @@ rule compile_cpp :
         "{file}.out"
     shell : 
         "g++ {input} -std=c++11 -o {output}"
+
