@@ -7,10 +7,10 @@ pacbio-hifi:
    path: ../Hi-Fi/data/input_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
 
 pacbio-clr:
-# - name: test-pacbio-clr
-#   path: ../Hi-Fi/data/input_reads/SRR8073714.fastq
- - name: Bmock-PacBio
-   path: ../../metagenomic_benchmark/data/input_reads/Bmock-PacBio.fastq
+ - name: test-pacbio-clr
+   path: ../Hi-Fi/data/input_reads/SRR8073714.fastq
+# - name: Bmock-PacBio
+#   path: ../../metagenomic_benchmark/data/input_reads/Bmock-PacBio.fastq
 
 ont:
  - name: test-ont
@@ -43,7 +43,8 @@ ont-illumina-hybrid-assemblers:
 # - operaMS
 
 ##### Evaluation #####
-reference-genomes: ../../metagenomic_benchmark/data/input_reference_genomes/zymo/
+reference-genomes: ../Hi-Fi/data/input_reference_genomes/ 
+#../../metagenomic_benchmark/data/input_reference_genomes/zymo/
 #../Hi-Fi/data/input_reference_genomes/
 
 abundance-information: ../abundance_info.csv
