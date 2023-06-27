@@ -86,7 +86,7 @@ rule operams_assembly :
         r2 = get_reverse,
         long = get_run_path
     output : "outputs/{run_name}/hybrid_{second_run_name}/operaMS/assembly.fasta",
-    conda : "../env/operams.yaml"
+    #conda : "../env/operams.yaml"
     threads : 48
     resources :
         cpus_per_task=48,
