@@ -7,14 +7,13 @@ git clone https://github.com/CSB5/OPERA-MS.git
 
 # Create operaMS conda environment
 cd OPERA-MS
-conda env create -y -p operaMS_install_env -c conda-forge perl-app-cpanminus r-rlang
-conda activate operaMS_install_env
+conda create -y -p ../../env/operaMS_install_env -c conda-forge -c bioconda perl-app-cpanminus r-rlang pilon
 
 # Activate operaMS environment
-conda activate metaMDBG
+conda activate ../../env/operaMS_install_env
 
 # Compile the software
 make
 perl OPERA-MS.pl check-dependency
 
-cd ../../..
+cd ../..

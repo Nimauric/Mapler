@@ -15,17 +15,18 @@ Ncpu=$(nproc)
 echo ======================================
 generic_arguments="--no-ref-clustering --num-processors "$num_processor" "
 
-mkdir "$4"
-#perl dependencies/OPERA-MS/tools_opera_ms/install_perl_module.pl
-
-#source ../config/opera_ms_installer.sh
-
-
-#eval "$(conda shell.bash hook)" #Makes it possible to use conda activate
-#conda activate ~/operaMS_install_env
+mkdir -p "$output_directory"
 
 
 echo perl dependencies/OPERA-MS/OPERA-MS.pl \
+    --no-ref-clustering \
+    --num-processors "$num_processor" \
+    --short-read1 "$short1" \
+    --short-read2 "$short2" \
+    --long-read "$long" \
+    --out-dir "$output_directory"/tmp
+
+perl dependencies/OPERA-MS/OPERA-MS.pl \
     --no-ref-clustering \
     --num-processors "$num_processor" \
     --short-read1 "$short1" \
