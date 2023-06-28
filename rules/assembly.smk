@@ -79,7 +79,7 @@ rule hifiasm_meta_assembly :
 
 rule operams_assembly :
     params : 
-        output_folder = "outputs/{run_name}/hybrid_{run_name}/opera-ms/assembly.fasta"
+        output_folder = "outputs/{run_name}/hybrid_{second_run_name}/operaMS"
     input : 
         script = "assemblers/opera_ms_wraper.sh",
         r1 =  get_forward,
@@ -87,7 +87,7 @@ rule operams_assembly :
         long = get_run_path
     output : "outputs/{run_name}/hybrid_{second_run_name}/operaMS/assembly.fasta",
     conda : "env/operaMS_install_env/"
-    threads : 24
+    threads : 48
     resources :
         cpus_per_task=48,
         mem_mb=160*1000, # 1 giga = 1000 mega
