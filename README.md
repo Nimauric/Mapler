@@ -4,6 +4,8 @@ Metagenome Assembly and Evaluation Pipeline for Long Reads
 ## Description
 The aim of this repository is to compare long-reads metagenomic assemblers, focusing on hi-fi assemblers, but with support for lo-fi long reads assemblers and hybrid assemblers.
 
+This pipeline was used to study assembly of complex ecosystems and their evaluation, the results of which can be found here : https://inria.hal.science/hal-04142837
+
 ## Installation
 Clone the repository in a cluster with slurm and conda support, then run `source initialise_env.sh`
 
