@@ -1,4 +1,6 @@
-# metagenomic_benchmark
+# MAEPLR
+Metagenome Assembly and Evaluation Pipeline for Long Reads 
+
 ## Description
 The aim of this repository is to compare long-reads metagenomic assemblers, focusing on hi-fi assemblers, but with support for lo-fi long reads assemblers and hybrid assemblers.
 
