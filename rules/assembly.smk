@@ -77,16 +77,23 @@ rule hifiasm_meta_assembly :
 
 ########## HYBRID ASSEMBLERS ##########
 
+rule operams_installation : 
+    conda : "../env/operaMS.yaml"
+    input : "assemblers/opera_ms_installer.sh"
+    output : directory("dependencies/OPERA-MS/"),
+    shell : "./{input}"
+
 rule operams_assembly :
     params : 
         output_folder = "outputs/{run_name}/hybrid_{second_run_name}/operaMS"
     input : 
+        dependencies = "dependencies/OPERA-MS/",
         script = "assemblers/opera_ms_wraper.sh",
         r1 =  get_forward,
         r2 = get_reverse,
         long = get_run_path
     output : "outputs/{run_name}/hybrid_{second_run_name}/operaMS/assembly.fasta",
-    conda : "env/operaMS_install_env/"
+    conda : "../env/operaMS.yaml"
     threads : 48
     resources :
         cpus_per_task=48,
