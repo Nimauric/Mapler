@@ -16,6 +16,21 @@ def get_run_type(wildcards) :
     return run_type
 
 
+def get_short_run_path(wildcards) :
+    for run_type in config :
+        for a in config[run_type] :
+            if a["name"] == wildcards.second_run_name :
+                return a["forward"], a["reverse"]
+    return None, None
+
+def get_forward(wildcards) :
+    forward , _ = get_short_run_path(wildcards)
+    return forward
+
+def get_reverse(wildcards) :
+    _ , reverse = get_short_run_path(wildcards)
+    return reverse
+
 ########## HI-FI ASSEMBLERS ##########
 
 rule metaMDBG_assembly :
@@ -59,3 +74,36 @@ rule hifiasm_meta_assembly :
         run_path = get_run_path,
     output : "outputs/{run_name}/hifiasm-meta/assembly.fasta",
     shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/hifiasm-meta"
+
+########## HYBRID ASSEMBLERS ##########
+
+rule operams_installation : 
+    conda : "../env/operaMS.yaml"
+    input : "assemblers/opera_ms_installer.sh"
+    output : directory("dependencies/OPERA-MS/"),
+    shell : "./{input}"
+
+rule operams_assembly :
+    params : 
+        output_folder = "outputs/{run_name}/hybrid_{second_run_name}/operaMS"
+    input : 
+        dependencies = "dependencies/OPERA-MS/",
+        script = "assemblers/opera_ms_wraper.sh",
+        r1 =  get_forward,
+        r2 = get_reverse,
+        long = get_run_path
+    output : "outputs/{run_name}/hybrid_{second_run_name}/operaMS/assembly.fasta",
+    conda : "../env/operaMS.yaml"
+    threads : 48
+    resources :
+        cpus_per_task=48,
+        mem_mb=160*1000, # 1 giga = 1000 mega
+        runtime=3*24*60,
+    shell : 
+        "./{input.script} {input.r1} {input.r2} {input.long} {params.output_folder}"
+
+
+
+
+
+

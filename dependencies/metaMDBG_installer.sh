@@ -1,5 +1,6 @@
 #!/bin/sh
 cd dependencies
+eval "$(conda shell.bash hook)" #Makes it possible to use conda activate
 
 # Download metaMDBG repository  
 git clone https://github.com/GaetanBenoitDev/metaMDBG.git
