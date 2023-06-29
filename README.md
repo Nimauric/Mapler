@@ -1,4 +1,4 @@
-# MAEPLR
+# Mapler (MAEPLR)
 Metagenome Assembly and Evaluation Pipeline for Long Reads 
 
 ## Description
