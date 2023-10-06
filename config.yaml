@@ -3,28 +3,28 @@
 
 ##### Reads #####
 pacbio-hifi:
- - name: test-hifi
-   path: ../Hi-Fi/data/input_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
+ - name: salad-irg-pacbio-hifi
+   path: ../data/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq
 
 pacbio-clr:
- - name: Bmock-PacBio
-   path: ../metagenomic_benchmark/data/input_reads/Bmock-PacBio.fastq
+ - name: .
+   path: .
 
 ont:
- - name: test-ont
-   path: ../Hi-Fi/data/input_reads/SRR8073713.fastq
+ - name: .
+   path: .
 
 illumina:
- - name: test-illumina
-   forward: ../metagenomic_benchmark/data/input_reads/Bmock-Illumina-1.fastq
-   reverse: ../metagenomic_benchmark/data/input_reads/Bmock-Illumina-2.fastq
+ - name: salad-run1-illumina
+   forward: ../data/cleaned_run1_R1.fastq 
+   reverse: ../data/cleaned_run1_R2.fastq
 
 
 
 ##### Assemblers #####
 pacbio-hifi-assemblers:
-# - metaMDBG
-# - metaflye
+ - metaMDBG
+ - metaflye
 # - hifiasm-meta
 
 pacbio-clr-assemblers:
@@ -35,21 +35,23 @@ ont-assemblers:
 # - metaflye
 # - miniasm
 
-pacbio-clr-illumina-hybrid-assemblers:
+pacbio-hifi-illumina-hybrid-assemblers:
  - operaMS
+
+pacbio-clr-illumina-hybrid-assemblers:
+# - operaMS
 
 ont-illumina-hybrid-assemblers:
 # - operaMS
 
 ##### Evaluation #####
-reference-genomes: ../metagenomic_benchmark/data/input_reference_genomes/zymo/
-#../Hi-Fi/data/input_reference_genomes/
-
-abundance-information: ../abundance_info.csv
+reference-genomes: .
+abundance-information: .
 
 metrics:
 # - reference-based
-# - reference-free
-# - bin-quality-based
+ - reference-free
+ - bin-quality-based
 # -reference-based-binning-evaluation
+
 

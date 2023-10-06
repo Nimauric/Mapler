@@ -1,7 +1,8 @@
 def get_run_info(wildcards) :
+    run_name = wildcards.run_name.split(sep="/")[0]
     for run_type in config :
         for a in config[run_type] :
-            if a["name"] == wildcards.run_name :
+            if a["name"] == run_name :
                 return a["path"], run_type
     return None, None
 
@@ -58,3 +59,4 @@ rule bin_quality_based_stats :
     output : "outputs/{run_name}/{assember_name}/bin_quality_based_report.txt"
     shell : 
         "python3 {input.script} {input.checkm_results} {input.bins} > {output}"
+

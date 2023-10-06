@@ -21,16 +21,30 @@ ont_assemblies = expand("{run}/{assembler}",
 if(config["ont-assemblers"] == None) : ont_assemblies = []
 
 
-pacbio_clr_illumina_hybrid_assemblies = expand("{pacbio}/hybrid_{illumina}/{assembler}",
-    pacbio = [r["name"] for r in config["pacbio-clr"]],
+pacbio_hifi_illumina_hybrid_assemblies = expand("{long}/hybrid_{illumina}/{assembler}",
+    long = [r["name"] for r in config["pacbio-hifi"]],
+    illumina =  [r["name"] for r in config["illumina"]],
+    assembler = config["pacbio-hifi-illumina-hybrid-assemblers"])
+if(config["pacbio-hifi-illumina-hybrid-assemblers"] == None) : pacbio_hifi_illumina_hybrid_assemblies = []
+
+pacbio_clr_illumina_hybrid_assemblies = expand("{long}/hybrid_{illumina}/{assembler}",
+    long = [r["name"] for r in config["pacbio-clr"]],
     illumina =  [r["name"] for r in config["illumina"]],
     assembler = config["pacbio-clr-illumina-hybrid-assemblers"])
 if(config["pacbio-clr-illumina-hybrid-assemblers"] == None) : pacbio_clr_illumina_hybrid_assemblies = []
 
+ont_illumina_hybrid_assemblies = expand("{long}/hybrid_{illumina}/{assembler}",
+    long = [r["name"] for r in config["ont"]],
+    illumina =  [r["name"] for r in config["illumina"]],
+    assembler = config["ont-illumina-hybrid-assemblers"])
+if(config["ont-illumina-hybrid-assemblers"] == None) : ont_illumina_hybrid_assemblies = []
+
 assemblies = ( pacbio_hifi_assemblies 
              + pacbio_clr_assemblies
              + ont_assemblies
-             + pacbio_clr_illumina_hybrid_assemblies )
+             + pacbio_hifi_illumina_hybrid_assemblies
+             + pacbio_clr_illumina_hybrid_assemblies
+             + ont_illumina_hybrid_assemblies )
 
 ########## RULE ALL ##########
 rule all :

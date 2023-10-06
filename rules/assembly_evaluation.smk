@@ -7,9 +7,13 @@ def get_files_in_folder(path):
     return arguments
     
 def get_run_info(wildcards) :
+    run_name = wildcards.run_name.split(sep="/")[0]
+
+    print("run name : ", run_name)
     for run_type in config :
         for a in config[run_type] :
-            if a["name"] == wildcards.run_name :
+            if a["name"] == run_name :
+                print("run path :", a["path"])
                 return a["path"], run_type
     return None, None
 
@@ -80,3 +84,4 @@ rule assembly_reference_based_stats :
     conda : "../env/python.yaml"
     output : "outputs/{run_name}/{assember_name}/reference_based_report.txt"
     shell : "python3 {input.script} {input.metaquast_output} {input.coverage_information}  > {output}" 
+
