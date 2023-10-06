@@ -33,8 +33,14 @@ def get_reverse(wildcards) :
 
 ########## HI-FI ASSEMBLERS ##########
 
+rule metaMDBG_installation : 
+    conda : "../env/metaMDBG.yaml"
+    input : "assemblers/metaMDBG_installer.sh"
+    output : directory("dependencies/metaMDBG/"),
+    shell : "./{input}"
+
 rule metaMDBG_assembly :
-    conda : "/home/nmaurice/miniconda3/envs/metaMDBG"
+    conda : "../env/metaMDBG.yaml"
     threads : 16
     resources :
         cpus_per_task = 16,
