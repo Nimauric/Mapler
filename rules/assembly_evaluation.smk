@@ -47,6 +47,8 @@ rule reads_on_contigs_mapping :
 rule assembly_references_free_stats :
     params : 
         threshold = "5000"
+    resources :
+        runtime=2*24*60,
     input : 
         script = "assembly_evaluation/reference_free_report_writer.out",
         assembly = "outputs/{run_name}/{assember_name}/assembly.fasta",
@@ -84,4 +86,5 @@ rule assembly_reference_based_stats :
     conda : "../env/python.yaml"
     output : "outputs/{run_name}/{assember_name}/reference_based_report.txt"
     shell : "python3 {input.script} {input.metaquast_output} {input.coverage_information}  > {output}" 
+
 

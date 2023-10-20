@@ -25,7 +25,7 @@ illumina:
 pacbio-hifi-assemblers:
  - metaMDBG
  - metaflye
-# - hifiasm-meta
+ - hifiasm-meta
 
 pacbio-clr-assemblers:
 # - metaflye
@@ -36,7 +36,7 @@ ont-assemblers:
 # - miniasm
 
 pacbio-hifi-illumina-hybrid-assemblers:
- - operaMS
+# - operaMS
 
 pacbio-clr-illumina-hybrid-assemblers:
 # - operaMS

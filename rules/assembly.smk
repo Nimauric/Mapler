@@ -41,9 +41,9 @@ rule metaMDBG_installation :
 
 rule metaMDBG_assembly :
     conda : "../env/metaMDBG.yaml"
-    threads : 16
+    threads : 48
     resources :
-        cpus_per_task = 16,
+        cpus_per_task = 48,
         mem_mb=50*1000, # 1 giga = 1000 mega
         runtime=3*24*60,
     input : 
@@ -103,7 +103,7 @@ rule operams_assembly :
     threads : 48
     resources :
         cpus_per_task=48,
-        mem_mb=160*1000, # 1 giga = 1000 mega
+        mem_mb=320*1000, # 1 giga = 1000 mega
         runtime=3*24*60,
     shell : 
         "./{input.script} {input.r1} {input.r2} {input.long} {params.output_folder}"
