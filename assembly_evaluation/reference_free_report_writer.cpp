@@ -93,20 +93,8 @@ vector<tuple<string, int, float, float>> import_contigs_data(string &path_to_con
                 contigs.emplace_back(contig_name, size,(float) GC/size, (float) depth/size);
             }
             contig_name = line.substr(1);
-            size = 0;
-            GC = 0;
-            depth = 0.f;
-            
-            for (auto row : alignements){
-                if(get<2>(row) == contig_name){
-                    depth += get<4>(row);
-                }
-            }
-            
-
         } else {
             size +=line.size();
-            GC += count_if(line.begin(), line.end(), isGC);
         }
         
     }
@@ -121,7 +109,6 @@ void produce_filtered_stats_csv(string path_to_filtered_stats_csv_output, vector
     int shortest_contig;
     int number_of_contigs = 0;
     long int assembly_length = 0;
-    float GC_content = 0.0;
     float mean_depth = 0.0;
     int N50;
     int L50 = 0;
@@ -133,7 +120,6 @@ void produce_filtered_stats_csv(string path_to_filtered_stats_csv_output, vector
     out << "shortest contig,assembly length,number of contigs,gc content,mean depth,N50,L50" << endl;
     while(number_of_contigs  < contigs.size()){
         shortest_contig = get<1>(contigs[number_of_contigs]);
-        GC_content = (GC_content*number_of_contigs + get<2>(contigs[number_of_contigs]))/(number_of_contigs+1);
         mean_depth = (mean_depth*number_of_contigs + get<3>(contigs[number_of_contigs]))/(number_of_contigs+1);
         assembly_length += shortest_contig;
         number_of_contigs +=1;
@@ -167,17 +153,14 @@ int main(int argc, char *argv[]) {
     string path_to_paf = argv[1];
     string path_to_reads = argv[2];
     string path_to_contigs = argv[3];
-    string path_to_contigs_info_csv_output = argv[4];
-    string path_to_filtered_stats_csv_output = argv[5];
-    string path_to_txt_output = argv[6];
-    int threshold = stoi(argv[7]);
+    string path_to_txt_output = argv[4];
+    int threshold = stoi(argv[5]);
 
     
     // Alignements
     cout << "reading alignements..." << endl;
     // "read_name", "read_length", "contig_name", "contig_length", "aligned_bases"
     vector<tuple<string, int, string, int, int>> alignements = import_alignements (path_to_paf);
-    
     
     // Reads
     cout << "reading reads..." << endl;
@@ -193,7 +176,6 @@ int main(int argc, char *argv[]) {
 
     // Loop over alignements;
     cout << "analizing alignements..." << endl;
-    produce_filtered_stats_csv(path_to_filtered_stats_csv_output, contigs);
 
      unordered_set<string> unique_aligned_reads;
     long int total_alignement_length = 0;
@@ -218,22 +200,6 @@ int main(int argc, char *argv[]) {
     int kept_contigs_number = 0;
     int discarded_contigs_number = 0;
 
-    ofstream out;
-    out.open(path_to_contigs_info_csv_output);
-    out << "contig_name,contig_length,GC_content,mean_depth" << endl;
-    for (auto row : contigs){
-        int length = get<1>(row);
-        out << get<0>(row) << "," << get<1>(row) << "," << get<2>(row) << "," << get<3>(row) << endl;
-        if(length > threshold){
-            kept_contigs_length += length;
-            kept_contigs_number +=1;
-        } else {
-            discarded_contigs_length += length;
-            discarded_contigs_number +=1;
-        }  
-    }
-    out.close();
-
     // Second loop over contigs to get L50 and N50
     int N50 = 0;
     int L50 = 0;
@@ -248,7 +214,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    
+    ofstream out;
     out.open(path_to_txt_output);
     out << "Number of mapped reads : " << number_of_aligned_reads << endl;
     out << "Total number of reads : " << number_of_reads << endl;

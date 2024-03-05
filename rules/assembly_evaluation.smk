@@ -35,7 +35,7 @@ rule reads_on_contigs_mapping :
     resources :
         cpus_per_task = 8,
         mem_mb=10*1000, # 1 giga = 1000 mega
-        runtime=2*24*60,
+        runtime=3*24*60,
     input : 
         script = "assembly_evaluation/minimap2_wraper.sh",
         assembly = "outputs/{run_name}/{assember_name}/assembly.fasta",
@@ -48,16 +48,53 @@ rule assembly_references_free_stats :
     params : 
         threshold = "5000"
     resources :
-        runtime=2*24*60,
+        runtime=3*24*60,
     input : 
         script = "assembly_evaluation/reference_free_report_writer.out",
         assembly = "outputs/{run_name}/{assember_name}/assembly.fasta",
         run = get_run_path,
         reads_on_contigs_mapping = "outputs/{run_name}/{assember_name}/reference_free/reads_on_contigs_mapping.paf",
     output : 
-        contigs_sequence_based_stats = "outputs/{run_name}/{assember_name}/reference_free/contigs_sequence_based_stats.csv",
-        contigs_alignement_based_stats = "outputs/{run_name}/{assember_name}/reference_free/contigs_alignement_based_stats.csv",
         txt_report = "outputs/{run_name}/{assember_name}/reference_free_report.txt"
+
+    shell : "./{input.script} {input.reads_on_contigs_mapping} {input.run} {input.assembly} {output.txt_report} {params.threshold}"
+    
+
+
+##### Reference-free-sample-comparison #####
+rule reads_on_contigs_mapping_sample_comparison : 
+    params : 
+        sample_run_type = config["sample-comparison-type"],
+        sample_run_reads = config["sample-comparison-reads"],
+        output_directory =  "outputs/{run_name}/{assember_name}/reference_free_sample_comparison",
+    conda :	"../env/minimap2.yaml"
+    threads : 32
+    resources :
+        cpus_per_task = 32,
+        mem_mb=10*1000, # 1 giga = 1000 mega
+        runtime=2*24*60,
+    input : 
+        script = "assembly_evaluation/minimap2_wraper.sh",
+        assembly = "outputs/{run_name}/{assember_name}/assembly.fasta",
+    output : "outputs/{run_name}/{assember_name}/reference_free_sample_comparison/reads_on_contigs_mapping.paf"
+    shell : "{input.script} {input.assembly} {params.sample_run_type} {params.sample_run_reads} {params.output_directory} {output} " 
+
+
+rule assembly_references_free_stats_sample_comparison :
+    params : 
+        threshold = "5000"
+    resources :
+        runtime=3*24*60,
+        mem_mb=10*1000, # 1 giga = 1000 mega
+    input : 
+        script = "assembly_evaluation/reference_free_report_writer.out",
+        assembly = "outputs/{run_name}/{assember_name}/assembly.fasta",
+        run = config["sample-comparison-reads"],
+        reads_on_contigs_mapping = "outputs/{run_name}/{assember_name}/reference_free_sample_comparison/reads_on_contigs_mapping.paf",
+    output : 
+        contigs_sequence_based_stats = "outputs/{run_name}/{assember_name}/reference_free_sample_comparison/contigs_sequence_based_stats.csv",
+        contigs_alignement_based_stats = "outputs/{run_name}/{assember_name}/reference_free_sample_comparison/contigs_alignement_based_stats.csv",
+        txt_report = "outputs/{run_name}/{assember_name}/reference_free_sample_comparison_report.txt"
 
     shell : "./{input.script} {input.reads_on_contigs_mapping} {input.run} {input.assembly} {output.contigs_sequence_based_stats} {output.contigs_alignement_based_stats} {output.txt_report} {params.threshold}"
     

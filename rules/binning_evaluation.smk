@@ -60,3 +60,15 @@ rule bin_quality_based_stats :
     shell : 
         "python3 {input.script} {input.checkm_results} {input.bins} > {output}"
 
+##### Alignement-based #####
+rule bin_alignemnt_based_stats : 
+    input :
+        script = "binning_and_evaluation/bin_alignement_stats_writer.out",
+        bins = "outputs/{run_name}/{assember_name}/bins",
+        paf = "outputs/{run_name}/{assember_name}/{reference}/reads_on_contigs_mapping.paf"
+    resources :
+        mem_mb=100*1000, # 1 giga = 1000 mega
+        runtime=1*60,
+    output : "outputs/{run_name}/{assember_name}/{reference}/per_bin_mapping.csv"
+    shell : 
+        "./{input.script} {input.paf} {input.bins} {output}"

@@ -48,10 +48,14 @@ ont-illumina-hybrid-assemblers:
 reference-genomes: .
 abundance-information: .
 
+sample-comparison-type : illumina
+sample-comparison-reads : ../data/cleaned_run1_combined.fastq
+
 metrics:
 # - reference-based
+# - reference-free-sample-comparison
  - reference-free
- - bin-quality-based
+# - bin-quality-based
 # -reference-based-binning-evaluation
 
 

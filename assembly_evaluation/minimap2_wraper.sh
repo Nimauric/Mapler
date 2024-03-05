@@ -18,6 +18,9 @@ case $run_type in
     "pacbio-hifi")
         sequencer_arguments="map-hifi"
         ;;
+    "illumina")
+        sequencer_arguments="sr"
+        ;;
     *)
         echo "Unsupported or unrecognized read sequencer !"
         echo "$run_type"

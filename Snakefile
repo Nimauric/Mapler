@@ -55,22 +55,31 @@ rule all :
         expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies)
             if(config["metrics"] and ("reference-based" in config["metrics"])) else "Snakefile",
 
+        expand("outputs/{assembly}/reference_free_sample_comparison_report.txt", assembly = assemblies)
+            if(config["metrics"] and ("reference-free-sample-comparison" in config["metrics"])) else "Snakefile",
+        
         expand("outputs/{assembly}/reference_free_report.txt", assembly = assemblies)
             if(config["metrics"] and ("reference-free" in config["metrics"])) else "Snakefile",
 
         expand("outputs/{assembly}/bin_quality_based_report.txt", assembly = assemblies)
             if(config["metrics"] and ("bin-quality-based" in config["metrics"])) else "Snakefile",
             
+        expand("outputs/{assembly}/reference_free/per_bin_mapping.csv", assembly = assemblies)
+            if(config["metrics"] and ("bin-quality-based" in config["metrics"])) else "Snakefile",
+        
+        expand("outputs/{assembly}/reference_free_sample_comparison/per_bin_mapping.csv", assembly = assemblies)
+            if(config["metrics"] and ("bin-quality-based" in config["metrics"]) and ("reference-free-sample-comparison" in config["metrics"])) else "Snakefile",
 
 
         #"test.txt",
 
 
 rule compile_cpp : 
+    conda : "./env/c++.yaml",
     input : 
         "{file}.cpp"
     output : 
         "{file}.out"
     shell : 
-        "g++ {input} -std=c++11 -o {output}"
+        "g++ {input} -std=c++17 -o {output}"
 
