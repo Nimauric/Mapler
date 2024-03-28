@@ -1,81 +1,88 @@
-########## INCLUSIONS ##########
+###### Utility function ###### 
+
+# Return a list containing the attribute "attribute" of each sample
+def get_samples(attribute) : 
+    # attribute = {name, read_path}
+    return [sample[attribute] for sample in config["samples"]]
+
+# Return the attribute "attribute" of an assembly with the name "sample"
+def get_sample(attribute, wildcards):
+    index = get_samples("name").index(wildcards.sample)
+    return get_samples(attribute)[index]
+
+# Return the path to the reads of a fraction of an assembly 
+def get_read_path(wildcards) : 
+    if(wildcards.fraction == "full") : 
+        return get_sample("read_path", wildcards)
+    return "outputs/" + wildcards.sample + "/" + wildcards.assembler + "/" + wildcards.fraction + "_reads.fastq"
+
+# Return the path to the reads of all fractions of an assembly 
+def get_all_read_path(wildcards) :
+    out = []
+    for f in config["fractions"] :
+        wildcards.fraction = f
+        out.append(get_read_path(wildcards))
+    return out
+
+def get_reference_names() : 
+    return [os.path.splitext(os.path.basename(r))[0] for r in config["reference_genomes"]]
+
+def get_reference(reference_name) : 
+    for ref in config["reference_genomes"] : 
+        if reference_name in ref : 
+            return ref
+    return None
+    
+##### Additional rules #####  
 include : "rules/assembly.smk"
-include : "rules/assembly_evaluation.smk"
-include : "rules/binning_evaluation.smk"
+include : "rules/mapping.smk"
+include : "rules/binning.smk"
+include : "rules/bin_quality_analysis.smk"
+include : "rules/read_quality_analysis.smk"
+include : "rules/contig_quality_analysis.smk"
 
-# Read runs-assemblers pair
-pacbio_hifi_assemblies = expand("{run}/{assembler}",
-    run = [r["name"] for r in config["pacbio-hifi"]],
-    assembler = config["pacbio-hifi-assemblers"])
-if(config["pacbio-hifi-assemblers"] == None) : pacbio_hifi_assemblies = []
+##### Improvements #####
+"""
+replace minimap2 by mapquick for hifi long reads mapping
+replace kraken2 by sourmash for taxonomic assignation
+"""
 
-
-pacbio_clr_assemblies = expand("{run}/{assembler}",
-    run = [r["name"] for r in config["pacbio-clr"]],
-    assembler = config["pacbio-clr-assemblers"])
-if(config["pacbio-clr-assemblers"] == None) : pacbio_clr_assemblies = []
-
-ont_assemblies = expand("{run}/{assembler}",
-    run = [r["name"] for r in config["ont"]],
-    assembler = config["ont-assemblers"])
-if(config["ont-assemblers"] == None) : ont_assemblies = []
-
-
-pacbio_hifi_illumina_hybrid_assemblies = expand("{long}/hybrid_{illumina}/{assembler}",
-    long = [r["name"] for r in config["pacbio-hifi"]],
-    illumina =  [r["name"] for r in config["illumina"]],
-    assembler = config["pacbio-hifi-illumina-hybrid-assemblers"])
-if(config["pacbio-hifi-illumina-hybrid-assemblers"] == None) : pacbio_hifi_illumina_hybrid_assemblies = []
-
-pacbio_clr_illumina_hybrid_assemblies = expand("{long}/hybrid_{illumina}/{assembler}",
-    long = [r["name"] for r in config["pacbio-clr"]],
-    illumina =  [r["name"] for r in config["illumina"]],
-    assembler = config["pacbio-clr-illumina-hybrid-assemblers"])
-if(config["pacbio-clr-illumina-hybrid-assemblers"] == None) : pacbio_clr_illumina_hybrid_assemblies = []
-
-ont_illumina_hybrid_assemblies = expand("{long}/hybrid_{illumina}/{assembler}",
-    long = [r["name"] for r in config["ont"]],
-    illumina =  [r["name"] for r in config["illumina"]],
-    assembler = config["ont-illumina-hybrid-assemblers"])
-if(config["ont-illumina-hybrid-assemblers"] == None) : ont_illumina_hybrid_assemblies = []
-
-assemblies = ( pacbio_hifi_assemblies 
-             + pacbio_clr_assemblies
-             + ont_assemblies
-             + pacbio_hifi_illumina_hybrid_assemblies
-             + pacbio_clr_illumina_hybrid_assemblies
-             + ont_illumina_hybrid_assemblies )
-
-########## RULE ALL ##########
 rule all :
     input :
-	# For each run-assembler pair
-        expand("outputs/{assembly}/assembly.fasta", assembly = assemblies),
+        expand("outputs/{sample}/{assembler}/assembly.fasta", sample=get_samples("name"), assembler = config["assemblers"]),
 
-        expand("outputs/{assembly}/reference_based_report.txt", assembly = assemblies)
-            if(config["metrics"] and ("reference-based" in config["metrics"])) else "Snakefile",
+        # Read quality analysis (fastqc, kraken2, kat)
+        expand("outputs/{sample}/{assembler}/fastqc/{fraction}/fastqc_report.html", sample=get_samples("name"), assembler = config["assemblers"], fraction=config["fractions"])
+            if(config["fastqc"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/kraken2/{fraction}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], fraction=config["fractions"])
+            if(config["kraken2"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/kat/{fraction}-stats.tsv", sample=get_samples("name"), assembler = config["assemblers"], fraction=config["fractions"])
+            if(config["kat"] == True) else "Snakefile",
 
-        expand("outputs/{assembly}/reference_free_sample_comparison_report.txt", assembly = assemblies)
-            if(config["metrics"] and ("reference-free-sample-comparison" in config["metrics"])) else "Snakefile",
+        # Contig quality analysis (read mapping, short read mapping, metaquast, reference mapping)
+        expand("outputs/{sample}/{assembler}/reads_on_contigs_mapping_evaluation/report.txt", sample=get_samples("name"), assembler = config["assemblers"])
+            if(config["read_mapping_evaluation"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/metaquast/report.txt", sample=get_samples("name"), assembler = config["assemblers"])
+            if(config["metaquast"] == True) else "Snakefile",
         
-        expand("outputs/{assembly}/reference_free_report.txt", assembly = assemblies)
-            if(config["metrics"] and ("reference-free" in config["metrics"])) else "Snakefile",
-
-        expand("outputs/{assembly}/bin_quality_based_report.txt", assembly = assemblies)
-            if(config["metrics"] and ("bin-quality-based" in config["metrics"])) else "Snakefile",
-            
-        expand("outputs/{assembly}/reference_free/per_bin_mapping.csv", assembly = assemblies)
-            if(config["metrics"] and ("bin-quality-based" in config["metrics"])) else "Snakefile",
+        expand("outputs/{sample}/reads_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
+            if(config["reference_mapping_evaluation"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/contigs_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
+            if(config["reference_mapping_evaluation"] == True) else "Snakefile", 
         
-        expand("outputs/{assembly}/reference_free_sample_comparison/per_bin_mapping.csv", assembly = assemblies)
-            if(config["metrics"] and ("bin-quality-based" in config["metrics"]) and ("reference-free-sample-comparison" in config["metrics"])) else "Snakefile",
+        # Bins quality analysis (checkm, separate read and contig quality analysis by bin quality)
+        expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/bins/bin.1.fa", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["binning"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/metabat2_bins_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["checkm"] == True) else "Snakefile",
+        # TO DO : checkm, % of mapped reads / bases to each bin quality level
 
 
-        #"test.txt",
+##### Utility rules #####
 
-
+#Compiles required cpp programs 
 rule compile_cpp : 
-    conda : "./env/c++.yaml",
+    conda : "./envs/c++.yaml",
     input : 
         "{file}.cpp"
     output : 

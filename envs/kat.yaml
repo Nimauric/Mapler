@@ -1,0 +1,6 @@
+name : kat
+channels :
+  - bioconda
+  - conda-forge
+dependencies :
+ - kat

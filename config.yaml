@@ -1,61 +1,84 @@
----
-# No "_" in the names
+##### Samples #####
+samples :
+ - name : zymo
+   read_path : /groups/genscale/nimauric/long_reads/zymoD6331.fastq
+ - name : salad-irg 
+   read_path : /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
 
-##### Reads #####
-pacbio-hifi:
- - name: salad-irg-pacbio-hifi
-   path: ../data/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq
+short_reads_1 : /groups/genscale/nimauric/short_reads/merged_run_R1.fastq
+short_reads_2 : /groups/genscale/nimauric/short_reads/merged_run_R2.fastq
+short_read_assembly : /groups/genscale/nimauric/short_reads/short_read_assembly.fa
 
-pacbio-clr:
- - name: .
-   path: .
-
-ont:
- - name: .
-   path: .
-
-illumina:
- - name: salad-run1-illumina
-   forward: ../data/cleaned_run1_R1.fastq 
-   reverse: ../data/cleaned_run1_R2.fastq
-
-
-
-##### Assemblers #####
-pacbio-hifi-assemblers:
+##### Assembly #####
+assemblers :
  - metaMDBG
- - metaflye
- - hifiasm-meta
-
-pacbio-clr-assemblers:
-# - metaflye
-# - miniasm
-
-ont-assemblers:
-# - metaflye
-# - miniasm
-
-pacbio-hifi-illumina-hybrid-assemblers:
 # - operaMS
+# - metaflye #unimplemented
+# - hifiasm-meta #unimplemented
+# - canu #unimplemented
+# - opera-ms #unimplemented
 
-pacbio-clr-illumina-hybrid-assemblers:
-# - operaMS
+operaMS_path : ../programs/OPERA-MS
+###### Evaluation ######
 
-ont-illumina-hybrid-assemblers:
-# - operaMS
+#### Binning #####
+binning : false
+binners : 
+ - metabat2
 
-##### Evaluation #####
-reference-genomes: .
-abundance-information: .
+checkm : false
 
-sample-comparison-type : illumina
-sample-comparison-reads : ../data/cleaned_run1_combined.fastq
+### Contig analysis ###
+read_mapping_evaluation : true
+read_mapping_threshold : 0 #minimum total alignement length for a read to be considered to a config
+short_read_mapping_evaluation : false
+reference_mapping_evaluation : false
+metaquast : false
+reference_genomes :
+### Soil ###
+# - /groups/genscale/nimauric/soil_references/flavobacterium_sp_KS_LB2.fasta
+# - /groups/genscale/nimauric/soil_references/Gemmatirosa_kalamazoonesis.fasta
+# - /groups/genscale/nimauric/soil_references/Humisphaera_borealis.fasta
+# - /groups/genscale/nimauric/soil_references/Lysobacter_terrestris.fasta
+# - /groups/genscale/nimauric/soil_references/Thauera_sp_MZ1T.fasta
+# - /groups/genscale/nimauric/soil_references/Mesorhizobium_sp.fasta
+### Zymo ###
+ - /groups/genscale/nimauric/ZymoD6331/Akkermansia_muciniphila.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Candida_albican.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Enterococcus_faecalis.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B3008.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Faecalibacterium_prausnitzii.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Methanobrevibacter_smithii.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Saccharomyces_cerevisiae.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Bacteroides_fragilis.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Clostridioides_difficile.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B1109.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B766.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Fusobacterium_nucleatum.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Prevotella_corporis.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Salmonella_enterica.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Bifidobacterium_adolescentis.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Clostridium_perfringens.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_b2207.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_JM109.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Lactobacillus_fermentum.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Roseburia_hominis.fasta
+ - /groups/genscale/nimauric/ZymoD6331/Veillonella_rogosae.fasta
+abundance_information : /groups/genscale/nimauric/long_reads/zymo_abundance.csv 
+#/groups/genscale/nimauric/long_reads/soil_abundance.csv
 
-metrics:
-# - reference-based
-# - reference-free-sample-comparison
- - reference-free
-# - bin-quality-based
-# -reference-based-binning-evaluation
 
+### Read analysis ###
+fractions : 
+#  - full
+  - mapped 
+  - unmapped
 
+fastqc : false # read quality and other statistics
+
+kraken2 : false # taxonomic assignation
+kraken2bin : ../salad_analysis/kraken2/bins/
+kraken2db : /groups/genscale/nimauric/databases/standard_kraken_database/
+kronabin : /scratch/nimauric/salad_analysis/KronaTools-2.7/bin/
+
+kat : false # read abundance analysis

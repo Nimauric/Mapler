@@ -1,0 +1,9 @@
+name : python
+channels :
+  - conda-forge
+  - bioconda
+dependencies :
+ - python
+ - pysam
+ - pandas
+ - biopython

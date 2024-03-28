@@ -1,9 +1,0 @@
-channels :
-  - bioconda
-  - conda-forge
-
-dependencies :
- - xmlstarlet=1.6
- - minimap2=2.24
- - pandas=1.5
- - seaborn=0.12.2

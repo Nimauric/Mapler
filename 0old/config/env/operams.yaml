@@ -1,7 +1,0 @@
-channels :
-  - conda-forge
-
-dependencies :
- - perl-app-cpanminus
- - r-rlang
-
