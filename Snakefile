@@ -43,7 +43,7 @@ include : "rules/contig_quality_analysis.smk"
 
 ##### Improvements #####
 """
-replace minimap2 by mapquick for hifi long reads mapping
+replace minimap2 by mapquick for hifi long reads mapping ?
 replace kraken2 by sourmash for taxonomic assignation
 """
 
@@ -73,9 +73,20 @@ rule all :
         # Bins quality analysis (checkm, separate read and contig quality analysis by bin quality)
         expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/bins/bin.1.fa", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
             if(config["binning"] == True) else "Snakefile",
-        expand("outputs/{sample}/{assembler}/metabat2_bins_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+        expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
             if(config["checkm"] == True) else "Snakefile",
-        # TO DO : checkm, % of mapped reads / bases to each bin quality level
+        expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"], target_bin=config["target_bins"])
+            if(config["kraken2_on_bins"] == True) else "Snakefile",
+
+        # Binning short reads
+        expand("outputs/{sample}/{assembler}/{binner}_bins_short_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["checkm"] == True and config["short_read_binning"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/{binner}_bins_cobinning_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["checkm"] == True and config["short_read_cobinning"] == True) else "Snakefile",
+
+        # Binning additional reads cobinning
+        expand("outputs/{sample}/{assembler}/{binner}_bins_additional_reads_cobinning_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["checkm"] == True and config["additional_reads_cobinning"] == True) else "Snakefile",
 
 
 ##### Utility rules #####

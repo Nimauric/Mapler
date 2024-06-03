@@ -1,32 +1,76 @@
 ##### Samples #####
 samples :
- - name : zymo
-   read_path : /groups/genscale/nimauric/long_reads/zymoD6331.fastq
+# - name : zymo
+#   read_path : /groups/genscale/nimauric/long_reads/zymoD6331.fastq
  - name : salad-irg 
    read_path : /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
+# - name : human-gut
+#   read_path : /groups/genscale/nimauric/long_reads/biocolective_139369_vegan_gut.fastq
 
+short_read_binning : false
+short_read_cobinning : false
+additional_reads_cobinning : false
 short_reads_1 : /groups/genscale/nimauric/short_reads/merged_run_R1.fastq
 short_reads_2 : /groups/genscale/nimauric/short_reads/merged_run_R2.fastq
 short_read_assembly : /groups/genscale/nimauric/short_reads/short_read_assembly.fa
+additional_reads :
+ - name : conc-irg
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
+ - name : conc-rhizo
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M2-juil-conc-rhizo-A2-1.hifi-reads.fastq
+ - name : aub-irg-A22
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M3-oct-aub-irg-A22-1.hifi-reads.fastq
+ - name : aub-rhizo-A24
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M4-oct-aub-rhizo-A24-4.hifi_reads.fastq
+ - name : aub-rhizo-C20
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M5-oct-aub-rhizo-C20-8.hifi_reads.fastq
+ - name : aub-irg-D6
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M6-oct-aub-irg-D6-2.hifi_reads.fastq
+ - name : poiv-irg-B1
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M7-oct-poiv-irg-B1-2.hifi_reads.fastq
+ - name : sal-rhizo
+   path : /groups/genscale/nimauric/long_reads/SMRTcell1-M9-fev-sal-rhizo-A10-1.hifi_reads.fastq
+
+
 
 ##### Assembly #####
 assemblers :
- - metaMDBG
+# - metaMDBG
+ - test-cluster
 # - operaMS
-# - metaflye #unimplemented
-# - hifiasm-meta #unimplemented
+# - metaflye
+# - hifiasm_meta
 # - canu #unimplemented
-# - opera-ms #unimplemented
+
 
 operaMS_path : ../programs/OPERA-MS
 ###### Evaluation ######
 
 #### Binning #####
-binning : false
+binning : true
 binners : 
  - metabat2
-
-checkm : false
+checkm : true
+kraken2_on_bins : false #/!\ Require having done binning separatly on a previous step
+target_bins : #/!\ Require having done binning separatly on a previous step
+# HQ
+ - 272
+ - 306
+ - 390
+ - 255
+ - 112
+# MQ
+ - 253
+ - 343
+ - 226
+ - 170
+ - 242
+# LQ
+ - 123
+ - 194
+ - 154
+ - 177
+ - 256
 
 ### Contig analysis ###
 read_mapping_evaluation : true
@@ -35,50 +79,66 @@ short_read_mapping_evaluation : false
 reference_mapping_evaluation : false
 metaquast : false
 reference_genomes :
-### Soil ###
+### Soil from blast ###
 # - /groups/genscale/nimauric/soil_references/flavobacterium_sp_KS_LB2.fasta
 # - /groups/genscale/nimauric/soil_references/Gemmatirosa_kalamazoonesis.fasta
 # - /groups/genscale/nimauric/soil_references/Humisphaera_borealis.fasta
-# - /groups/genscale/nimauric/soil_references/Lysobacter_terrestris.fasta
 # - /groups/genscale/nimauric/soil_references/Thauera_sp_MZ1T.fasta
 # - /groups/genscale/nimauric/soil_references/Mesorhizobium_sp.fasta
+### Soil from 5 x 3 bins ###
+# - /groups/genscale/nimauric/soil_references/Lysobacter_terrestris.fasta
+# - /groups/genscale/nimauric/soil_references/Bradyrhizobium_arachidis.fasta
+# - /groups/genscale/nimauric/soil_references/Streptomyces_sp_135.fasta
+# - /groups/genscale/nimauric/soil_references/Bradyrhizobium_erythrophlei.fasta
+# - /groups/genscale/nimauric/soil_references/Streptomyces_sp_MBT27.fasta
+# - /groups/genscale/nimauric/soil_references/Bradyrhizobium_sp_4.fasta
+# - /groups/genscale/nimauric/soil_references/Bradyrhizobium_sp_A19.fasta 
+# - /groups/genscale/nimauric/soil_references/Streptomyces_sp_MST_110588.fasta
+# - /groups/genscale/nimauric/soil_references/Burkholderia_ubonensis.fasta
+# - /groups/genscale/nimauric/soil_references/Streptomyces_venezuelae.fasta
+# - /groups/genscale/nimauric/soil_references/Cupriavidus_pauculus.fasta
+# - /groups/genscale/nimauric/soil_references/Nitrospira_tepida.fasta
+# - /groups/genscale/nimauric/soil_references/Enhydrobacter_sp.fasta
+# - /groups/genscale/nimauric/soil_references/Pseudomonas_sp_ABC1.fasta
+# - /groups/genscale/nimauric/soil_references/Streptomyces_liliifuscus.fasta
 ### Zymo ###
- - /groups/genscale/nimauric/ZymoD6331/Akkermansia_muciniphila.fasta
- - /groups/genscale/nimauric/ZymoD6331/Candida_albican.fasta
- - /groups/genscale/nimauric/ZymoD6331/Enterococcus_faecalis.fasta
- - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B3008.fasta
- - /groups/genscale/nimauric/ZymoD6331/Faecalibacterium_prausnitzii.fasta
- - /groups/genscale/nimauric/ZymoD6331/Methanobrevibacter_smithii.fasta
- - /groups/genscale/nimauric/ZymoD6331/Saccharomyces_cerevisiae.fasta
- - /groups/genscale/nimauric/ZymoD6331/Bacteroides_fragilis.fasta
- - /groups/genscale/nimauric/ZymoD6331/Clostridioides_difficile.fasta
- - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B1109.fasta
- - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B766.fasta
- - /groups/genscale/nimauric/ZymoD6331/Fusobacterium_nucleatum.fasta
- - /groups/genscale/nimauric/ZymoD6331/Prevotella_corporis.fasta
- - /groups/genscale/nimauric/ZymoD6331/Salmonella_enterica.fasta
- - /groups/genscale/nimauric/ZymoD6331/Bifidobacterium_adolescentis.fasta
- - /groups/genscale/nimauric/ZymoD6331/Clostridium_perfringens.fasta
- - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_b2207.fasta
- - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_JM109.fasta
- - /groups/genscale/nimauric/ZymoD6331/Lactobacillus_fermentum.fasta
- - /groups/genscale/nimauric/ZymoD6331/Roseburia_hominis.fasta
- - /groups/genscale/nimauric/ZymoD6331/Veillonella_rogosae.fasta
-abundance_information : /groups/genscale/nimauric/long_reads/zymo_abundance.csv 
-#/groups/genscale/nimauric/long_reads/soil_abundance.csv
+ - /groups/genscale/nimauric/ZymoD6331/Zymo_merged.fasta 
+# - /groups/genscale/nimauric/ZymoD6331/Akkermansia_muciniphila.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Candida_albican.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Enterococcus_faecalis.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B3008.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Faecalibacterium_prausnitzii.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Methanobrevibacter_smithii.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Saccharomyces_cerevisiae.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Bacteroides_fragilis.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Clostridioides_difficile.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B1109.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_B766.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Fusobacterium_nucleatum.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Prevotella_corporis.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Salmonella_enterica.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Bifidobacterium_adolescentis.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Clostridium_perfringens.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_b2207.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Escherichia_coli_JM109.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Lactobacillus_fermentum.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Roseburia_hominis.fasta
+# - /groups/genscale/nimauric/ZymoD6331/Veillonella_rogosae.fasta
+abundance_information : /groups/genscale/nimauric/long_reads/zymo_abundance.csv #/groups/genscale/nimauric/long_reads/soil_abundance.csv #
+
 
 
 ### Read analysis ###
 fractions : 
-#  - full
+  - full
   - mapped 
   - unmapped
 
-fastqc : false # read quality and other statistics
+fastqc : true # read quality and other statistics
 
-kraken2 : false # taxonomic assignation
-kraken2bin : ../salad_analysis/kraken2/bins/
+kraken2 : true # taxonomic assignation
+kraken2bin : /scratch/nimauric/kraken2/bins/
 kraken2db : /groups/genscale/nimauric/databases/standard_kraken_database/
-kronabin : /scratch/nimauric/salad_analysis/KronaTools-2.7/bin/
+kronabin : /scratch/nimauric/KronaTools-2.7/bin/
 
-kat : false # read abundance analysis
+kat : true # read abundance analysis

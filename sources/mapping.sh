@@ -10,9 +10,14 @@
 output="$1"
 query="$2"
 target="$3"
-preset="$4" #map-hifi or asm20
+preset="$4" #map-hifi or asm20 or sr
+additional_query="$5" # In case of short read mapping, query= R1, query2 = R2.
 
-minimap2 -a -t $(nproc) -cx $preset $target $query \
+echo minimap2 -a -t $(nproc) -cx $preset $target $query $additional_query
+echo samtools sort --threads $(nproc) -o $output
+echo samtools index $output
+
+minimap2 -a -t $(nproc) -cx $preset $target $query $additional_query\
     | samtools sort --threads $(nproc) -o $output \
     && samtools index $output
 

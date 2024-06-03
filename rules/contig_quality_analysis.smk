@@ -5,7 +5,7 @@ rule metaquast :
         output_directory="outputs/{sample}/{assembler}/metaquast/results/"
     conda : "../envs/quast.yaml"
     resources :
-        mem_mb=10*1000,
+        mem_mb=20*1000,
         runtime=24*60,
     input : "outputs/{sample}/{assembler}/assembly.fasta",
     output : directory("outputs/{sample}/{assembler}/metaquast/results/summary/TSV/"),

@@ -18,6 +18,8 @@ with open(reads_path, "r") as fastq :
 
 
 ### Fetch the range of covered position for each read
+
+
 covered_positions = {}
 with pysam.AlignmentFile(alignement_path, "rb") as bam:
     for alignment in bam.fetch() :
