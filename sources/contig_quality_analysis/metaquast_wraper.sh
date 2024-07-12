@@ -7,10 +7,10 @@
 
 assembly="$1"
 output_directory="$2"
-reference_genomes="${@:3}"
+min_identity="$3"
+reference_genomes="${@:4}"
 
 
 mkdir "$output_directory"
-
-metaquast "$assembly" -r $( echo "$reference_genomes" | tr ' ' , ) -o "$output_directory"
+metaquast "$assembly" -r $( echo "$reference_genomes" | tr ' ' , ) -o "$output_directory" --min-identity "$min_identity" --unique-mapping --reuse-combined-alignments
 

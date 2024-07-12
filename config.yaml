@@ -2,10 +2,33 @@
 samples :
 # - name : zymo
 #   read_path : /groups/genscale/nimauric/long_reads/zymoD6331.fastq
- - name : salad-irg 
-   read_path : /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
+# - name : salad-irg 
+#   read_path : /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
 # - name : human-gut
 #   read_path : /groups/genscale/nimauric/long_reads/biocolective_139369_vegan_gut.fastq
+
+ - name : salad_irg+Burkholderia_ambifaria_5X
+   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_5X.fastq
+ - name : Burkholderia_ambifaria_5X
+   read_path : ../CWL_subsample/Burkholderia_ambifaria_5X.fastq
+ - name : salad_irg+Burkholderia_ambifaria_10X
+   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_10X.fastq
+ - name : Burkholderia_ambifaria_10X
+   read_path : ../CWL_subsample/Burkholderia_ambifaria_10X.fastq
+ - name : salad_irg+Burkholderia_ambifaria_30X
+   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_30X.fastq
+ - name : Burkholderia_ambifaria_30X
+   read_path : ../CWL_subsample/Burkholderia_ambifaria_30X.fastq
+ - name : salad_irg+Burkholderia_ambifaria_50X
+   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_50X.fastq
+ - name : Burkholderia_ambifaria_50X
+   read_path : ../CWL_subsample/Burkholderia_ambifaria_50X.fastq  
+ - name : salad_irg+Burkholderia_ambifaria_100X
+   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_100X.fastq
+ - name : Burkholderia_ambifaria_100X
+   read_path : ../CWL_subsample/Burkholderia_ambifaria_100X.fastq 
+
+
 
 short_read_binning : false
 short_read_cobinning : false
@@ -13,7 +36,7 @@ additional_reads_cobinning : false
 short_reads_1 : /groups/genscale/nimauric/short_reads/merged_run_R1.fastq
 short_reads_2 : /groups/genscale/nimauric/short_reads/merged_run_R2.fastq
 short_read_assembly : /groups/genscale/nimauric/short_reads/short_read_assembly.fa
-additional_reads :
+additional_reads : 
  - name : conc-irg
    path : /groups/genscale/nimauric/long_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
  - name : conc-rhizo
@@ -35,8 +58,8 @@ additional_reads :
 
 ##### Assembly #####
 assemblers :
-# - metaMDBG
- - test-cluster
+ - metaMDBG
+# - test-cluster
 # - operaMS
 # - metaflye
 # - hifiasm_meta
@@ -47,10 +70,10 @@ operaMS_path : ../programs/OPERA-MS
 ###### Evaluation ######
 
 #### Binning #####
-binning : true
+binning : false
 binners : 
  - metabat2
-checkm : true
+checkm : false
 kraken2_on_bins : false #/!\ Require having done binning separatly on a previous step
 target_bins : #/!\ Require having done binning separatly on a previous step
 # HQ
@@ -73,11 +96,12 @@ target_bins : #/!\ Require having done binning separatly on a previous step
  - 256
 
 ### Contig analysis ###
-read_mapping_evaluation : true
-read_mapping_threshold : 0 #minimum total alignement length for a read to be considered to a config
+read_mapping_evaluation : false
+read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
 short_read_mapping_evaluation : false
-reference_mapping_evaluation : false
+reference_mapping_evaluation : true
 metaquast : false
+metaquast_min_identity : 95
 reference_genomes :
 ### Soil from blast ###
 # - /groups/genscale/nimauric/soil_references/flavobacterium_sp_KS_LB2.fasta
@@ -101,8 +125,10 @@ reference_genomes :
 # - /groups/genscale/nimauric/soil_references/Enhydrobacter_sp.fasta
 # - /groups/genscale/nimauric/soil_references/Pseudomonas_sp_ABC1.fasta
 # - /groups/genscale/nimauric/soil_references/Streptomyces_liliifuscus.fasta
+### Soil spiked 
+- /groups/genscale/nimauric/soil_references/Burkholderia_ambifaria.fasta 
 ### Zymo ###
- - /groups/genscale/nimauric/ZymoD6331/Zymo_merged.fasta 
+# - /groups/genscale/nimauric/ZymoD6331/Zymo_merged.fasta 
 # - /groups/genscale/nimauric/ZymoD6331/Akkermansia_muciniphila.fasta
 # - /groups/genscale/nimauric/ZymoD6331/Candida_albican.fasta
 # - /groups/genscale/nimauric/ZymoD6331/Enterococcus_faecalis.fasta
@@ -124,21 +150,21 @@ reference_genomes :
 # - /groups/genscale/nimauric/ZymoD6331/Lactobacillus_fermentum.fasta
 # - /groups/genscale/nimauric/ZymoD6331/Roseburia_hominis.fasta
 # - /groups/genscale/nimauric/ZymoD6331/Veillonella_rogosae.fasta
-abundance_information : /groups/genscale/nimauric/long_reads/zymo_abundance.csv #/groups/genscale/nimauric/long_reads/soil_abundance.csv #
 
+abundance_information : /groups/genscale/nimauric/long_reads/soil_abundance.csv # /groups/genscale/nimauric/long_reads/zymo_abundance.csv #
 
 
 ### Read analysis ###
 fractions : 
-  - full
-  - mapped 
-  - unmapped
+#  - full
+#  - mapped 
+#  - unmapped
 
-fastqc : true # read quality and other statistics
+fastqc : false # read quality and other statistics
 
-kraken2 : true # taxonomic assignation
+kraken2 : false # taxonomic assignation
 kraken2bin : /scratch/nimauric/kraken2/bins/
 kraken2db : /groups/genscale/nimauric/databases/standard_kraken_database/
 kronabin : /scratch/nimauric/KronaTools-2.7/bin/
 
-kat : true # read abundance analysis
+kat : false # read abundance analysis

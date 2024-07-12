@@ -2,14 +2,15 @@
 rule metaquast :
     params : 
         reference_genomes = config["reference_genomes"],
-        output_directory="outputs/{sample}/{assembler}/metaquast/results/"
+        output_directory="outputs/{sample}/{assembler}/metaquast/results/",
+        min_identity=config["metaquast_min_identity"]
     conda : "../envs/quast.yaml"
     resources :
         mem_mb=20*1000,
         runtime=24*60,
     input : "outputs/{sample}/{assembler}/assembly.fasta",
     output : directory("outputs/{sample}/{assembler}/metaquast/results/summary/TSV/"),
-    shell : "sources/contig_quality_analysis/metaquast_wraper.sh {input} {params.output_directory} {params.reference_genomes}"
+    shell : "sources/contig_quality_analysis/metaquast_wraper.sh {input} {params.output_directory} {params.min_identity} {params.reference_genomes} "
 
 rule metaquast_report_writer :
     input : 
