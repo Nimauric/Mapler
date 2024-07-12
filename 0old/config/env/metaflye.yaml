@@ -1,7 +1,0 @@
-channels :
-  - bioconda
-  - conda-forge
-
-dependencies :
- - xmlstarlet=1.6
- - flye=2.9

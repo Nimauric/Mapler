@@ -1,9 +1,0 @@
-channels :
-  - bioconda
-  - conda-forge
-
-dependencies :
- - perl-app-cpanminus 
- - r-rlang
- - pilon
-

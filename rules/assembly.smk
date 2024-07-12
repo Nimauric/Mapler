@@ -1,115 +1,61 @@
-
-########## HELPERS ##########
-def get_run_info(wildcards) :
-    for run_type in config :
-        for a in config[run_type] :
-            if a["name"] == wildcards.run_name :
-                return a["path"], run_type
-    return None, None
-
-def get_run_path(wildcards) : 
-    run_path, _ = get_run_info(wildcards)
-    return run_path
-
-def get_run_type(wildcards) :
-    _ , run_type = get_run_info(wildcards)
-    return run_type
-
-
-def get_short_run_path(wildcards) :
-    for run_type in config :
-        for a in config[run_type] :
-            if a["name"] == wildcards.second_run_name :
-                return a["forward"], a["reverse"]
-    return None, None
-
-def get_forward(wildcards) :
-    forward , _ = get_short_run_path(wildcards)
-    return forward
-
-def get_reverse(wildcards) :
-    _ , reverse = get_short_run_path(wildcards)
-    return reverse
-
-########## HI-FI ASSEMBLERS ##########
-
-rule metaMDBG_installation : 
-    conda : "../env/metaMDBG.yaml"
-    input : "assemblers/metaMDBG_installer.sh"
-    output : directory("dependencies/metaMDBG/"),
-    shell : "./{input}"
-
 rule metaMDBG_assembly :
-    conda : "../env/metaMDBG.yaml"
+    params : 
+        expand("{name}", name=get_samples("name")),
+        tmp_directory="outputs/{sample}/metaMDBG/tmp/"
+    conda : "../envs/metaMDBG.yaml"
     threads : 48
     resources :
-        cpus_per_task = 48,
-        mem_mb=50*1000, # 1 giga = 1000 mega
-        runtime=3*24*60,
-    input : 
-        script = "assemblers/metaMDBG_wraper.sh",
-        dependencies = "dependencies/metaMDBG/",
-        run_path = get_run_path,
-    output : "outputs/{run_name}/metaMDBG/assembly.fasta",
-    shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/metaMDBG"
+        cpus_per_task = 48, #on irg salad, 38% efficiency (Maybe I should reduce number of threads, but 7h is slow enough)
+        mem_mb=35*1000, #on irg salad, 48% efficiency : 50GB => 35GB
+        runtime=2*24*60, #on irg salad, 7h30
+    input : lambda wildcards: get_sample("read_path", wildcards),
+    output : "outputs/{sample}/metaMDBG/assembly.fasta"
+    shell : "./sources/assembly/metaMDBG_wraper.sh {input} {params.tmp_directory} {output}"
 
 rule metaflye_assembly :
     params : 
-        run_type = get_run_type
-    conda : "../env/flye.yaml"
+        expand("{name}", name=get_samples("name")),
+        output_directory="outputs/{sample}/metaflye/"
+    conda : "../envs/flye.yaml"
     threads : 48
     resources :
-        cpus_per_task = 48,
-        mem_mb=160*1000, # 1 giga = 1000 mega
-        runtime=3*24*60,
-    input : 
-        script = "assemblers/metaflye_wraper.sh",
-        run_path = get_run_path,
-    output : "outputs/{run_name}/metaflye/assembly.fasta",
-    shell : "./{input.script} {params.run_type} {input.run_path} outputs/{wildcards.run_name}/metaflye"
+        cpus_per_task = 48, #on irg salad, 60% efficiency
+        mem_mb=60*1000, #on irg salad, 33.43% efficiency : 160GB => 60 GB
+        runtime=1*24*60, #on irg salad, 4 hours
+    input : lambda wildcards: get_sample("read_path", wildcards),
+    output : "outputs/{sample}/metaflye/assembly.fasta",
+    shell : "./sources/assembly/metaflye_wraper.sh {input} {params.output_directory}"
 
 rule hifiasm_meta_assembly :
-    conda : "../env/hifiasm_meta.yaml"
-    threads : 48
-    resources :
-        cpus_per_task = 48,
-        mem_mb=80*1000, # 1 giga = 1000 mega
-        runtime=3*24*60,
-    input : 
-        script = "assemblers/hifiasm_meta_wraper.sh",
-        run_path = get_run_path,
-    output : "outputs/{run_name}/hifiasm-meta/assembly.fasta",
-    shell : "./{input.script} {input.run_path} outputs/{wildcards.run_name}/hifiasm-meta"
-
-########## HYBRID ASSEMBLERS ##########
-
-rule operams_installation : 
-    conda : "../env/operaMS.yaml"
-    input : "assemblers/opera_ms_installer.sh"
-    output : directory("dependencies/OPERA-MS/"),
-    shell : "./{input}"
-
-rule operams_assembly :
     params : 
-        output_folder = "outputs/{run_name}/hybrid_{second_run_name}/operaMS"
-    input : 
-        dependencies = "dependencies/OPERA-MS/",
-        script = "assemblers/opera_ms_wraper.sh",
-        r1 =  get_forward,
-        r2 = get_reverse,
-        long = get_run_path
-    output : "outputs/{run_name}/hybrid_{second_run_name}/operaMS/assembly.fasta",
-    conda : "../env/operaMS.yaml"
+        expand("{name}", name=get_samples("name")),
+        output_directory="outputs/{sample}/hifiasm_meta/"
+    conda : "../envs/hifiasm_meta.yaml"
     threads : 48
     resources :
-        cpus_per_task=48,
-        mem_mb=320*1000, # 1 giga = 1000 mega
-        runtime=3*24*60,
-    shell : 
-        "./{input.script} {input.r1} {input.r2} {input.long} {params.output_folder}"
+        cpus_per_task = 48, #on irg salad, 12% efficiency  (Maybe I should reduce number of threads, but 17h is slow enough)
+        mem_mb=80*1000, #on irg salad, 63% efficiency 
+        runtime=2*24*60, #on irg salad, 17 hours
+    input : lambda wildcards: get_sample("read_path", wildcards),
+    output : "outputs/{sample}/hifiasm_meta/assembly.fasta",
+    shell : "./sources/assembly/hifiasm_meta_wraper.sh {input} {params.output_directory}"
 
 
-
-
-
-
+rule operaMS_assembly :
+    params : 
+        expand("{name}", name=get_samples("name")),
+        tmp_directory="outputs/{sample}/operaMS/tmp/",
+        operaMS_path=config["operaMS_path"],
+    conda : "../envs/operaMS.yaml"
+    threads : 48
+    resources :
+        cpus_per_task = 48, # ~25% efficiency 
+        mem_mb=200*1000, #OUT OF MEMORY : 100 => 200 G
+        runtime=5*24*60,
+    input : 
+        long_reads = lambda wildcards: get_sample("read_path", wildcards),
+        short_read_1 = config["short_reads_1"],
+        short_read_2 = config["short_reads_2"],
+        short_read_assembly=config["short_read_assembly"],
+    output : "outputs/{sample}/operaMS/assembly.fasta"
+    shell : "./sources/assembly/operaMS_wraper.sh {params.operaMS_path} {input.long_reads} {input.short_read_1} {input.short_read_2} {input.short_read_assembly} {params.tmp_directory} {output}"
