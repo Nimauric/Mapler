@@ -18,7 +18,7 @@ additional_reads :
 
 # (optional), used for evaluation
 reference_genomes :
-- /groups/genscale/nimauric/soil_references/Pseudomonas_fluorescens_IMGN2.fasta
+- /path/to/reference_genome.fasta
 # (optional), used for evaluation
 abundance_information : /path/to/abundance.csv # need to be reworked
 
@@ -72,6 +72,79 @@ kraken2 : false # requires kraken2bin; kraken2db and kronabin
 kat : false
 
 ##### Parameters #####
+### Functional parameters ###
 read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
 metaquast_min_identity : 95
 
+### Ressources parameters ###
+
+# Mapping
+rules_mapping :
+  threads: 24
+  memory: 100G 
+  time: 1*24*60 #in minutes
+
+# Assembly 
+rule_metaMDBG_assembly: 
+  threads: 48
+  memory: 35G 
+  time: 2*24*60 #in minutes
+
+rule_metaflye_assembly: 
+  threads: 48
+  memory: 60G 
+  time: 1*24*60 #in minutes
+
+rule_hifiasm_meta_assembly: 
+  threads: 48
+  memory: 80G 
+  time: 2*24*60 #in minutes
+
+rule_operaMS_assembly : 
+  threads: 48
+  memory: 200G 
+  time: 5*24*60 #in minutes
+
+# Binning
+rules_metabat2_binnings : 
+  threads: 16
+  memory: 20G 
+  time: 12*60 #in minutes
+
+# Contig quality analysis
+rule_metaquast: 
+  threads: 1
+  memory: 20G 
+  time: 24*60 #in minutes
+
+# Bin quality analysis
+rule_checkm: 
+  threads: 16
+  memory: 100G 
+  time: 24*60 #in minutes
+
+rule_checkm_report_writer : 
+  threads: 1
+  memory: 100G 
+  time: 1*60 #in minutes
+
+rule_kraken2_on_bins : 
+  threads: 12
+  memory: 100G 
+  time: 4*60 #in minutes
+
+# read quality analysis 
+rule_extract_unmapped_reads : 
+  threads: 24
+  memory: 100G 
+  time: 24*60 #in minutes
+
+rule_kraken2 : 
+  threads: 12
+  memory: 100G 
+  time: 4*60 #in minutes
+
+rule_kat_sect : 
+  threads: 12
+  memory: 200G 
+  time: 4*60 #in minutes

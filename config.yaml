@@ -1,4 +1,6 @@
-##### Samples #####
+##### Inputs #####
+### Samples ###
+# long reads used for assembly and evaluation
 samples :
 # - name : zymo
 #   read_path : /groups/genscale/nimauric/long_reads/zymoD6331.fastq
@@ -8,21 +10,21 @@ samples :
 #   read_path : /groups/genscale/nimauric/long_reads/biocolective_139369_vegan_gut.fastq
  - name : Pseudomonas_fluorescens_1X
    read_path : ../CWL_subsample/Pseudomonas_fluorescens_1X.fastq
- - name : Pseudomonas_fluorescens_3X
-   read_path : ../CWL_subsample/Pseudomonas_fluorescens_3X.fastq
- - name : Pseudomonas_fluorescens_5X
-   read_path : ../CWL_subsample/Pseudomonas_fluorescens_5X.fastq
- - name : Pseudomonas_fluorescens_10X
-   read_path : ../CWL_subsample/Pseudomonas_fluorescens_10X.fastq
+# - name : Pseudomonas_fluorescens_3X
+#   read_path : ../CWL_subsample/Pseudomonas_fluorescens_3X.fastq
+# - name : Pseudomonas_fluorescens_5X
+#   read_path : ../CWL_subsample/Pseudomonas_fluorescens_5X.fastq
+# - name : Pseudomonas_fluorescens_10X
+#   read_path : ../CWL_subsample/Pseudomonas_fluorescens_10X.fastq
 
- - name : salad_irg+Pseudomonas_fluorescens_1X
-   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_1X.fastq
- - name : salad_irg+Pseudomonas_fluorescens_3X
-   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_3X.fastq
- - name : salad_irg+Pseudomonas_fluorescens_5X
-   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_5X.fastq
- - name : salad_irg+Pseudomonas_fluorescens_10X
-   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_10X.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_1X
+#   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_1X.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_3X
+#   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_3X.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_5X
+#   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_5X.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_10X
+#   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_10X.fastq
 
 # - name : Pseudomonas_fluorescens_1X_simulated
 #   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/Pseudomonas_fluorescens_1X_simulated.fastq
@@ -46,13 +48,14 @@ samples :
 
 
 
-
-short_read_binning : false
-short_read_cobinning : false
-additional_reads_cobinning : false
+# (optional), short reads, may be used for binning or evaluation. Should be from the same sample as the long reads
 short_reads_1 : /groups/genscale/nimauric/short_reads/merged_run_R1.fastq
 short_reads_2 : /groups/genscale/nimauric/short_reads/merged_run_R2.fastq
+# (optional), short read assembly, may be used for assembly. Should be from the same sample as the long reads
 short_read_assembly : /groups/genscale/nimauric/short_reads/short_read_assembly.fa
+
+
+# (optional), long reads used for cobinning. Should be from a similar sample as the studied sample
 additional_reads : 
  - name : conc-irg
    path : /groups/genscale/nimauric/long_reads/SMRTcell1-M1-juil-conc-irg-A2-1.hifi-reads.fastq
@@ -71,54 +74,7 @@ additional_reads :
  - name : sal-rhizo
    path : /groups/genscale/nimauric/long_reads/SMRTcell1-M9-fev-sal-rhizo-A10-1.hifi_reads.fastq
 
-
-
-##### Assembly #####
-assemblers :
- - metaMDBG
-# - test-cluster
-# - operaMS
-# - metaflye
-# - hifiasm_meta
-# - canu #unimplemented
-
-
-operaMS_path : ../programs/OPERA-MS
-###### Evaluation ######
-
-#### Binning #####
-binning : false
-binners : 
- - metabat2
-checkm : false
-kraken2_on_bins : false #/!\ Require having done binning separatly on a previous step
-target_bins : #/!\ Require having done binning separatly on a previous step
-# HQ
- - 272
- - 306
- - 390
- - 255
- - 112
-# MQ
- - 253
- - 343
- - 226
- - 170
- - 242
-# LQ
- - 123
- - 194
- - 154
- - 177
- - 256
-
-### Contig analysis ###
-read_mapping_evaluation : false
-read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
-short_read_mapping_evaluation : false
-reference_mapping_evaluation : false
-metaquast : true
-metaquast_min_identity : 95
+# (optional), used for evaluation
 reference_genomes :
 ### Soil from blast ###
 # - /groups/genscale/nimauric/soil_references/flavobacterium_sp_KS_LB2.fasta
@@ -169,20 +125,149 @@ reference_genomes :
 # - /groups/genscale/nimauric/ZymoD6331/Roseburia_hominis.fasta
 # - /groups/genscale/nimauric/ZymoD6331/Veillonella_rogosae.fasta
 
+# (optional), used for evaluation
 abundance_information : /groups/genscale/nimauric/long_reads/soil_abundance.csv # /groups/genscale/nimauric/long_reads/zymo_abundance.csv #
 
 
-### Read analysis ###
-fractions : 
-  - full
-#  - mapped 
-#  - unmapped
-
-fastqc : false # read quality and other statistics
-
-kraken2 : false # taxonomic assignation
+### External programs ###
+# (optional), used for evaluation via taxonomic assignation
 kraken2bin : /scratch/nimauric/kraken2/bins/
 kraken2db : /groups/genscale/nimauric/databases/standard_kraken_database/
 kronabin : /scratch/nimauric/KronaTools-2.7/bin/
 
-kat : false # read abundance analysis
+
+# (optional), 
+operaMS_path : ../programs/OPERA-MS
+
+##### Controls #####
+### Assembly and binning ###
+assemblers : # uncomment assemblers to use them
+ - metaMDBG
+# - operaMS # requires short_read_assembly and operaMS_path
+# - metaflye
+# - hifiasm_meta
+
+short_read_binning : false # requires short_reads_1 and short_reads_2
+short_read_cobinning : false # requires short_reads_1 and short_reads_2
+additional_reads_cobinning : false # requires at least one additional_reads 
+
+binning : false
+binners : 
+  - metabat2
+
+### Evaluation ###
+# contig analysis
+metaquast : true # requires reference_genomes
+read_mapping_evaluation : false 
+short_read_mapping_evaluation : false # requires short_reads_1 and short_reads_2
+reference_mapping_evaluation : false # requires reference_genomes
+
+# bins analysis
+checkm : false
+kraken2_on_bins : false #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
+target_bins : #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
+# HQ
+ - 272
+ - 306
+ - 390
+ - 255
+ - 112
+# MQ
+ - 253
+ - 343
+ - 226
+ - 170
+ - 242
+# LQ
+ - 123
+ - 194
+ - 154
+ - 177
+ - 256
+
+# Fractionned read analysis
+fractions : 
+  - full
+#  - mapped 
+#  - unmapped
+fastqc : false 
+kraken2 : false # requires kraken2bin; kraken2db and kronabin
+kat : false
+
+##### Parameters #####
+### Functional parameters ###
+read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
+metaquast_min_identity : 95
+
+### Ressources parameters ###
+
+# Mapping
+rules_mapping :
+  threads: 24
+  memory: 100G 
+  time: 1*24*60 #in minutes
+
+# Assembly 
+rule_metaMDBG_assembly: 
+  threads: 48
+  memory: 35G 
+  time: 2*24*60 #in minutes
+
+rule_metaflye_assembly: 
+  threads: 48
+  memory: 60G 
+  time: 1*24*60 #in minutes
+
+rule_hifiasm_meta_assembly: 
+  threads: 48
+  memory: 80G 
+  time: 2*24*60 #in minutes
+
+rule_operaMS_assembly : 
+  threads: 48
+  memory: 200G 
+  time: 5*24*60 #in minutes
+
+# Binning
+rules_metabat2_binnings : 
+  threads: 16
+  memory: 20G 
+  time: 12*60 #in minutes
+
+# Contig quality analysis
+rule_metaquast: 
+  threads: 1
+  memory: 20G 
+  time: 24*60 #in minutes
+
+# Bin quality analysis
+rule_checkm: 
+  threads: 16
+  memory: 100G 
+  time: 24*60 #in minutes
+
+rule_checkm_report_writer : 
+  threads: 1
+  memory: 100G 
+  time: 1*60 #in minutes
+
+rule_kraken2_on_bins : 
+  threads: 12
+  memory: 100G 
+  time: 4*60 #in minutes
+
+# read quality analysis 
+rule_extract_unmapped_reads : 
+  threads: 24
+  memory: 100G 
+  time: 24*60 #in minutes
+
+rule_kraken2 : 
+  threads: 12
+  memory: 100G 
+  time: 4*60 #in minutes
+
+rule_kat_sect : 
+  threads: 12
+  memory: 200G 
+  time: 4*60 #in minutes

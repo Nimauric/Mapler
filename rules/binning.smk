@@ -3,11 +3,11 @@ rule metabat2_binning :
         contigs =  "outputs/{sample}/{assembler}/assembly.fasta",
         alignement =  "outputs/{sample}/{assembler}/{reference_reads}_on_contigs.bam"
     conda : "../envs/metabat2.yaml",
-    threads : 16
+    threads : config["rules_metabat2_binnings"]["threads"]
     resources :
-        cpus_per_task = 16,  #on mmdbg irg salad, 91% efficiency : 8 => 16
-        mem_mb=10*1000, # on mmdbg irg salad, 49% efficiency
-        runtime=12*60, # on mmdbg irg salad, 4 hours
+        cpus_per_task = config["rules_metabat2_binnings"]["threads"],
+        mem_mb=config["rules_metabat2_binnings"]["memory"],
+        runtime=eval(config["rules_metabat2_binnings"]["time"]),
     output : 
         directory = directory("outputs/{sample}/{assembler}/metabat2_bins_{reference_reads}_alignement/bins"),
         at_least_one_bin = "outputs/{sample}/{assembler}/metabat2_bins_{reference_reads}_alignement/bins/bin.1.fa"
@@ -19,11 +19,11 @@ rule metabat2_cobinning_short_reads :
         alignement1 =  "outputs/{sample}/{assembler}/reads_on_contigs.bam",
         alignement2 =  "outputs/{sample}/{assembler}/short_reads_on_contigs.bam",
     conda : "../envs/metabat2.yaml",
-    threads : 16
+    threads : config["rules_metabat2_binnings"]["threads"]
     resources :
-        cpus_per_task = 16, 
-        mem_mb=10*1000,
-        runtime=12*60, 
+        cpus_per_task = config["rules_metabat2_binnings"]["threads"],
+        mem_mb=config["rules_metabat2_binnings"]["memory"],
+        runtime=eval(config["rules_metabat2_binnings"]["time"]),
     output : 
         directory = directory("outputs/{sample}/{assembler}/metabat2_bins_cobinning_alignement/bins"),
         at_least_one_bin = "outputs/{sample}/{assembler}/metabat2_bins_cobinning_alignement/bins/bin.1.fa"
@@ -35,11 +35,11 @@ rule metabat2_cobinning_additional_reads :
         alignement =  "outputs/{sample}/{assembler}/reads_on_contigs.bam",
         additional_alignements =  expand("outputs/{{sample}}/{{assembler}}/{additional_reads_name}_reads_on_contigs.bam", additional_reads_name = [ar["name"] for ar in config["additional_reads"]]),
     conda : "../envs/metabat2.yaml",
-    threads : 16
+    threads : config["rules_metabat2_binnings"]["threads"]
     resources :
-        cpus_per_task = 16, 
-        mem_mb=10*1000,
-        runtime=12*60, 
+        cpus_per_task = config["rules_metabat2_binnings"]["threads"],
+        mem_mb=config["rules_metabat2_binnings"]["memory"],
+        runtime=eval(config["rules_metabat2_binnings"]["time"]),
     output : 
         directory = directory("outputs/{sample}/{assembler}/metabat2_bins_additional_reads_cobinning_alignement/bins"),
         at_least_one_bin = "outputs/{sample}/{assembler}/metabat2_bins_additional_reads_cobinning_alignement/bins/bin.1.fa"
