@@ -44,7 +44,7 @@ include : "rules/contig_quality_analysis.smk"
 ##### Improvements #####
 """
 replace minimap2 by mapquick for hifi long reads mapping ?
-replace kraken2 by sourmash for taxonomic assignation
+replace kraken2 by sourmash for taxonomic assignation ?
 """
 
 rule all :

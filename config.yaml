@@ -6,27 +6,44 @@ samples :
 #   read_path : /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
 # - name : human-gut
 #   read_path : /groups/genscale/nimauric/long_reads/biocolective_139369_vegan_gut.fastq
+ - name : Pseudomonas_fluorescens_1X
+   read_path : ../CWL_subsample/Pseudomonas_fluorescens_1X.fastq
+ - name : Pseudomonas_fluorescens_3X
+   read_path : ../CWL_subsample/Pseudomonas_fluorescens_3X.fastq
+ - name : Pseudomonas_fluorescens_5X
+   read_path : ../CWL_subsample/Pseudomonas_fluorescens_5X.fastq
+ - name : Pseudomonas_fluorescens_10X
+   read_path : ../CWL_subsample/Pseudomonas_fluorescens_10X.fastq
 
- - name : salad_irg+Burkholderia_ambifaria_5X
-   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_5X.fastq
- - name : Burkholderia_ambifaria_5X
-   read_path : ../CWL_subsample/Burkholderia_ambifaria_5X.fastq
- - name : salad_irg+Burkholderia_ambifaria_10X
-   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_10X.fastq
- - name : Burkholderia_ambifaria_10X
-   read_path : ../CWL_subsample/Burkholderia_ambifaria_10X.fastq
- - name : salad_irg+Burkholderia_ambifaria_30X
-   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_30X.fastq
- - name : Burkholderia_ambifaria_30X
-   read_path : ../CWL_subsample/Burkholderia_ambifaria_30X.fastq
- - name : salad_irg+Burkholderia_ambifaria_50X
-   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_50X.fastq
- - name : Burkholderia_ambifaria_50X
-   read_path : ../CWL_subsample/Burkholderia_ambifaria_50X.fastq  
- - name : salad_irg+Burkholderia_ambifaria_100X
-   read_path : ../CWL_subsample/salad_irg+Burkholderia_ambifaria_100X.fastq
- - name : Burkholderia_ambifaria_100X
-   read_path : ../CWL_subsample/Burkholderia_ambifaria_100X.fastq 
+ - name : salad_irg+Pseudomonas_fluorescens_1X
+   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_1X.fastq
+ - name : salad_irg+Pseudomonas_fluorescens_3X
+   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_3X.fastq
+ - name : salad_irg+Pseudomonas_fluorescens_5X
+   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_5X.fastq
+ - name : salad_irg+Pseudomonas_fluorescens_10X
+   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_10X.fastq
+
+# - name : Pseudomonas_fluorescens_1X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/Pseudomonas_fluorescens_1X_simulated.fastq
+# - name : Pseudomonas_fluorescens_3X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/Pseudomonas_fluorescens_3X_simulated.fastq
+# - name : Pseudomonas_fluorescens_5X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/Pseudomonas_fluorescens_5X_simulated.fastq
+# - name : Pseudomonas_fluorescens_10X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/Pseudomonas_fluorescens_10X_simulated.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_1X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/salad_irg+Pseudomonas_fluorescens_1X_simulated.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_3X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/salad_irg+Pseudomonas_fluorescens_3X_simulated.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_5X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/salad_irg+Pseudomonas_fluorescens_5X_simulated.fastq
+# - name : salad_irg+Pseudomonas_fluorescens_10X_simulated
+#   read_path : /scratch/nimauric/CWL_subsample/simulate_reads/salad_irg+Pseudomonas_fluorescens_10X_simulated.fastq
+
+# - name : salad_irg+Pseudomonas_fluorescens_10X
+#   read_path : ../CWL_subsample/salad_irg+Pseudomonas_fluorescens_10X.fastq
+
 
 
 
@@ -99,8 +116,8 @@ target_bins : #/!\ Require having done binning separatly on a previous step
 read_mapping_evaluation : false
 read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
 short_read_mapping_evaluation : false
-reference_mapping_evaluation : true
-metaquast : false
+reference_mapping_evaluation : false
+metaquast : true
 metaquast_min_identity : 95
 reference_genomes :
 ### Soil from blast ###
@@ -126,7 +143,8 @@ reference_genomes :
 # - /groups/genscale/nimauric/soil_references/Pseudomonas_sp_ABC1.fasta
 # - /groups/genscale/nimauric/soil_references/Streptomyces_liliifuscus.fasta
 ### Soil spiked 
-- /groups/genscale/nimauric/soil_references/Burkholderia_ambifaria.fasta 
+# - /groups/genscale/nimauric/soil_references/Pseudomonas_fluorescens.fasta
+- /groups/genscale/nimauric/soil_references/Pseudomonas_fluorescens_IMGN2.fasta
 ### Zymo ###
 # - /groups/genscale/nimauric/ZymoD6331/Zymo_merged.fasta 
 # - /groups/genscale/nimauric/ZymoD6331/Akkermansia_muciniphila.fasta
@@ -156,7 +174,7 @@ abundance_information : /groups/genscale/nimauric/long_reads/soil_abundance.csv 
 
 ### Read analysis ###
 fractions : 
-#  - full
+  - full
 #  - mapped 
 #  - unmapped
 

@@ -1,0 +1,77 @@
+##### Inputs #####
+### Samples ###
+# long reads used for assembly and evaluation
+samples :
+ - name : sample_name
+   read_path : /path/to/reads.fastq
+
+# (optional), short reads, may be used for binning or evaluation. Should be from the same sample as the long reads
+short_reads_1 : /path/to/short_reads_1.fastq
+short_reads_2 : /path/to/short_reads_2.fastq
+# (optional), short read assembly, may be used for assembly. Should be from the same sample as the long reads
+short_read_assembly : /path/to/short_read_assembly.fasta
+
+# (optional), long reads used for cobinning. Should be from a similar sample as the studied sample
+additional_reads : 
+ - name : sample_name
+   path : /path/to/reads.fastq
+
+# (optional), used for evaluation
+reference_genomes :
+- /groups/genscale/nimauric/soil_references/Pseudomonas_fluorescens_IMGN2.fasta
+# (optional), used for evaluation
+abundance_information : /path/to/abundance.csv # need to be reworked
+
+
+### External programs ###
+# (optional), used for evaluation via taxonomic assignation
+kraken2bin : /path/to/kraken2/bins/
+kraken2db : /path/to/kraken_database/
+kronabin : /path/to/KronaTools-2.7/bin/
+
+# (optional), 
+operaMS_path : /path/to/OPERA-MS
+
+
+##### Controls #####
+### Assembly and binning ###
+assemblers : # uncomment assemblers to use them
+ - metaMDBG
+# - operaMS # requires short_read_assembly and operaMS_path
+# - metaflye
+# - hifiasm_meta
+
+short_read_binning : false # requires short_reads_1 and short_reads_2
+short_read_cobinning : false # requires short_reads_1 and short_reads_2
+additional_reads_cobinning : false # requires at least one additional_reads 
+
+binning : true
+binners : 
+  - metabat2
+
+### Evaluation ###
+# contig analysis
+metaquast : true # requires reference_genomes
+read_mapping_evaluation : false 
+short_read_mapping_evaluation : false # requires short_reads_1 and short_reads_2
+reference_mapping_evaluation : false # requires reference_genomes
+
+# bins analysis
+checkm : false
+kraken2_on_bins : false #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
+target_bins : #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
+ - 1
+
+# Fractionned read analysis
+fractions : 
+  - full
+#  - mapped 
+#  - unmapped
+fastqc : false 
+kraken2 : false # requires kraken2bin; kraken2db and kronabin
+kat : false
+
+##### Parameters #####
+read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
+metaquast_min_identity : 95
+
