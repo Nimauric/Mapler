@@ -10,7 +10,8 @@ rule checkm :
     resources :
         cpus_per_task = config["rule_checkm"]["threads"],
         mem_mb=config["rule_checkm"]["memory"],
-        runtime=eval(config["rule_checkm"]["time"]),    output :"outputs/{sample}/{assembler}/metabat2_bins_{reference_reads}_alignement/checkm/bins_quality_check.tsv"
+        runtime=eval(config["rule_checkm"]["time"]),
+    output :"outputs/{sample}/{assembler}/metabat2_bins_{reference_reads}_alignement/checkm/bins_quality_check.tsv"
     shell : "./sources/bin_quality_analysis/checkm_wraper.sh {params.bins_extension} {input.bins} {params.output_directory} {output}"
 
 rule checkm_report_writer : 

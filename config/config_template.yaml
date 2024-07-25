@@ -1,85 +1,87 @@
 ##### Inputs #####
+analysis_name: analysis_name
+
 ### Samples ###
 # long reads used for assembly and evaluation
-samples :
- - name : sample_name
-   read_path : /path/to/reads.fastq
+samples: 
+ - name: sample_name
+   read_path: /path/to/reads.fastq
 
 # (optional), short reads, may be used for binning or evaluation. Should be from the same sample as the long reads
-short_reads_1 : /path/to/short_reads_1.fastq
-short_reads_2 : /path/to/short_reads_2.fastq
+short_reads_1: /path/to/short_reads_1.fastq
+short_reads_2: /path/to/short_reads_2.fastq
 # (optional), short read assembly, may be used for assembly. Should be from the same sample as the long reads
-short_read_assembly : /path/to/short_read_assembly.fasta
+short_read_assembly: /path/to/short_read_assembly.fasta
 
 # (optional), long reads used for cobinning. Should be from a similar sample as the studied sample
-additional_reads : 
- - name : sample_name
-   path : /path/to/reads.fastq
+additional_reads: 
+ - name: sample_name
+   path: /path/to/reads.fastq
 
 # (optional), used for evaluation
-reference_genomes :
+reference_genomes: 
 - /path/to/reference_genome.fasta
 # (optional), used for evaluation
-abundance_information : /path/to/abundance.csv # need to be reworked
+abundance_information: /path/to/abundance.csv # need to be reworked
 
 
 ### External programs ###
 # (optional), used for evaluation via taxonomic assignation
-kraken2bin : /path/to/kraken2/bins/
-kraken2db : /path/to/kraken_database/
-kronabin : /path/to/KronaTools-2.7/bin/
+kraken2bin: /path/to/kraken2/bins/
+kraken2db: /path/to/kraken_database/
+kronabin: /path/to/KronaTools-2.7/bin/
 
 # (optional), 
-operaMS_path : /path/to/OPERA-MS
+operaMS_path: /path/to/OPERA-MS
 
 
 ##### Controls #####
 ### Assembly and binning ###
-assemblers : # uncomment assemblers to use them
+assemblers: # uncomment assemblers to use them
  - metaMDBG
 # - operaMS # requires short_read_assembly and operaMS_path
 # - metaflye
 # - hifiasm_meta
 
-short_read_binning : false # requires short_reads_1 and short_reads_2
-short_read_cobinning : false # requires short_reads_1 and short_reads_2
-additional_reads_cobinning : false # requires at least one additional_reads 
+short_read_binning: false # requires short_reads_1 and short_reads_2
+short_read_cobinning: false # requires short_reads_1 and short_reads_2
+additional_reads_cobinning: false # requires at least one additional_reads 
 
-binning : true
-binners : 
+binning: true
+binners: 
   - metabat2
 
 ### Evaluation ###
 # contig analysis
-metaquast : true # requires reference_genomes
-read_mapping_evaluation : false 
-short_read_mapping_evaluation : false # requires short_reads_1 and short_reads_2
-reference_mapping_evaluation : false # requires reference_genomes
+metaquast: true # requires reference_genomes
+read_mapping_evaluation: false 
+short_read_mapping_evaluation: false # requires short_reads_1 and short_reads_2
+reference_mapping_evaluation: false # requires reference_genomes
 
 # bins analysis
-checkm : false
-kraken2_on_bins : false #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
-target_bins : #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
+checkm: false
+kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
+target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
  - 1
 
 # Fractionned read analysis
-fractions : 
+fractions: 
   - full
 #  - mapped 
 #  - unmapped
-fastqc : false 
-kraken2 : false # requires kraken2bin; kraken2db and kronabin
-kat : false
+fastqc: false 
+kraken2: false # requires kraken2bin; kraken2db and kronabin
+kat: false
 
 ##### Parameters #####
 ### Functional parameters ###
-read_mapping_threshold : 0 #minimum total alignement length for a read to be considered mapped to a contig
-metaquast_min_identity : 95
+read_mapping_threshold: 0 #minimum total alignement length for a read to be considered mapped to a contig
+metaquast_min_identity: 95
 
 ### Ressources parameters ###
 
 # Mapping
-rules_mapping :
+rules_mapping: 
   threads: 24
   memory: 100G 
   time: 1*24*60 #in minutes
@@ -100,13 +102,13 @@ rule_hifiasm_meta_assembly:
   memory: 80G 
   time: 2*24*60 #in minutes
 
-rule_operaMS_assembly : 
+rule_operaMS_assembly: 
   threads: 48
   memory: 200G 
   time: 5*24*60 #in minutes
 
 # Binning
-rules_metabat2_binnings : 
+rules_metabat2_binnings: 
   threads: 16
   memory: 20G 
   time: 12*60 #in minutes
@@ -123,28 +125,28 @@ rule_checkm:
   memory: 100G 
   time: 24*60 #in minutes
 
-rule_checkm_report_writer : 
+rule_checkm_report_writer: 
   threads: 1
   memory: 100G 
   time: 1*60 #in minutes
 
-rule_kraken2_on_bins : 
+rule_kraken2_on_bins: 
   threads: 12
   memory: 100G 
   time: 4*60 #in minutes
 
 # read quality analysis 
-rule_extract_unmapped_reads : 
+rule_extract_unmapped_reads: 
   threads: 24
   memory: 100G 
   time: 24*60 #in minutes
 
-rule_kraken2 : 
+rule_kraken2: 
   threads: 12
   memory: 100G 
   time: 4*60 #in minutes
 
-rule_kat_sect : 
+rule_kat_sect: 
   threads: 12
   memory: 200G 
   time: 4*60 #in minutes
