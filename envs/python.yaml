@@ -1,9 +1,8 @@
-name : python
 channels :
   - conda-forge
   - bioconda
 dependencies :
- - python
- - pysam
- - pandas
- - biopython
+ - python=3.10.14
+ - pysam=0.22.0
+ - pandas=2.2.1
+ - biopython=1.83

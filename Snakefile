@@ -87,17 +87,3 @@ rule all :
         # Binning additional reads cobinning
         expand("outputs/{sample}/{assembler}/{binner}_bins_additional_reads_cobinning_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
             if(config["checkm"] == True and config["additional_reads_cobinning"] == True) else "Snakefile",
-
-
-##### Utility rules #####
-
-#Compiles required cpp programs 
-rule compile_cpp : 
-    conda : "./envs/c++.yaml",
-    input : 
-        "{file}.cpp"
-    output : 
-        "{file}.out"
-    shell : 
-        "g++ {input} -std=c++17 -o {output}"
-

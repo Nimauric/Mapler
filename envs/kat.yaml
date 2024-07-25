@@ -1,6 +1,5 @@
-name : kat
 channels :
   - bioconda
   - conda-forge
 dependencies :
- - kat
+ - kat=2.4.2

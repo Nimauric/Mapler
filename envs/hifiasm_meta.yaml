@@ -1,6 +1,5 @@
 channels :
   - bioconda
   - conda-forge
-
 dependencies :
- - hifiasm_meta
+ - hifiasm_meta=hamtv0.3.1
