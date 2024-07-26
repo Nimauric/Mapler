@@ -59,3 +59,8 @@ rule operaMS_assembly :
         short_read_assembly=config["short_read_assembly"],
     output : "outputs/{sample}/operaMS/assembly.fasta"
     shell : "./sources/assembly/operaMS_wraper.sh {params.operaMS_path} {input.long_reads} {input.short_read_1} {input.short_read_2} {input.short_read_assembly} {params.tmp_directory} {output}"
+
+rule copy_assembly : 
+    input : config["custom_assembly_path"],
+    output : "outputs/{sample}/custom_assembly/assembly.fasta"
+    shell : "cp {input} {output}"
