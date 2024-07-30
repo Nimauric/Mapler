@@ -42,3 +42,4 @@ rule read_contig_mapping_evaluation :
 # contig statistics ? N50...
 
 # compare mapping contigs on reference with mapping reads on reference  ?
+

@@ -64,7 +64,6 @@ rule all :
             if(config["read_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/metaquast/report.txt", sample=get_samples("name"), assembler = config["assemblers"])
             if(config["metaquast"] == True) else "Snakefile",
-        
         expand("outputs/{sample}/reads_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
             if(config["reference_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/contigs_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
@@ -75,6 +74,8 @@ rule all :
             if(config["binning"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
             if(config["checkm"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/gtdbtk/results/gtdbtk.bac120.summary.tsv", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["gtdbtk"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"], target_bin=config["target_bins"])
             if(config["kraken2_on_bins"] == True) else "Snakefile",
 

@@ -35,6 +35,9 @@ kraken2bin: /path/to/kraken2/bins/
 kraken2db: /path/to/kraken_database/
 kronabin: /path/to/KronaTools-2.7/bin/
 
+gtdbtk_database: /path/to/gtdbtk_release220/
+mash_database: outputs/mash_db #if doesn't exist, will be created here
+
 # (optional), 
 operaMS_path: /path/to/OPERA-MS
 
@@ -66,6 +69,7 @@ reference_mapping_evaluation: false # requires reference_genomes
 
 # bins analysis
 checkm: false
+gtdbtk: false # requires gtdbtk_database and mash_database
 kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
 target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
  - 1
@@ -140,6 +144,11 @@ rule_kraken2_on_bins:
   threads: 12
   memory: 100G 
   time: 4*60 #in minutes
+
+rule_gtdbtk_on_bins: 
+  threads: 20
+  memory: 100G 
+  time: 8*60 #in minutes
 
 # read quality analysis 
 rule_extract_unmapped_reads: 

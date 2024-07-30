@@ -1,17 +1,21 @@
+
+
+
+
 ##### Inputs #####
-analysis_name: test
+analysis_name: gtdbtk_implementation
 
 ### Samples ###
 # long reads used for assembly and evaluation
 samples: 
-# - name: zymo
-#   read_path: /groups/genscale/nimauric/long_reads/zymoD6331.fastq
-# - name: salad-irg 
-#   read_path: /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
+ - name: zymo
+   read_path: /groups/genscale/nimauric/long_reads/zymoD6331.fastq
+ - name: salad-irg 
+   read_path: /groups/genscale/nimauric/long_reads/SMRTcell1-M8-fev-sal-irg-1.hifi_reads.fastq 
 # - name: human-gut
 #   read_path: /groups/genscale/nimauric/long_reads/biocolective_139369_vegan_gut.fastq
- - name: Pseudomonas_fluorescens_1X
-   read_path: ../CWL_subsample/Pseudomonas_fluorescens_1X.fastq
+# - name: Pseudomonas_fluorescens_1X
+#   read_path: ../CWL_subsample/Pseudomonas_fluorescens_1X.fastq
 # - name: Pseudomonas_fluorescens_3X
 #   read_path: ../CWL_subsample/Pseudomonas_fluorescens_3X.fastq
 # - name: Pseudomonas_fluorescens_5X
@@ -140,6 +144,8 @@ kraken2bin: /scratch/nimauric/kraken2/bins/
 kraken2db: /groups/genscale/nimauric/databases/standard_kraken_database/
 kronabin: /scratch/nimauric/KronaTools-2.7/bin/
 
+gtdbtk_database: /groups/genscale/nimauric/databases/gtdbtk_release220/
+mash_database: outputs/mash_db #if doesn't exist, will be created here
 
 # (optional), 
 operaMS_path: ../programs/OPERA-MS
@@ -148,8 +154,8 @@ operaMS_path: ../programs/OPERA-MS
 ### Assembly and binning ###
 
 assemblers: # uncomment assemblers to use them
-# - metaMDBG
- - custom_assembly # requires custom_assembly_path
+ - metaMDBG
+# - custom_assembly # requires custom_assembly_path
 # - operaMS # requires short_read_assembly and operaMS_path
 # - metaflye
 # - hifiasm_meta
@@ -158,20 +164,21 @@ short_read_binning: false # requires short_reads_1 and short_reads_2
 short_read_cobinning: false # requires short_reads_1 and short_reads_2
 additional_reads_cobinning: false # requires at least one additional_reads 
 
-binning: true
+binning: false
 binners: 
-#  - metabat2
-  - custom # requires custom_bins_path
+  - metabat2
+#  - custom # requires custom_bins_path
 
 ### Evaluation ###
 # contig analysis
-metaquast: true # requires reference_genomes
+metaquast: false # requires reference_genomes
 read_mapping_evaluation: false 
 short_read_mapping_evaluation: false # requires short_reads_1 and short_reads_2
 reference_mapping_evaluation: false # requires reference_genomes
 
 # bins analysis
 checkm: false
+gtdbtk: true # requires gtdbtk_database and mash_database
 kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
 target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2bin; kraken2db and kronabin
 # HQ
@@ -263,6 +270,11 @@ rule_kraken2_on_bins:
   threads: 12
   memory: 100G 
   time: 4*60 #in minutes
+
+rule_gtdbtk_on_bins: 
+  threads: 20
+  memory: 100G 
+  time: 8*60 #in minutes
 
 # read quality analysis 
 rule_extract_unmapped_reads: 
