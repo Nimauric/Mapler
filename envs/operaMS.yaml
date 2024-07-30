@@ -1,7 +1,6 @@
-name : operaMS
 channels:
   - conda-forge
   - bioconda
 dependencies:
-  - perl-app-cpanminus
-  - r-rlang
+  - perl-app-cpanminus=1.7047
+  - r-rlang=1.1.3

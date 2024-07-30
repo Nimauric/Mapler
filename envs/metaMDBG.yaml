@@ -1,6 +1,5 @@
-name : metaMDBG
 channels:
   - conda-forge
   - bioconda
 dependencies:
-  - metamdbg
+  - metamdbg=0.3

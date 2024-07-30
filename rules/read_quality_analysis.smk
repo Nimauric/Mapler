@@ -10,11 +10,11 @@ rule extract_unmapped_reads :
         mapped_reads = "outputs/{sample}/{assembler}/mapped_reads.fastq",
         unmapped_reads = "outputs/{sample}/{assembler}/unmapped_reads.fastq",
     conda : "../envs/mapping.yaml"
-    threads : 24
+    threads : config["rule_extract_unmapped_reads"]["threads"]
     resources :
-        cpus_per_task = 24, 
-        mem_mb= 100*1000 , 
-        runtime=1*24*60, 
+        cpus_per_task = config["rule_extract_unmapped_reads"]["threads"],
+        mem_mb=config["rule_extract_unmapped_reads"]["memory"],
+        runtime=eval(config["rule_extract_unmapped_reads"]["time"]),
     shell : "./sources/read_quality_analysis/extract_unmapped_reads.sh {input.mapping} {params.output_directory}"
 
 rule fastqc : 
@@ -37,11 +37,11 @@ rule kraken2 :
         output_directory = "outputs/{sample}/{assembler}/kraken2/{fraction}"
     input : get_read_path
     output : "outputs/{sample}/{assembler}/kraken2/{fraction}/krona.html",
-    threads : 12
+    threads : config["rule_kraken2"]["threads"]
     resources :
-        cpus_per_task = 6, #on mmdbg irg salad full, 35% efficiency with 12 cpus => 6
-        mem_mb= 100*1000 , #on mmdbg irg salad full, 72% efficiency
-        runtime=1*4*60, #on mmdbg irg salad full, 17 minutes
+        cpus_per_task = config["rule_kraken2"]["threads"],
+        mem_mb=config["rule_kraken2"]["memory"],
+        runtime=eval(config["rule_kraken2"]["time"]),
     shell : "./sources/read_quality_analysis/kraken2.sh {params.kraken2_directory} {params.database} {params.krona_directory} {input} {params.output_directory}"
 
 rule kat_sect : 
@@ -54,9 +54,9 @@ rule kat_sect :
         full_reads = lambda wildcards: get_sample( "read_path", wildcards), #The full set, used to evaluate the frequency
     output : "outputs/{sample}/{assembler}/kat/{fraction}-stats.tsv"
     conda : "../envs/kat.yaml"
-    threads : 12
+    threads : config["rule_kat_sect"]["threads"]
     resources :
-        cpus_per_task = 12, #on mmdbg irg salad full, 91% efficiency 12
-        mem_mb= 200*1000 , #on mmdbg irg salad full, 71% efficiency
-        runtime=1*4*60, #on mmdbg irg salad full, 1h
+        cpus_per_task = config["rule_kat_sect"]["threads"],
+        mem_mb=config["rule_kat_sect"]["memory"],
+        runtime=eval(config["rule_kat_sect"]["time"]),
     shell : "./sources/read_quality_analysis/kat.sh {input.reads} {input.full_reads} {params.output_prefix}" 

@@ -44,7 +44,7 @@ include : "rules/contig_quality_analysis.smk"
 ##### Improvements #####
 """
 replace minimap2 by mapquick for hifi long reads mapping ?
-replace kraken2 by sourmash for taxonomic assignation
+replace kraken2 by sourmash for taxonomic assignation ?
 """
 
 rule all :
@@ -64,7 +64,6 @@ rule all :
             if(config["read_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/metaquast/report.txt", sample=get_samples("name"), assembler = config["assemblers"])
             if(config["metaquast"] == True) else "Snakefile",
-        
         expand("outputs/{sample}/reads_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
             if(config["reference_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/contigs_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
@@ -75,6 +74,8 @@ rule all :
             if(config["binning"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
             if(config["checkm"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/gtdbtk/results/gtdbtk.bac120.summary.tsv", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["gtdbtk"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"], target_bin=config["target_bins"])
             if(config["kraken2_on_bins"] == True) else "Snakefile",
 
@@ -87,17 +88,3 @@ rule all :
         # Binning additional reads cobinning
         expand("outputs/{sample}/{assembler}/{binner}_bins_additional_reads_cobinning_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
             if(config["checkm"] == True and config["additional_reads_cobinning"] == True) else "Snakefile",
-
-
-##### Utility rules #####
-
-#Compiles required cpp programs 
-rule compile_cpp : 
-    conda : "./envs/c++.yaml",
-    input : 
-        "{file}.cpp"
-    output : 
-        "{file}.out"
-    shell : 
-        "g++ {input} -std=c++17 -o {output}"
-

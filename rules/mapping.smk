@@ -9,11 +9,11 @@ rule reads_on_contigs_mapping :
         reads = lambda wildcards: get_sample( "read_path", wildcards), 
     output : "outputs/{sample}/{assembler}/reads_on_contigs.bam"
     conda : "../envs/mapping.yaml"
-    threads : 24
+    threads : config["rules_mapping"]["threads"]
     resources :
-        cpus_per_task = 24, 
-        mem_mb= 100*1000 , 
-        runtime=1*24*60, 
+        cpus_per_task = config["rules_mapping"]["threads"],
+        mem_mb=config["rules_mapping"]["memory"],
+        runtime=eval(config["rules_mapping"]["time"]),
     shell : "./sources/mapping.sh {output} {input.reads} {input.assembly} map-hifi "
 
 rule short_reads_on_contigs_mapping : 
@@ -25,11 +25,11 @@ rule short_reads_on_contigs_mapping :
         R2 = config["short_reads_2"], 
     output : "outputs/{sample}/{assembler}/short_reads_on_contigs.bam"
     conda : "../envs/mapping.yaml"
-    threads : 24
+    threads : config["rules_mapping"]["threads"]
     resources :
-        cpus_per_task = 24, 
-        mem_mb= 100*1000 , 
-        runtime=1*24*60, 
+        cpus_per_task = config["rules_mapping"]["threads"],
+        mem_mb=config["rules_mapping"]["memory"],
+        runtime=eval(config["rules_mapping"]["time"]),
     shell : "./sources/mapping.sh {output} {input.R1} {input.assembly} sr {input.R2}"
 
 
@@ -48,16 +48,12 @@ rule additional_reads_on_contigs_mapping :
         reads = get_additional_read_path
     output : "outputs/{sample}/{assembler}/{additional_read_name}_reads_on_contigs.bam",
     conda : "../envs/mapping.yaml"
-    threads : 24
+    threads : config["rules_mapping"]["threads"]
     resources :
-        cpus_per_task = 24, 
-        mem_mb= 100*1000 , 
-        runtime=1*24*60, 
+        cpus_per_task = config["rules_mapping"]["threads"],
+        mem_mb=config["rules_mapping"]["memory"],
+        runtime=eval(config["rules_mapping"]["time"]),
     shell : "./sources/mapping.sh {output} {input.reads} {input.assembly} map-hifi "
-
-
-
-
 
 rule reads_on_reference_mapping : 
     input :
@@ -65,11 +61,11 @@ rule reads_on_reference_mapping :
         reference = lambda wildcards: get_reference(wildcards.reference_name)
     output : "outputs/{sample}/reads_on_reference.{reference_name}.bam"
     conda : "../envs/mapping.yaml"
-    threads : 24
+    threads : config["rules_mapping"]["threads"]
     resources :
-        cpus_per_task = 24, 
-        mem_mb= 100*1000 , 
-        runtime=1*24*60, 
+        cpus_per_task = config["rules_mapping"]["threads"],
+        mem_mb=config["rules_mapping"]["memory"],
+        runtime=eval(config["rules_mapping"]["time"]),
     shell : "./sources/mapping.sh {output} {input.reads} {input.reference} map-hifi"
 
 
@@ -79,11 +75,11 @@ rule contigs_on_reference_mapping :
         reference = lambda wildcards: get_reference(wildcards.reference_name)
     output : "outputs/{sample}/{assembler}/contigs_on_reference.{reference_name}.bam"
     conda : "../envs/mapping.yaml"
-    threads : 24
+    threads : config["rules_mapping"]["threads"]
     resources :
-        cpus_per_task = 24, 
-        mem_mb= 100*1000 , 
-        runtime=1*24*60, 
+        cpus_per_task = config["rules_mapping"]["threads"],
+        mem_mb=config["rules_mapping"]["memory"],
+        runtime=eval(config["rules_mapping"]["time"]),
     shell : "./sources/mapping.sh {output} {input.assembly} {input.reference} asm20"
 
 #expand("outputs/{sample}/{assembler}/contigs_on_reference.{reference}.bam", 

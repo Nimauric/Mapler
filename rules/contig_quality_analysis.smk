@@ -5,9 +5,11 @@ rule metaquast :
         output_directory="outputs/{sample}/{assembler}/metaquast/results/",
         min_identity=config["metaquast_min_identity"]
     conda : "../envs/quast.yaml"
+    threads : config["rule_metaquast"]["threads"]
     resources :
-        mem_mb=20*1000,
-        runtime=24*60,
+        cpus_per_task = config["rule_metaquast"]["threads"],
+        mem_mb=config["rule_metaquast"]["memory"],
+        runtime=eval(config["rule_metaquast"]["time"]),
     input : "outputs/{sample}/{assembler}/assembly.fasta",
     output : directory("outputs/{sample}/{assembler}/metaquast/results/summary/TSV/"),
     shell : "sources/contig_quality_analysis/metaquast_wraper.sh {input} {params.output_directory} {params.min_identity} {params.reference_genomes} "
@@ -40,3 +42,4 @@ rule read_contig_mapping_evaluation :
 # contig statistics ? N50...
 
 # compare mapping contigs on reference with mapping reads on reference  ?
+

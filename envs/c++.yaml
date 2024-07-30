@@ -1,5 +1,0 @@
-name : cpp
-channels :
-  - conda-forge
-dependencies :
- - gxx
