@@ -6,3 +6,5 @@ dependencies :
  - pysam=0.22.0
  - pandas=2.2.1
  - biopython=1.83
+ - matplotlib=3.8.3
+ - numpy=1.26.4

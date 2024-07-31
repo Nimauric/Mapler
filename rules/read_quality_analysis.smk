@@ -60,3 +60,11 @@ rule kat_sect :
         mem_mb=config["rule_kat_sect"]["memory"],
         runtime=eval(config["rule_kat_sect"]["time"]),
     shell : "./sources/read_quality_analysis/kat.sh {input.reads} {input.full_reads} {params.output_prefix}" 
+
+rule kat_plot:
+    input : 
+        mapped = "outputs/{sample}/{assembler}/kat/mapped-stats.tsv",
+        unmapped = "outputs/{sample}/{assembler}/kat/unmapped-stats.tsv",
+    output : "outputs/{sample}/{assembler}/kat/kat-plot.png"
+    conda : "../envs/python.yaml"
+    shell : "python3 sources/read_quality_analysis/kat.py {input.mapped} {input.unmapped} {output}"
