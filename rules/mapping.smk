@@ -37,6 +37,7 @@ rule short_reads_on_contigs_mapping :
 def get_additional_read_path(wildcards):
     name = wildcards.additional_read_name
     path = [p["path"] for p in config["additional_reads"] if p["name"] == name]
+    print(name, path)
     if(len(path) == 1) : 
         return path
 

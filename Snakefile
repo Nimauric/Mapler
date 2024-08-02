@@ -59,8 +59,6 @@ if(config["additional_reads_cobinning"] == True) :
     binnings += expand("{binner}_bins_additional_reads_cobinning_alignement", binner = config["binners"])
 
 
-    
-print(binnings)
 
 rule all :
     input :

@@ -32,17 +32,16 @@ rule kraken2 :
         expand("{sample}", sample=get_samples("name")),
         expand("{fraction}", fraction=config["fractions"]),
         database = config["kraken2db"],
-        kraken2_directory = config["kraken2bin"],
-        krona_directory = config["kronabin"],
         output_directory = "outputs/{sample}/{assembler}/kraken2/{fraction}"
     input : get_read_path
+    conda : "../envs/kraken2.yaml"
     output : "outputs/{sample}/{assembler}/kraken2/{fraction}/krona.html",
     threads : config["rule_kraken2"]["threads"]
     resources :
         cpus_per_task = config["rule_kraken2"]["threads"],
         mem_mb=config["rule_kraken2"]["memory"],
         runtime=eval(config["rule_kraken2"]["time"]),
-    shell : "./sources/read_quality_analysis/kraken2.sh {params.kraken2_directory} {params.database} {params.krona_directory} {input} {params.output_directory}"
+    shell : "./sources/read_quality_analysis/kraken2.sh {params.database} {input} {params.output_directory}"
 
 rule kat_sect : 
     params : 
