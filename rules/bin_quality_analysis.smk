@@ -65,3 +65,14 @@ rule gtdbtk_on_bins:
     input: "outputs/{sample}/{assembler}/{binning}/bins",
     output: "outputs/{sample}/{assembler}/{binning}/gtdbtk/results/gtdbtk.bac120.summary.tsv"
     shell: "./sources/bin_quality_analysis/gtdbtk_wraper.sh {params.output_directory} {params.gtdbtk_database} {params.mash_database} {input}"
+
+
+rule read_contig_mapping_plot : 
+    input:
+        checkm_report = "outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt",
+        bins_directory = "outputs/{sample}/{assembler}/{binning}/bins",
+        reads_on_contigs_alignment = "outputs/{sample}/{assembler}/reads_on_contigs.bam",
+        reads = lambda wildcards: get_sample("read_path", wildcards)
+    conda: "../envs/python.yaml"
+    output: "outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.png"
+    shell: "python3 sources/bin_quality_analysis/reads_on_contigs_mapping_plot.py {input.checkm_report} {input.bins_directory} {input.reads_on_contigs_alignment} {input.reads} {output}"

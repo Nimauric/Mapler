@@ -82,6 +82,8 @@ rule all :
             if(config["gtdbtk"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"], target_bin=config["target_bins"])
             if(config["kraken2_on_bins"] == True) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/{binner}_bins_reads_alignement/read_contig_mapping_plot.png", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
+            if(config["checkm"] == True and config["read_mapping_evaluation"] == True) else "Snakefile",
 
         # Binning short reads
         expand("outputs/{sample}/{assembler}/{binner}_bins_short_reads_alignement/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binner = config["binners"])
