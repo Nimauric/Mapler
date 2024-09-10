@@ -169,14 +169,12 @@ df.plot(kind='bar', stacked=True, ax=axes, color=colors)
 axes.set_ylim([0, 1])
 plt.xticks(rotation=0, ha='center')
 plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()])
-plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), title="Quality", reverse=True)
 
 plt.xticks(range(2), ["Aligned Read Count Ratio", "Alignment Length Ratio"])
-plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), title="Quality", reverse=True)
-plt.savefig(output)
+legend = plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), title="Quality", reverse=True)
+
+
 plt.show()
-
-
-
+plt.savefig(output, bbox_extra_artists=(legend,), bbox_inches='tight')
 print("Done !")
 

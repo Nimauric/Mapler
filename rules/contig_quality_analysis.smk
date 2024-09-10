@@ -32,7 +32,12 @@ rule read_contig_mapping_evaluation :
         threshold = config["read_mapping_threshold"]
     input :
         reads = lambda wildcards: get_sample("read_path", wildcards),
-        mapping = "outputs/{sample}/{assembler}/{reference_reads}_on_contigs.bam",    
+        mapping = "outputs/{sample}/{assembler}/{reference_reads}_on_contigs.bam",
+    threads : config["rule_read_contig_mapping_evaluation"]["threads"]
+    resources :
+        cpus_per_task = config["rule_read_contig_mapping_evaluation"]["threads"],
+        mem_mb=config["rule_read_contig_mapping_evaluation"]["memory"],
+        runtime=eval(config["rule_read_contig_mapping_evaluation"]["time"]),   
     output : "outputs/{sample}/{assembler}/{reference_reads}_on_contigs_mapping_evaluation/report.txt"
     conda : "../envs/python.yaml"
     shell : "python3 ./sources/contig_quality_analysis/read_mapping_evaluation.py {input.reads} {input.mapping} {params.threshold} > {output}"

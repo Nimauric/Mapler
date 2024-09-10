@@ -85,8 +85,6 @@ rule all :
             if(config["reference_mapping_evaluation"] == True) else "Snakefile", 
         
         # Bins quality analysis (checkm, separate read and contig quality analysis by bin quality)
-        expand("outputs/{sample}/{assembler}/{binning}/bins/bin.1.fa", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
-            if(config["binning"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/checkm/checkm-plot.png", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)

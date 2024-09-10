@@ -49,6 +49,6 @@ rule copy_bins:
     input: config["custom_bins_path"]
     output:
         directory = directory("outputs/{sample}/{assembler}/custom_bins_reads_alignement/bins"),
-        at_least_one_bin = "outputs/{sample}/{assembler}/custom_bins_reads_alignement/bins/bin.1.fa"
     shell:
-        "cp {input}/*.fa {output.directory}"
+        """mkdir -p {output.directory}
+        cp {input}/*.fa {output.directory}"""
