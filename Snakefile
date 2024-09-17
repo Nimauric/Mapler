@@ -97,5 +97,3 @@ rule all :
             if(config["checkm"] == True and config["read_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/read_contig_mapping.txt", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True and config["read_mapping_evaluation"] == True) else "Snakefile",
-
-            
