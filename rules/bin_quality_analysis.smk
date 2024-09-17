@@ -38,8 +38,6 @@ rule checkm_plot:
 rule kraken2_on_bins:
     params: 
         database = config["kraken2db"],
-        kraken2_directory = config["kraken2bin"],
-        krona_directory = config["kronabin"],
         output_directory ="outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}"
     input: "outputs/{sample}/{assembler}/{binning}/bins/bin.{target_bin}.fa"
     output: "outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}/krona.html",
@@ -48,7 +46,7 @@ rule kraken2_on_bins:
         cpus_per_task = config["rule_kraken2_on_bins"]["threads"],
         mem_mb=config["rule_kraken2_on_bins"]["memory"],
         runtime=eval(config["rule_kraken2_on_bins"]["time"]),
-    shell: "./sources/read_quality_analysis/kraken2.sh {params.kraken2_directory} {params.database} {params.krona_directory} {input} {params.output_directory}"
+    shell: "./sources/read_quality_analysis/kraken2.sh {params.database} {input} {params.output_directory}"
 
 # GTDBTK
 rule gtdbtk_on_bins:
@@ -79,5 +77,7 @@ rule read_contig_mapping_plot:
         mem_mb=config["rule_read_contig_mapping_plot"]["memory"],
         runtime=eval(config["rule_read_contig_mapping_plot"]["time"]),
     conda: "../envs/python.yaml"
-    output: "outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.png"
-    shell: "python3 sources/bin_quality_analysis/reads_on_contigs_mapping_plot.py {input.checkm_report} {input.bins_directory} {input.reads_on_contigs_alignment} {input.reads} {output}"
+    output: 
+        plot="outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.png",
+        text="outputs/{sample}/{assembler}/{binning}/read_contig_mapping.txt"
+    shell: "python3 sources/bin_quality_analysis/reads_on_contigs_mapping_plot.py {input.checkm_report} {input.bins_directory} {input.reads_on_contigs_alignment} {input.reads} {output.plot} {output.text}"
