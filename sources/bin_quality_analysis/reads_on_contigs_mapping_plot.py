@@ -11,7 +11,8 @@ checkm_report =  sys.argv[1] # "../outputs/zymo/metaMDBG/metabat2_bins_reads_ali
 bins_directory = sys.argv[2] # "../outputs/zymo/metaMDBG/metabat2_bins_reads_alignement/bins"
 reads_on_contigs_alignment = sys.argv[3] # "../outputs/zymo/metaMDBG/reads_on_contigs.bam"
 reads_path = sys.argv[4] # "/groups/genscale/nimauric/long_reads/zymoD6331.fastq"
-output = sys.argv[5]
+output_plot = sys.argv[5]
+output_text = sys.argv[6]
 
 
 ### Data processing ###
@@ -152,10 +153,12 @@ for q in qualities :
 
     aligned_reads_count_ratio[q] = aligned_reads_count[q] / reads_count
     alignements_length_ratio[q] = alignment_lengths[q]/ reads_length
-    print("quality :", q)
-    print("aligned reads over total reads count ratio : {:.2f}% ({}/{})".format(aligned_reads_count_ratio[q] * 100,aligned_reads_count[q], reads_count ))
-    print("alignement length over total reads length ratio : {:.2f}% ({}/{})".format(alignements_length_ratio[q] * 100, alignment_lengths[q], reads_length))
-    print()
+
+    with open(output_text, 'a') as output_file:
+        output_file.write("quality : {}\n".format(q))
+        output_file.write("aligned reads over total reads count ratio : {:.2f}% ({}/{})\n".format(aligned_reads_count_ratio[q] * 100,aligned_reads_count[q], reads_count ))
+        output_file.write("alignement length over total reads length ratio : {:.2f}% ({}/{})\n".format(alignements_length_ratio[q] * 100, alignment_lengths[q], reads_length))
+        output_file.write("\n")
 
 # Save plot
 colors = ['blue', 'green', 'orange', 'red', 'grey']
@@ -175,6 +178,6 @@ legend = plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), title="Quality"
 
 
 plt.show()
-plt.savefig(output, bbox_extra_artists=(legend,), bbox_inches='tight')
+plt.savefig(output_plot, bbox_extra_artists=(legend,), bbox_inches='tight')
 print("Done !")
 
