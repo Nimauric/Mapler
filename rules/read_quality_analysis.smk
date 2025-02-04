@@ -64,6 +64,6 @@ rule kat_plot:
     input : 
         mapped = "outputs/{sample}/{assembler}/kat/mapped-stats.tsv",
         unmapped = "outputs/{sample}/{assembler}/kat/unmapped-stats.tsv",
-    output : "outputs/{sample}/{assembler}/kat/kat-plot.png"
+    output : "outputs/{sample}/{assembler}/kat/kat-plot.pdf"
     conda : "../envs/python.yaml"
     shell : "python3 sources/read_quality_analysis/kat.py {input.mapped} {input.unmapped} {output}"

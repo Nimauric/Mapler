@@ -178,6 +178,6 @@ legend = plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), title="Quality"
 
 
 plt.show()
-plt.savefig(output_plot, bbox_extra_artists=(legend,), bbox_inches='tight')
+plt.savefig(output_plot, bbox_extra_artists=(legend,), bbox_inches='tight',format="pdf")
 print("Done !")
 

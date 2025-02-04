@@ -34,4 +34,4 @@ scatter_plot.set_ylim(0, 100)
 scatter_plot.set_xlim(0, 100)
 
 plt.show()
-plt.savefig(output_path)
+plt.savefig(output_path,format="pdf")

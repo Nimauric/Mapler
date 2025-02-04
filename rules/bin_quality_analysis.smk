@@ -30,7 +30,7 @@ rule checkm_report_writer:
 
 rule checkm_plot:
     input : "outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt"
-    output : "outputs/{sample}/{assembler}/{binning}/checkm/checkm-plot.png"
+    output : "outputs/{sample}/{assembler}/{binning}/checkm/checkm-plot.pdf"
     conda : "../envs/python.yaml"
     shell : "python3 sources/bin_quality_analysis/checkm_plot.py {input} {output}"
 
@@ -78,6 +78,6 @@ rule read_contig_mapping_plot:
         runtime=eval(config["rule_read_contig_mapping_plot"]["time"]),
     conda: "../envs/python.yaml"
     output: 
-        plot="outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.png",
+        plot="outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.pdf",
         text="outputs/{sample}/{assembler}/{binning}/read_contig_mapping.txt"
     shell: "python3 sources/bin_quality_analysis/reads_on_contigs_mapping_plot.py {input.checkm_report} {input.bins_directory} {input.reads_on_contigs_alignment} {input.reads} {output.plot} {output.text}"

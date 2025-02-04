@@ -35,4 +35,4 @@ plt.hist(unmapped_occurences['median'], bins=bins, alpha=0.5, range=(1, xlim), l
 
 plt.legend()
 plt.show()
-plt.savefig(output_path)
+plt.savefig(output_path,format="pdf")
