@@ -25,6 +25,11 @@ rule fastqc :
     input : get_read_path
     output : "outputs/{sample}/{assembler}/fastqc/{fraction}/fastqc_report.html"
     conda : "../envs/fastqc.yaml"
+    threads : config["rule_fastqc"]["threads"]
+    resources :
+        cpus_per_task = config["rule_fastqc"]["threads"],
+        mem_mb=config["rule_fastqc"]["memory"],
+        runtime=eval(config["rule_fastqc"]["time"]),
     shell : "./sources/read_quality_analysis/fastqc.sh {input} {params.output_directory}"
 
 rule kraken2 :

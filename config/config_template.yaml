@@ -174,3 +174,8 @@ rule_kat_sect:
   threads: 12
   memory: 200G 
   time: 4*60 #in minutes
+
+rule_fastqc: 
+  threads: 1
+  memory: 5G 
+  time: 2*60 #in minutes
