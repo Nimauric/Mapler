@@ -71,7 +71,7 @@ rule all :
             if(config["kraken2"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/kat/{fraction}-stats.tsv", sample=get_samples("name"), assembler = config["assemblers"], fraction=config["fractions"])
             if(config["kat"] == True) else "Snakefile",
-        expand("outputs/{sample}/{assembler}/kat/kat-plot.png", sample=get_samples("name"), assembler = config["assemblers"])
+        expand("outputs/{sample}/{assembler}/kat/kat-plot.pdf", sample=get_samples("name"), assembler = config["assemblers"])
             if(config["kat"] == True and "mapped" in config["fractions"] and "unmapped" in config["fractions"]) else "Snakefile",
 
         # Contig quality analysis (read mapping, short read mapping, metaquast, reference mapping)
@@ -87,13 +87,13 @@ rule all :
         # Bins quality analysis (checkm, separate read and contig quality analysis by bin quality)
         expand("outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True) else "Snakefile",
-        expand("outputs/{sample}/{assembler}/{binning}/checkm/checkm-plot.png", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
+        expand("outputs/{sample}/{assembler}/{binning}/checkm/checkm-plot.pdf", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/gtdbtk/results/gtdbtk.bac120.summary.tsv", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["gtdbtk"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings, target_bin=config["target_bins"])
             if(config["kraken2_on_bins"] == True) else "Snakefile",
-        expand("outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.png", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
+        expand("outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.pdf", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True and config["read_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/read_contig_mapping.txt", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True and config["read_mapping_evaluation"] == True) else "Snakefile",
