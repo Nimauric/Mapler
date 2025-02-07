@@ -3,13 +3,19 @@
 #SBATCH --time=3-00:00:00
 #SBATCH --mem=5G
 
-analysis_name=$(grep "analysis_name:" config/config.yaml | cut -d " " -f 2)
+config=${1:-"config/config.yaml"}
+
+if [[ "$config" == "config/config_test.yaml" ]]; then
+    gzip -d test/test_dataset.fastq.gz
+fi
+
+analysis_name=$(grep "analysis_name:" $config | cut -d " " -f 2)
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
 log_directory=logs/$analysis_name/$timestamp/
 
 # Log config file and git info
 mkdir -p $log_directory
-cp config/config.yaml $log_directory/config.yaml
+cp $config $log_directory/config.yaml
 echo "Branch: $(git rev-parse --abbrev-ref HEAD)" > $log_directory/git_info.txt
 echo "Latest Commit: $(git rev-parse HEAD)" >> $log_directory/git_info.txt
 

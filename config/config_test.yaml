@@ -1,11 +1,11 @@
-analysis_name: analysis_name # Used to name the logs files
+analysis_name: test # Used to name the logs files
 
 ##### Inputs #####
 ### Samples ###
 # long reads used for assembly and evaluation
 samples: 
- - name: sample_name
-   read_path: /path/to/reads.fastq
+ - name: test_dataset
+   read_path: test/test_dataset.fastq
 
 # (optional), short reads, may be used for binning or evaluation. Should be from the same sample as the long reads
 short_reads_1: /path/to/short_reads_1.fastq
@@ -59,13 +59,13 @@ binners: # uncomment binners to use them
 
 ### Evaluation ###
 # contig analysis
-metaquast: true # requires reference_genomes
-read_mapping_evaluation: false 
+metaquast: false # requires reference_genomes
+read_mapping_evaluation: true 
 short_read_mapping_evaluation: false # requires short_reads_1 and short_reads_2
 reference_mapping_evaluation: false # requires reference_genomes
 
 # bins analysis
-checkm: false
+checkm: true
 gtdbtk: false # requires gtdbtk_database and mash_database, analyses all bins
 kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2db, analyses bins specified in target_bins
 target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db
@@ -90,92 +90,92 @@ metaquast_min_identity: 95
 # Mapping
 rules_mapping: 
   threads: 24
-  memory: 100G 
+  memory: 10G 
   time: 1*24*60 #in minutes
 
 # Assembly 
 rule_metaMDBG_assembly: 
   threads: 48
-  memory: 35G 
+  memory: 3.5G 
   time: 2*24*60 #in minutes
 
 rule_metaflye_assembly: 
   threads: 48
-  memory: 60G 
+  memory: 6G 
   time: 1*24*60 #in minutes
 
 rule_hifiasm_meta_assembly: 
   threads: 48
-  memory: 80G 
+  memory: 8G 
   time: 2*24*60 #in minutes
 
 rule_operaMS_assembly: 
   threads: 48
-  memory: 200G 
+  memory: 20G 
   time: 5*24*60 #in minutes
 
 # Binning
 rules_metabat2_binnings: 
   threads: 16
-  memory: 20G 
+  memory: 2G 
   time: 12*60 #in minutes
 
 # Contig quality analysis
 rule_metaquast: 
   threads: 1
-  memory: 20G 
+  memory: 2G 
   time: 24*60 #in minutes
 
 rule_read_contig_mapping_evaluation :
   threads: 1
-  memory: 10G 
+  memory: 1G 
   time: 2*60 #in minutes
 
 
 # Bin quality analysis
 rule_checkm: 
   threads: 16
-  memory: 100G 
+  memory: 10G 
   time: 24*60 #in minutes
 
 rule_checkm_report_writer: 
   threads: 1
-  memory: 100G 
+  memory: 10G 
   time: 1*60 #in minutes
 
 rule_kraken2_on_bins: 
   threads: 12
-  memory: 100G 
+  memory: 10G 
   time: 4*60 #in minutes
 
 rule_gtdbtk_on_bins: 
   threads: 20
-  memory: 100G 
+  memory: 10G 
   time: 8*60 #in minutes
 
 rule_read_contig_mapping_plot:
   threads: 1
-  memory: 10G 
+  memory: 1G 
   time: 2*60 #in minutes
 
   
 # read quality analysis 
 rule_extract_unmapped_reads: 
   threads: 24
-  memory: 100G 
+  memory: 10G 
   time: 24*60 #in minutes
 
 rule_kraken2: 
   threads: 12
-  memory: 100G 
+  memory: 10G 
   time: 4*60 #in minutes
 
 rule_kat_sect: 
   threads: 12
-  memory: 200G 
+  memory: 20G 
   time: 4*60 #in minutes
 
 rule_fastqc: 
   threads: 1
-  memory: 5G 
+  memory: 0.5G 
   time: 2*60 #in minutes

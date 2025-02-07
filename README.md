@@ -13,25 +13,26 @@ Clone the git repository and install snakemake (tested with version 7.28.3). I r
 git clone git@gitlab.inria.fr:mistic/mapler.git
 conda create -n snakemake -c bioconda snakemake=7.28.3
 ```
-Most other dependencies are installed by the pipeline itself via conda. Exceptions include programs unavailable via conda and large databases, which must be downloaded separately if you want to perform some analyses:
-- [OPERA-MS](https://github.com/CSB5/OPERA-MS), for hybrid assemblies
+
+Most other dependencies are installed by the pipeline itself via conda, during execution. If you wish to install the dependencies in advance, you may run the `snakemake --use-conda --conda-create-envs-only  -c1 --configfile <configfile>` command before launching a job.
+
+Some programs unaviable via conda and large databases are not installed automatically, and must be downloaded separately for some optional analysis. If you use them, you must indicate their path in the configfile.
+- [OPERA-MS](https://github.com/CSB5/OPERA-MS),  for hybrid assemblies (short and long reads)
 - the [genome taxonomy database](https://gtdb.ecogenomic.org/), for the taxonomic assignment of bins with GTDB-Tk
 - a [kraken database](https://benlangmead.github.io/aws-indexes/k2) (tested with the standard kraken database), for the taxonomic assignment of reads and selected bins.
 
 
 ## Usage
-Before using the pipeline, you must create a copy of `config/config_template.yaml` called `config/config.yaml`.
-Details on how to configure this file are written as comments in said file. The config file is structured in three parts :
+The pipeline must be launched from within the pipeline directory. It can either be run with `sbatch pipeline.sh` to take advantage of a slurm cluster's ressources, or with `./local_pipeline.sh`. You can also use `./np_pipeline.sh` to preview a run. In either case, a configfile must be provided, either as an argument, or by default `config/config.yaml`. You must configure that configfile before launching the pipeline (a template, `config/config_template.yaml` is provided). Those familiar with snakemake may directly use snakemake commands.
+
+If you use `config/config_test.yaml` as a configfile, a test dataset will be provided
+
+Details on how to configure this file are written as comments in said file. The configfile is structured in three parts :
 - Inputs : path to samples and external programs (most are optional and only needed for certain analysis)
 - Controls : allowing a choice between multiple options (uncomment lines you wish to use, you may select multiple), or a binary choice on whether you wish to run the analysis (true) or not (false)
 - Parameters : functional parameters are values that can be tweaked for certain analyses, resource parameters allows to tweak memory, number of threads and allocated time for resource-intensive rules
-
-
-Navigate to the pipeline directory (`mapler`).   
-If using conda, activate the environment with `conda activate snakemake`.   
-Then, run `./np_pipeline.sh` to check whether the pipeline will produce the expected results.   
-If you're in a slurm cluster, run `sbatch pipeline.sh`, otherwise `./local_pipeline.sh`.   
-If the pipeline crashes and locks itself, you can unlock the working directory with `snakemake --unlock --configfile config.yaml`
+  
+If the pipeline crashes and locks itself, you can unlock the working directory with `snakemake --unlock --configfile config/config_template.yaml`
 
 
 ## Logs and Outputs
@@ -59,7 +60,9 @@ Assembly is performed with:
 - metaMDBG (https://github.com/GaetanBenoitDev/metaMDBG)
 - hifiasm-meta (https://github.com/xfengnefx/hifiasm-meta)
 - metaflye (https://github.com/mikolmogorov/Flye)
+
 Binning is performed with MetaBAT2 (https://bitbucket.org/berkeleylab/metabat/src/master/)
+
 Evaluation is performed with:
 - checkm (https://github.com/Ecogenomics/CheckM)
 - GTDB-Tk (https://github.com/Ecogenomics/GTDBTk)
@@ -67,6 +70,8 @@ Evaluation is performed with:
 - FastQC (https://github.com/s-andrews/FastQC)
 - Kraken2 (https://github.com/DerrickWood/kraken2)
 - Krona (https://github.com/marbl/Krona)
+- KAT (https://github.com/TGAC/KAT)
+
 Additionally, I used minimap2, pysam, biopython, pandas, matplotlib and numpy to perform custom evaluation
 
 
