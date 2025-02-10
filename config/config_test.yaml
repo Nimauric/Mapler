@@ -135,7 +135,7 @@ rule_read_contig_mapping_evaluation :
 # Bin quality analysis
 rule_checkm: 
   threads: 16
-  memory: 10G 
+  memory: 80G 
   time: 24*60 #in minutes
 
 rule_checkm_report_writer: 
