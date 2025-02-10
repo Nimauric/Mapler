@@ -25,7 +25,7 @@ Some programs unaviable via conda and large databases are not installed automati
 ## Usage
 The pipeline must be launched from within the pipeline directory. It can either be run with `sbatch pipeline.sh` to take advantage of a slurm cluster's ressources, or with `./local_pipeline.sh`. You can also use `./np_pipeline.sh` to preview a run. In either case, a configfile must be provided, either as an argument, or by default `config/config.yaml`. You must configure that configfile before launching the pipeline (a template, `config/config_template.yaml` is provided). Those familiar with snakemake may directly use snakemake commands.
 
-If you use `config/config_test.yaml` as a configfile, a test dataset will be provided
+If you use `config/config_test.yaml` as a configfile, a test dataset will be provided.
 
 Details on how to configure this file are written as comments in said file. The configfile is structured in three parts :
 - Inputs : path to samples and external programs (most are optional and only needed for certain analysis)

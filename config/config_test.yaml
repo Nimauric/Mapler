@@ -96,7 +96,7 @@ rules_mapping:
 # Assembly 
 rule_metaMDBG_assembly: 
   threads: 48
-  memory: 3.5G 
+  memory: 3G 
   time: 2*24*60 #in minutes
 
 rule_metaflye_assembly: 
@@ -177,5 +177,5 @@ rule_kat_sect:
 
 rule_fastqc: 
   threads: 1
-  memory: 0.5G 
+  memory: 1G 
   time: 2*60 #in minutes
