@@ -45,8 +45,8 @@ operaMS_path: /path/to/OPERA-MS
 assemblers: # uncomment assemblers to use them
  - metaMDBG
 # - custom_assembly # requires custom_assembly_path
-# - metaflye
-# - hifiasm_meta
+ - metaflye
+ - hifiasm_meta
 # - operaMS # requires short_read_assembly and operaMS_path, performs a hybrid assembly
 
 short_read_binning: false # requires short_reads_1 and short_reads_2
