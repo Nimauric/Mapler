@@ -61,25 +61,25 @@ binners: # uncomment binners to use them
 ### Evaluation ###
 # contig analysis
 metaquast: false # requires reference_genomes
-read_mapping_evaluation: false 
+read_mapping_evaluation: true 
 short_read_mapping_evaluation: false # requires short_reads_1 and short_reads_2
 reference_mapping_evaluation: false # requires reference_genomes
 
 # bins analysis
-checkm: false
-gtdbtk: false # requires gtdbtk_database and mash_database, analyses all bins
+checkm: true
+gtdbtk: true # requires gtdbtk_database and mash_database, analyses all bins
 kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2db, analyses bins specified in target_bins
 target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db
  - 1
 
 # Fractionned read analysis
 fractions: 
-  - full #all reads
-#  - mapped #reads that mapped to a contig, and were sucessfully assembled
-#  - unmapped #reads that are not mapped to a contig
-fastqc: false 
-kraken2: false # requires kraken2bin; kraken2db and kronabin
-kat: false
+#  - full #all reads
+  - mapped #reads that mapped to a contig, and were sucessfully assembled
+  - unmapped #reads that are not mapped to a contig
+fastqc: true 
+kraken2: true # requires kraken2bin; kraken2db and kronabin
+kat: true
 
 ##### Parameters #####
 ### Functional parameters ###
