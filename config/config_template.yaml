@@ -34,6 +34,7 @@ custom_bins_path: path/to/bins/ # path to a folder containing bins in .fa format
 kraken2db: /path/to/kraken_database/ #must be downloaded separately
 gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
 mash_database: outputs/mash_db #if doesn't exist, will be created here
+checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
 
 # (optional), for hybrid assembly
 operaMS_path: /path/to/OPERA-MS
@@ -59,7 +60,7 @@ binners: # uncomment binners to use them
 
 ### Evaluation ###
 # contig analysis
-metaquast: true # requires reference_genomes
+metaquast: false # requires reference_genomes
 read_mapping_evaluation: false 
 short_read_mapping_evaluation: false # requires short_reads_1 and short_reads_2
 reference_mapping_evaluation: false # requires reference_genomes
@@ -90,7 +91,7 @@ metaquast_min_identity: 95
 # Mapping
 rules_mapping: 
   threads: 24
-  memory: 100G 
+  memory: 50G 
   time: 1*24*60 #in minutes
 
 # Assembly 
@@ -101,17 +102,17 @@ rule_metaMDBG_assembly:
 
 rule_metaflye_assembly: 
   threads: 48
-  memory: 60G 
+  memory: 160G 
   time: 1*24*60 #in minutes
 
 rule_hifiasm_meta_assembly: 
   threads: 48
-  memory: 80G 
+  memory: 160G 
   time: 2*24*60 #in minutes
 
 rule_operaMS_assembly: 
   threads: 48
-  memory: 200G 
+  memory: 100G 
   time: 5*24*60 #in minutes
 
 # Binning
@@ -135,12 +136,12 @@ rule_read_contig_mapping_evaluation :
 # Bin quality analysis
 rule_checkm: 
   threads: 16
-  memory: 100G 
+  memory: 50G 
   time: 24*60 #in minutes
 
 rule_checkm_report_writer: 
   threads: 1
-  memory: 100G 
+  memory: 50G 
   time: 1*60 #in minutes
 
 rule_kraken2_on_bins: 
@@ -155,14 +156,14 @@ rule_gtdbtk_on_bins:
 
 rule_read_contig_mapping_plot:
   threads: 1
-  memory: 10G 
+  memory: 30G 
   time: 2*60 #in minutes
 
   
 # read quality analysis 
 rule_extract_unmapped_reads: 
   threads: 24
-  memory: 100G 
+  memory: 50G 
   time: 24*60 #in minutes
 
 rule_kraken2: 

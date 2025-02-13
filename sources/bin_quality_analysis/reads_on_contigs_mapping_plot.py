@@ -26,9 +26,8 @@ def GSCS_quality(contamination, completeness, contigs) :
         return "medium quality"   
     return "low quality"
 
-bin_to_quality = pd.read_csv(checkm_report, sep='\s+', skiprows=6, 
-    names = ["Bin ID", "Marker", "lineage", "genomes", "markers", "sets", "0", "1", "2", "3", "4", "5+", 
-             "Completeness", "Contamination", "Strain hetero", "Contigs", "Size", "N50", "N50/Size"])
+bin_to_quality = pd.read_csv(checkm_report, sep='\t', skiprows=6, 
+    names = ["Bin ID","Completeness","Contamination","Completeness_Model_Used","Translation_Table_Used","Coding_Density","Contig_N50","Average_Gene_Length","Genome_Size","GC_Content","Total_Coding_Sequences","Contigs","Max_Contig_Length","Additional_Notes"])
 bin_to_quality["Quality"] = bin_to_quality.apply(lambda x: GSCS_quality(x['Contamination'], x['Completeness'], x['Contigs']), axis=1)
 bin_to_quality = {bin_id: quality for bin_id, quality in zip(bin_to_quality["Bin ID"], bin_to_quality["Quality"])}
 
@@ -171,7 +170,9 @@ axes = plt.axes()
 df.plot(kind='bar', stacked=True, ax=axes, color=colors)
 axes.set_ylim([0, 1])
 plt.xticks(rotation=0, ha='center')
-plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in plt.gca().get_yticks()])
+yticks = plt.gca().get_yticks()
+plt.gca().set_yticks(yticks)
+plt.gca().set_yticklabels(['{:.0f}%'.format(x*100) for x in yticks])
 
 plt.xticks(range(2), ["Aligned Read Count Ratio", "Alignment Length Ratio"])
 legend = plt.legend(loc='upper right', bbox_to_anchor=(1.25, 1), title="Quality", reverse=True)

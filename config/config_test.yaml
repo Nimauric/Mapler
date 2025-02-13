@@ -34,6 +34,7 @@ custom_bins_path: path/to/bins/ # path to a folder containing bins in .fa format
 kraken2db: /path/to/kraken_database/ #must be downloaded separately
 gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
 mash_database: outputs/mash_db #if doesn't exist, will be created here
+checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
 
 # (optional), for hybrid assembly
 operaMS_path: /path/to/OPERA-MS

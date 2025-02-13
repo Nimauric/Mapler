@@ -3,6 +3,7 @@ rule checkm:
     params: 
         output_directory = "outputs/{sample}/{assembler}/{binning}/checkm/",
         bins_extension = "fa",
+        database_directory = config["checkm_database"]
     input:
         bins = "outputs/{sample}/{assembler}/{binning}/bins",
     conda: "../envs/checkm.yaml",
@@ -11,13 +12,13 @@ rule checkm:
         cpus_per_task = config["rule_checkm"]["threads"],
         mem_mb=config["rule_checkm"]["memory"],
         runtime=eval(config["rule_checkm"]["time"]),
-    output:"outputs/{sample}/{assembler}/{binning}/checkm/bins_quality_check.tsv"
-    shell: "./sources/bin_quality_analysis/checkm_wraper.sh {params.bins_extension} {input.bins} {params.output_directory} {output}"
+    output:"outputs/{sample}/{assembler}/{binning}/checkm/quality_report.tsv"
+    shell: "./sources/bin_quality_analysis/checkm_wraper.sh {params.bins_extension} {input.bins} {params.output_directory} {output} {params.database_directory}"
 
 rule checkm_report_writer: 
     input:
         bins = "outputs/{sample}/{assembler}/{binning}/bins",
-        checkm_results = "outputs/{sample}/{assembler}/{binning}/checkm/bins_quality_check.tsv",
+        checkm_results = "outputs/{sample}/{assembler}/{binning}/checkm/quality_report.tsv",
     conda: "../envs/python.yaml",
     threads: config["rule_checkm_report_writer"]["threads"]
     resources:
@@ -67,7 +68,7 @@ rule gtdbtk_on_bins:
 
 rule read_contig_mapping_plot: 
     input:
-        checkm_report = "outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt",
+        checkm_report = "outputs/{sample}/{assembler}/{binning}/checkm/quality_report.tsv",
         bins_directory = "outputs/{sample}/{assembler}/{binning}/bins",
         reads_on_contigs_alignment = "outputs/{sample}/{assembler}/reads_on_contigs.bam",
         reads = lambda wildcards: get_sample("read_path", wildcards)

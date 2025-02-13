@@ -44,8 +44,8 @@ def contig_stats(path) :
 ############### MAIN ###############
 # Import data
 table = pd.read_csv(path_to_checm_tsv,
-    delim_whitespace=True,
-    names=["Bin ID","Marker","lineage","genomes","markers","sets","0","1","2","3","4","5+","Completeness","Contamination","Strain hetero"],
+    sep='\t',
+    names=["Bin ID","Completeness","Contamination","Completeness_Model_Used","Translation_Table_Used","Coding_Density","Contig_N50","Average_Gene_Length","Genome_Size","GC_Content","Total_Coding_Sequences","Total_Contigs","Max_Contig_Length","Additional_Notes"],
     skiprows=1
     )
 
