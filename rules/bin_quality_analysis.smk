@@ -30,7 +30,7 @@ rule checkm_report_writer:
         "python3 sources/bin_quality_analysis/checkm_report_writer.py {input.checkm_results} {input.bins} > {output}"
 
 rule checkm_plot:
-    input : "outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt"
+    input : "outputs/{sample}/{assembler}/{binning}/checkm/quality_report.tsv"
     output : "outputs/{sample}/{assembler}/{binning}/checkm/checkm-plot.pdf"
     conda : "../envs/python.yaml"
     shell : "python3 sources/bin_quality_analysis/checkm_plot.py {input} {output}"
