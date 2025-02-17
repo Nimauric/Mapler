@@ -20,7 +20,7 @@ echo "Branch: $(git rev-parse --abbrev-ref HEAD)" > $log_directory/git_info.txt
 echo "Latest Commit: $(git rev-parse HEAD)" >> $log_directory/git_info.txt
 
 # Launch the pipeline
-snakemake all --cores all  --slurm --jobs 10 \
+snakemake all --cores all  --executor slurm --jobs 10 \
     --printshellcmds --keep-going \
     --use-conda --rerun-triggers mtime \
     --configfile $log_directory/config.yaml \

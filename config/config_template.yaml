@@ -91,92 +91,92 @@ metaquast_min_identity: 95
 # Mapping
 rules_mapping: 
   threads: 24
-  memory: 50G 
+  memory: 50000 
   time: 1*24*60 #in minutes
 
 # Assembly 
 rule_metaMDBG_assembly: 
   threads: 48
-  memory: 35G 
+  memory: 35000 
   time: 2*24*60 #in minutes
 
 rule_metaflye_assembly: 
   threads: 48
-  memory: 160G 
+  memory: 160000 
   time: 1*24*60 #in minutes
 
 rule_hifiasm_meta_assembly: 
   threads: 48
-  memory: 160G 
+  memory: 160000 
   time: 2*24*60 #in minutes
 
 rule_operaMS_assembly: 
   threads: 48
-  memory: 100G 
+  memory: 100000 
   time: 5*24*60 #in minutes
 
 # Binning
 rules_metabat2_binnings: 
   threads: 16
-  memory: 20G 
+  memory: 20000 
   time: 12*60 #in minutes
 
 # Contig quality analysis
 rule_metaquast: 
   threads: 1
-  memory: 20G 
+  memory: 20000 
   time: 24*60 #in minutes
 
 rule_read_contig_mapping_evaluation :
   threads: 1
-  memory: 10G 
+  memory: 10000 
   time: 2*60 #in minutes
 
 
 # Bin quality analysis
 rule_checkm: 
   threads: 16
-  memory: 50G 
+  memory: 50000 
   time: 24*60 #in minutes
 
 rule_checkm_report_writer: 
   threads: 1
-  memory: 50G 
+  memory: 50000 
   time: 1*60 #in minutes
 
 rule_kraken2_on_bins: 
   threads: 12
-  memory: 100G 
+  memory: 100000 
   time: 4*60 #in minutes
 
 rule_gtdbtk_on_bins: 
   threads: 20
-  memory: 100G 
+  memory: 100000 
   time: 8*60 #in minutes
 
 rule_read_contig_mapping_plot:
   threads: 1
-  memory: 30G 
+  memory: 30000 
   time: 2*60 #in minutes
 
   
 # read quality analysis 
 rule_extract_unmapped_reads: 
   threads: 24
-  memory: 50G 
+  memory: 50000 
   time: 24*60 #in minutes
 
 rule_kraken2: 
   threads: 12
-  memory: 100G 
+  memory: 100000 
   time: 4*60 #in minutes
 
 rule_kat_sect: 
   threads: 12
-  memory: 200G 
+  memory: 200000 
   time: 4*60 #in minutes
 
 rule_fastqc: 
   threads: 1
-  memory: 5G 
+  memory: 5000 
   time: 2*60 #in minutes

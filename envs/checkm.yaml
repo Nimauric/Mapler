@@ -1,4 +1,3 @@
-name: test_checkm2
 channels:
   - conda-forge
   - bioconda

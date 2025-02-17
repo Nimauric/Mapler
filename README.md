@@ -7,11 +7,13 @@ The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies, and 
 
 
 ## Installation
-I recommend using a slurm server, but the pipeline can also be run locally.
-Clone the git repository and install snakemake (tested with version 7.28.3). I recommend using conda :
+Clone the git repository and install snakemake (version 8+) and conda (version 24+). 
+On a slurm server, the pipeline requires the snakemake executor plugin slurm.
+The pipeline can also be run in local mode.
+You can install those dependencies with conda :
 ```
 git clone git@gitlab.inria.fr:mistic/mapler.git
-conda create -n snakemake -c bioconda snakemake=7.28.3
+conda create -n snakemake bioconda::snakemake-executor-plugin-slurm bioconda::snakemake 'conda>=24.1.2'
 ```
 
 Most other dependencies are installed by the pipeline itself via conda, during execution. If you wish to install the dependencies in advance, you may run the `snakemake --use-conda --conda-create-envs-only  -c1 --configfile <configfile>` command before launching a job.

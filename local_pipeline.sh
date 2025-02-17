@@ -1,7 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=mapler 
-#SBATCH --time=3-00:00:00
+#SBATCH --cpus-per-task=48
 #SBATCH --mem=100G
+#SBATCH --time=3-00:00:00
+
 
 config=${1:-"config/config.yaml"}
 
@@ -20,11 +22,16 @@ cp $config  $log_directory/config.yaml
 echo "Branch: $(git rev-parse --abbrev-ref HEAD)" > $log_directory/git_info.txt
 echo "Latest Commit: $(git rev-parse HEAD)" >> $log_directory/git_info.txt
 
+
+
 # Launch the pipeline
-snakemake all --cores all --jobs 10 \
+memory=${SLURM_MEM_PER_NODE:-$(free -m | awk '/^Mem:/ {print $2}')}
+snakemake all --cores all \
     --printshellcmds --keep-going \
     --use-conda --rerun-triggers mtime \
     --configfile $log_directory/config.yaml \
-    --default-resources mem_mb=5000 mem_mb_per_cpu=None runtime=2*60
+    --default-resources mem_mb=5000 mem_mb_per_cpu=None runtime=2*60 \
+    --cores $(nproc) \
+    --resources mem_mb="$memory"
 
 
