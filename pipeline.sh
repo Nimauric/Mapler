@@ -24,7 +24,8 @@ snakemake all --cores all  --executor slurm --jobs 10 \
     --printshellcmds --keep-going \
     --use-conda --rerun-triggers mtime \
     --configfile $log_directory/config.yaml \
-    --default-resources mem_mb=5000 mem_mb_per_cpu=None runtime=2*60
+    --default-resources mem_mb=5000 mem_mb_per_cpu=None runtime=2*60 \
+    --latency-wait 60
 
 # Get the slurm log 
 cp $(scontrol show job $SLURM_JOB_ID | grep "StdOut" | awk -F "=" '{print $2}') $log_directory

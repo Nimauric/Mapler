@@ -3,7 +3,7 @@
 #SBATCH --cpus-per-task=48
 #SBATCH --mem=100G
 #SBATCH --time=3-00:00:00
-
+#SBATCH --nodelist=cl1n037
 
 config=${1:-"config/config.yaml"}
 
@@ -32,6 +32,7 @@ snakemake all --cores all \
     --configfile $log_directory/config.yaml \
     --default-resources mem_mb=5000 mem_mb_per_cpu=None runtime=2*60 \
     --cores $(nproc) \
-    --resources mem_mb="$memory"
+    --resources mem_mb="$memory" \
+    --latency-wait 60
 
 
