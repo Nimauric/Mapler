@@ -21,11 +21,8 @@ def GSCS_quality(contamination, completeness, contigs) :
 bins = pd.read_csv(checkm_report, sep='\t', skiprows=1,
     names=["Bin ID","Completeness","Contamination","Completeness_Model_Used","Translation_Table_Used","Coding_Density","Contig_N50",
     "Average_Gene_Length","Genome_Size","GC_Content","Total_Coding_Sequences","Contigs","Max_Contig_Length","Additional_Notes"],)
-print(bins)
 bins = bins[["Bin ID", "Completeness", "Contamination", "Contigs"]]
-print(bins)
 bins["Quality"] = bins.apply(lambda x: GSCS_quality(x['Contamination'], x['Completeness'], x['Contigs']), axis=1)
-print(bins)
 
 ### Plotting ###
 scatter_plot = bins[bins["Quality"] == "near complete"].plot(x='Completeness', y='Contamination', kind='scatter',color="blue")

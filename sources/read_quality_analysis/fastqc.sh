@@ -9,13 +9,12 @@ output_directory=$2
 # Sets up java parameters so that fastQC works on big files
 export _JAVA_OPTIONS=-Xmx2048m
 echo "processing $reads"
-mkdir "$output_directory"/
+mkdir -p "$output_directory"/
+rm -r "$output_directory"/*
 fastqc "$reads" -o "$output_directory"/ -t $(nproc)
 
-rename 's/.html/ "$output_directory"\/fastqc_report.html' "$output_directory"/*.html
-
 mv "$output_directory"/*.html "$output_directory"/fastqc_report.html
-
+echo "Done!"
 
 
 

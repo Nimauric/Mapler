@@ -1,14 +1,15 @@
 #!/bin/bash
 #SBATCH --job-name=mapler 
 #SBATCH --cpus-per-task=48
-#SBATCH --mem=100G
-#SBATCH --time=3-00:00:00
-#SBATCH --nodelist=cl1n037
+#SBATCH --mem=200G
+#SBATCH --time=1-00:00:00
 
 config=${1:-"config/config.yaml"}
 
 if [[ "$config" == "config/config_test.yaml" ]]; then
-    gzip -d test/test_dataset.fastq.gz
+    if [[ ! -f test/test_dataset.fastq ]]; then
+        gzip -d test/test_dataset.fastq.gz
+    fi
 fi
 
 analysis_name=$(grep "analysis_name:" $config | cut -d " " -f 2)
@@ -16,7 +17,7 @@ timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
 log_directory=logs/$analysis_name/$timestamp/
 
 # Log config file and git info
-echo "/!\ The exection log isn't saved when run in local mode, please save it manually or if you have access to a slurm cluster, run pipeline.sh instead"
+echo "/!\ The execution log isn't saved when run in local mode, please save it manually or if you have access to a slurm cluster, run pipeline.sh instead"
 mkdir -p $log_directory
 cp $config  $log_directory/config.yaml
 echo "Branch: $(git rev-parse --abbrev-ref HEAD)" > $log_directory/git_info.txt

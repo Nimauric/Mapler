@@ -5,7 +5,8 @@ output_file="$4"
 database_dir="$5"
 
 # build directorys
-mkdir "$output_directory" 
+mkdir -p "$output_directory" 
+
 
 # download database
 echo ""
@@ -15,6 +16,7 @@ fi
 
 # run checkm2
 echo""
+rm -r "$output_directory"/*
 checkm2 predict --input "$input_directory" --extension "$bins_extension" --output-directory "$output_directory" --threads $(nproc) --force
 
 echo "Done !"
