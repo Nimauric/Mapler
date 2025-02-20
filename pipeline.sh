@@ -9,7 +9,7 @@ if [[ "$config" == "config/config_test.yaml" ]]; then
     if [[ ! -f test/test_dataset.fastq ]]; then
         gzip -d test/test_dataset.fastq.gz
     fi
-fig
+fi
 
 analysis_name=$(grep "analysis_name:" $config | cut -d " " -f 2)
 timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
