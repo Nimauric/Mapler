@@ -63,7 +63,6 @@ outputs/test_dataset/
         └── report.txt # A report on the aligned reads and aligned bases ratios
 ```
 
-
 ## Usage
 The pipeline must be launched from within the pipeline directory. Those familiar with snakemake may directly use snakemake commands to launch it. Otherwise, the following commands can be used :  
 ```bash
@@ -77,6 +76,20 @@ Details on how to configure this file are written as comments in the template. T
 - Inputs : path to samples and external programs (most are optional and only needed for certain analysis)
 - Controls : allowing a choice between multiple non-exclusive options, or a binary choice on whether the analysis is run (true) or not (false)
 - Parameters : functional parameters are values that can be tweaked for certain analyses, resource parameters allows to tweak memory, number of threads and allocated time for resource-intensive rules
+
+<details>
+	<summary>Multiple user-provided assemblies and binning</summary>
+
+   To use multiple user-provided assemblies and binning, you can either run them one at a time, or insert the assembly and/or bins like this :
+   ```bash
+   outputs/<sample_name>/<custom_assembly_process>/assembly.fasta
+   outputs/<sample_name>/<assembly>/<custom_binning_process>_bins_reads_alignement/bins/<bins.fa>
+   ```
+   Then, in the configfile, insert <custom_assembly_process> in the list of assemblers and/or <custom_binning_process> in the list of binners, and launch the pipeline as usual.
+
+
+
+</details>
 
 
 ## Logs and Outputs
