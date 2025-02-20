@@ -37,7 +37,7 @@ mash_database: outputs/mash_db #if doesn't exist, will be created here
 checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
 
 # (optional), for hybrid assembly
-operaMS_path: /path/to/OPERA-MS
+operaMS_path: outputs/OPERA-MS
 
 
 ##### Controls #####
@@ -78,7 +78,7 @@ fractions:
   - mapped #reads that mapped to a contig, and were sucessfully assembled
   - unmapped #reads that are not mapped to a contig
 fastqc: true 
-kraken2: true # requires kraken2bin; kraken2db and kronabin
+kraken2: true # requires kraken2db
 kat: true
 
 ##### Parameters #####

@@ -85,7 +85,7 @@ fractions:
 #  - mapped #reads that mapped to a contig, and were sucessfully assembled
 #  - unmapped #reads that are not mapped to a contig
 fastqc: false 
-kraken2: false # requires kraken2bin; kraken2db and kronabin
+kraken2: false # requires kraken2db
 kat: false
 
 #############################
@@ -101,93 +101,93 @@ metaquast_min_identity: 95
 
 # Mapping
 rules_mapping: 
-  threads: 2
+  threads: 4
   memory: 500
   time: 1*24*60 #in minutes
 
 # Assembly 
 rule_metaMDBG_assembly: 
-  threads: 4
+  threads: 48
   memory: 350 
   time: 2*24*60 #in minutes
 
 rule_metaflye_assembly: 
-  threads: 4
+  threads: 8
   memory: 1600 
   time: 1*24*60 #in minutes
 
 rule_hifiasm_meta_assembly: 
-  threads: 4
+  threads: 8
   memory: 1600 
   time: 2*24*60 #in minutes
 
 rule_operaMS_assembly: 
-  threads: 4
+  threads: 8
   memory: 1000 
   time: 5*24*60 #in minutes
 
 # Binning
 rules_metabat2_binnings: 
-  threads: 2
+  threads: 4
   memory: 200
   time: 12*60 #in minutes
 
 # Contig quality analysis
 rule_metaquast: 
-  threads: 1
+  threads: 2
   memory: 200 
   time: 24*60 #in minutes
 
 rule_read_contig_mapping_evaluation :
-  threads: 1
+  threads: 2
   memory: 100 
   time: 2*60 #in minutes
 
 
 # Bin quality analysis
 rule_checkm: 
-  threads: 2
+  threads: 4
   memory: 50
   time: 24*60 #in minutes
 
 rule_checkm_report_writer: 
-  threads: 1
+  threads: 2
   memory: 500 
   time: 1*60 #in minutes
 
 rule_kraken2_on_bins: 
-  threads: 1
+  threads: 2
   memory: 1000 
   time: 4*60 #in minutes
 
 rule_gtdbtk_on_bins: 
-  threads: 2
+  threads: 4
   memory: 1000 
   time: 8*60 #in minutes
 
 rule_read_contig_mapping_plot:
-  threads: 1
+  threads: 2
   memory: 300
   time: 2*60 #in minutes
 
   
 # read quality analysis 
 rule_extract_unmapped_reads: 
-  threads: 2
+  threads: 4
   memory: 500 
   time: 24*60 #in minutes
 
 rule_kraken2: 
-  threads: 1
+  threads: 2
   memory: 1000 
   time: 4*60 #in minutes
 
 rule_kat_sect: 
-  threads: 1
+  threads: 2
   memory: 2000 
   time: 4*60 #in minutes
 
 rule_fastqc: 
-  threads: 1
+  threads: 2
   memory: 50
   time: 2*60 #in minutes
