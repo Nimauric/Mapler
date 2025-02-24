@@ -23,8 +23,8 @@ conda activate snakemake
 The pipeline will handle any conda dependencies itself during the execution, but their installation can be quite lengthy.
 To download them prior to running the pipeline, it's possible to use the following command.
 Note that only a part of the analysis are run on the test dataset. 
-To download the environements for other analysis, change the `--configfile` argument.
-Those environements will be stored in `.snakemake/conda`
+To download the environments for other analysis, change the `--configfile` argument.
+Those environments will be stored in `.snakemake/conda`
 
 ```bash
 snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_test.yaml
@@ -39,11 +39,14 @@ snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_t
 </details>
 
 
-## Test
-To verify the installation, launch the pipeline with a test dataset, either locally or on a cluster
+## Testing the pipeline
+To verify the installation, launch the pipeline with a test dataset, either locally
 ```bash
-./local_pipeline.sh config/config_test.yaml > mylog.txt # for local execution
-sbatch pipeline.sh config/config_test.yaml # for slurm execution
+./local_pipeline.sh config/config_test.yaml > mylog.txt
+```
+Or on a cluster :
+```bash
+sbatch pipeline.sh config/config_test.yaml
 ```
 Either way, with 16 CPUs, it should require around 15 minutes (without taking into account dependencies installation) to produces results like this : 
 ```bash
@@ -71,9 +74,9 @@ sbatch pipeline.sh <configfile> # for slurm execution
 ./np_pipeline.sh <configfile> # to preview the execution
 snakemake --unlock --configfile <configfile> # to unlock the working directory after a crash
 ```
-It is recommanded to copy `config/config_template.yaml` as a configfile, and to tweak it according to the analysis's need. 
+It is recommended to copy `config/config_template.yaml` as a configfile, and to tweak it according to the analysis's need. 
 Details on how to configure this file are written as comments in the template. The configfile is structured in three parts :
-- Inputs : path to samples and external programs (most are optional and only needed for certain analysis)
+- Inputs : path to samples and external programs (most are optional and only needed for certain analyses)
 - Controls : allowing a choice between multiple non-exclusive options, or a binary choice on whether the analysis is run (true) or not (false)
 - Parameters : functional parameters are values that can be tweaked for certain analyses, resource parameters allows to tweak memory, number of threads and allocated time for resource-intensive rules
 
@@ -85,7 +88,29 @@ Details on how to configure this file are written as comments in the template. T
    outputs/<sample_name>/<custom_assembly_process>/assembly.fasta
    outputs/<sample_name>/<assembly>/<custom_binning_process>_bins_reads_alignement/bins/<bins.fa>
    ```
-   Then, in the configfile, insert <custom_assembly_process> in the list of assemblers and/or <custom_binning_process> in the list of binners, and launch the pipeline as usual.
+   
+   Then, in the configfile, insert <custom_assembly_process> in the list of assemblers and/or <custom_binning_process> in the list of binners, and launch the pipeline as usual. It should look something like this : 
+
+   ```bash
+   samples: 
+      - name: <sample_name>
+        read_path: </read/path.fastq>
+      - name: <another_sample_name>
+        read_path: </read/path.fastq>
+   [...]
+   assemblers: # uncomment assemblers to use them
+   # - metaMDBG
+    - <custom_assembly_process>
+   [...]
+   binners: 
+    - metabat2
+    - <custom_binning_process>
+   ```
+
+
+   
+
+   
 
 
 
@@ -113,9 +138,20 @@ Outputs of the assembly and its analyses can be found in `outputs/<sample_name>/
 Logs can be found in `logs/<analysis_name>/<date_hour>`, and contain the slurm log (only if `pipeline.sh` was used in a slurm cluster), the branch and hash of the latest git commit, and a copy of the config file used.
    
 ## Thrid-party software
-Assembly is performed with: [metaMDBG](https://github.com/GaetanBenoitDev/metaMDBG), [hifiasm-meta](https://github.com/xfengnefx/hifiasm-meta), [metaflye](https://github.com/mikolmogorov/Flye), [OPERA-MS](https://github.com/CSB5/OPERA-MS).
-Binning is performed with [MetaBAT2](https://bitbucket.org/berkeleylab/metabat/src/master/).
-Evaluation is performed with: [checkm](https://github.com/Ecogenomics/CheckM), [GTDB-Tk](https://github.com/Ecogenomics/GTDBTk), [MetaQUAST](https://github.com/ablab/quast), [FastQC](https://github.com/s-andrews/FastQC), [Kraken2](https://github.com/DerrickWood/kraken2), [Krona](https://github.com/marbl/Krona) and [KAT](https://github.com/TGAC/KAT).
+Assembly is performed with: metaMDBG ([git](https://github.com/GaetanBenoitDev/metaMDBG), [article](https://doi.org/10.1038/s41587-023-01983-6)),
+hifiasm-meta ([git](https://github.com/xfengnefx/hifiasm-meta), [article](https://www.nature.com/articles/s41592-022-01478-3)),
+metaflye ([git](https://github.com/mikolmogorov/Flye), [article](https://www.nature.com/articles/s41592-020-00971-x)),
+OPERA-MS ([git](https://github.com/CSB5/OPERA-MS), [article](https://www.nature.com/articles/s41587-019-0191-2)).
+Binning is performed with MetaBAT2 ([code](https://bitbucket.org/berkeleylab/metabat/src/master/), [article](https://pmc.ncbi.nlm.nih.gov/articles/PMC6662567/)).
+Evaluation is performed with: 
+checkM2 ([git](https://github.com/chklovski/CheckM2), [article](https://www.nature.com/articles/s41592-023-01940-w)),
+GTDB-Tk ([git](https://github.com/Ecogenomics/GTDBTk), [article](https://academic.oup.com/bioinformatics/article/36/6/1925/5626182)),
+MetaQUAST ([git](https://github.com/ablab/quast), [article](https://academic.oup.com/bioinformatics/article/32/7/1088/1743987)),
+FastQC ([git](https://github.com/s-andrews/FastQC), [website](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)),
+Kraken2 ([git](https://github.com/DerrickWood/kraken2), [article](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1891-0)),
+Krona ([git](https://github.com/marbl/Krona), [article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-385)),
+KAT ([git](https://github.com/TGAC/KAT), [article](https://academic.oup.com/bioinformatics/article/33/4/574/2664339)).
+
 Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used to perform custom evaluation
 
 
