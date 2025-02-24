@@ -26,7 +26,7 @@ def GSCS_quality(contamination, completeness, contigs) :
         return "medium quality"   
     return "low quality"
 
-bin_to_quality = pd.read_csv(checkm_report, sep='\t', skiprows=6, 
+bin_to_quality = pd.read_csv(checkm_report, sep='\t', skiprows=1, 
     names = ["Bin ID","Completeness","Contamination","Completeness_Model_Used","Translation_Table_Used","Coding_Density","Contig_N50","Average_Gene_Length","Genome_Size","GC_Content","Total_Coding_Sequences","Contigs","Max_Contig_Length","Additional_Notes"])
 bin_to_quality["Quality"] = bin_to_quality.apply(lambda x: GSCS_quality(x['Contamination'], x['Completeness'], x['Contigs']), axis=1)
 bin_to_quality = {bin_id: quality for bin_id, quality in zip(bin_to_quality["Bin ID"], bin_to_quality["Quality"])}
