@@ -12,5 +12,6 @@ reference_genomes="${@:4}"
 
 
 mkdir "$output_directory"
-metaquast "$assembly" -r $( echo "$reference_genomes" | tr ' ' , ) -o "$output_directory" --min-identity "$min_identity" --unique-mapping --reuse-combined-alignments
+metaquast "$assembly" -r $( echo "$reference_genomes" | tr ' ' , ) -o "$output_directory" --min-identity "$min_identity" --unique-mapping --threads $(nproc)
+#--reuse-combined-alignments #this option doesn't work with all metaquast options
 

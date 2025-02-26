@@ -14,11 +14,11 @@ if(config["metaquast"]) :
         input : "outputs/{sample}/{assembler}/assembly.fasta",
         output : directory("outputs/{sample}/{assembler}/metaquast/results/summary/TSV/"),
         shell : "sources/contig_quality_analysis/metaquast_wraper.sh {input} {params.output_directory} {params.min_identity} {params.reference_genomes} "
-
+if(config["metaquast"] and "abundance_information" in config) :
     rule metaquast_report_writer :
         input : 
             metaquast_output = "outputs/{sample}/{assembler}/metaquast/results/summary/TSV/", 
-            coverage_information = config["abundance_information"]
+            coverage_information = config["abundance_information"]    
         conda : "../envs/python.yaml"
         output : "outputs/{sample}/{assembler}/metaquast/report.txt",
         shell : "python3 sources/contig_quality_analysis/metaquast_report_writer.py {input.metaquast_output} {input.coverage_information}  > {output}" 

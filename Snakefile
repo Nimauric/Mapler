@@ -78,6 +78,8 @@ rule all :
         expand("outputs/{sample}/{assembler}/reads_on_contigs_mapping_evaluation/report.txt", sample=get_samples("name"), assembler = config["assemblers"])
             if(config["read_mapping_evaluation"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/metaquast/report.txt", sample=get_samples("name"), assembler = config["assemblers"])
+            if(config["metaquast"] == True and ("abundance_information" in config)) else "Snakefile",
+        expand("outputs/{sample}/{assembler}/metaquast/results/summary/TSV/", sample=get_samples("name"), assembler = config["assemblers"])
             if(config["metaquast"] == True) else "Snakefile",
         expand("outputs/{sample}/reads_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
             if(config["reference_mapping_evaluation"] == True) else "Snakefile",

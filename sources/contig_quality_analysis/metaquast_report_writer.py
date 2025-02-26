@@ -32,6 +32,7 @@ def message_generator(table,category) :
 metaquast_output = str(sys.argv[1])
 coverage_information = str(sys.argv[2])
 
+
 # import coverage information
 table = pd.read_csv(coverage_information, sep = ",", names=["genome", "category"])
 
@@ -48,4 +49,5 @@ for category in table["category"].unique() :
 
 print("Full table : ")
 print(table.to_string())
+
 
