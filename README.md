@@ -3,7 +3,7 @@ Metagenome Assembly and Evaluation Pipeline for Long Reads
 
 
 ## Description
-The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies, and can either perform the assembly itself through multiple state-of-the-art assemblers (metaMDBG, metaflye, hifiasm-meta), or evaluate user-submitted assemblies. In addition to classifying assembly bins in classical quality categories according to their marker gene content and taxonomic assignment, Mapler analyzes the alignment of reads on contigs. To do so, it calculates the ratio of mapped reads and bases, and separately analyzes mapped and unmapped reads via their k-mer frequency, read quality, and taxonomic assignment. Those results are displayed in the form of text reports or plots.
+The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies and can either perform the assembly itself through multiple state-of-the-art assemblers (metaMDBG, metaflye, hifiasm-meta), or evaluate user-submitted assemblies. In addition to classifying assembly bins in classical quality categories according to their marker gene content and taxonomic assignment, Mapler analyzes the alignment of reads on contigs. To do so, it calculates the ratio of mapped reads and bases, and separately analyzes mapped and unmapped reads via their k-mer frequency, read quality, and taxonomic assignment. Those results are displayed in the form of text reports or plots.
 
 ## Installation
 
@@ -13,15 +13,15 @@ git clone https://gitlab.inria.fr/mistic/mapler.git
 cd mapler
 ```
 
-The pipeline itself requires snakemake and conda, as well as, if on a slurm cluster, the snakemake executor plugin slurm. If they're not already installed, they can be set up in a conda environment :
+The pipeline requires Snakemake and Conda. If running on a SLURM cluster, the Snakemake SLURM executor plugin is also needed.. If they're not already installed, they can be set up in a conda environment:
 
 ```bash
-conda create -n snakemake 'bioconda::snakemake>=8.28' 'conda-forge::conda>=24.1.2' bioconda::snakemake-executor-plugin-slurm 
-conda activate snakemake
+conda create -n mapler 'bioconda::snakemake>=8.28' 'conda-forge::conda>=24.1.2' bioconda::snakemake-executor-plugin-slurm 
+conda activate mapler
 ```
 
-The pipeline will handle any conda dependencies itself during the execution, but their installation can be quite lengthy.
-To download them prior to running the pipeline, it's possible to use the following command.
+The pipeline will handle and download any conda dependencies itself during the execution.
+To download them prior to running the pipeline and speed up the first execution of the pipeline, it's possible to use the following command.
 Note that only a part of the analysis are run on the test dataset. 
 To download the environments for other analysis, change the `--configfile` argument.
 Those environments will be stored in `.snakemake/conda`
@@ -34,7 +34,7 @@ snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_t
 	<summary>Optional databases</summary>
 
    To run taxonomic assignment, both Kraken 2 (reads) and GTDB-Tk (bins) require external databases. If used, their path must be indicated in the configfile (kraken2db and gtdbtk_database).
-   If not already aviable, several Kraken 2 databases are aviable [here](https://benlangmead.github.io/aws-indexes/k2), to be chosen depending on targeted taxa and aviable disk space. The GTDB-Tk reference data can be found [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#installing-gtdbtk-reference-data).
+   If not already available, several Kraken 2 databases are available [here](https://benlangmead.github.io/aws-indexes/k2), to be chosen depending on targeted taxa and available disk space. The GTDB-Tk reference data can be found [here](https://ecogenomics.github.io/GTDBTk/installing/index.html#installing-gtdbtk-reference-data).
 
 </details>
 
@@ -44,11 +44,11 @@ To verify the installation, launch the pipeline with a test dataset, either loca
 ```bash
 ./local_pipeline.sh config/config_test.yaml > mylog.txt
 ```
-Or on a cluster :
+Or on a cluster:
 ```bash
 sbatch pipeline.sh config/config_test.yaml
 ```
-Either way, with 16 CPUs, it should require around 15 minutes (without taking into account dependencies installation) to produces results like this : 
+Either way, with 16 CPUs and 10G of RAM, it should require around 15 minutes (without taking into account dependencies installation) to produce results similar to this: 
 ```bash
 outputs/test_dataset/
 └── metaMDBG
@@ -67,30 +67,30 @@ outputs/test_dataset/
 ```
 
 ## Usage
-The pipeline must be launched from within the pipeline directory. Those familiar with snakemake may directly use snakemake commands to launch it. Otherwise, the following commands can be used :  
+The pipeline must be launched from within the pipeline directory. Those familiar with snakemake may directly use snakemake commands to launch it. Otherwise, the following commands can be used:  
 ```bash
 ./local_pipeline.sh <configfile> > mylog.txt # for local execution
 sbatch pipeline.sh <configfile> # for slurm execution
 ./np_pipeline.sh <configfile> # to preview the execution
 snakemake --unlock --configfile <configfile> # to unlock the working directory after a crash
 ```
-It is recommended to copy `config/config_template.yaml` as a configfile, and to tweak it according to the analysis's need. 
-Details on how to configure this file are written as comments in the template. The configfile is structured in three parts :
-- Inputs : path to samples and external programs (most are optional and only needed for certain analyses)
-- Controls : allowing a choice between multiple non-exclusive options, or a binary choice on whether the analysis is run (true) or not (false)
-- Parameters : functional parameters are values that can be tweaked for certain analyses, resource parameters allows to tweak memory, number of threads and allocated time for resource-intensive rules
+It is recommended to copy `config/config_template.yaml` as a configfile, and to tweak it according to the analysis's needs. 
+Details on how to configure this file are written as comments in the template. The configfile is structured in three parts:
+- Inputs: path to samples and external programs (most are optional and only needed for certain analyses)
+- Controls: allowing a choice between multiple non-exclusive options, or a binary choice on whether the analysis is run (true) or not (false)
+- Parameters: functional parameters define values that can be adjusted for certain analyses, while resource parameters allow users to configure memory, threads, and execution time
 
 <details>
 	<summary>Multiple user-provided assemblies and binning</summary>
 
-   To use multiple user-provided assemblies and binning, you can either run them one at a time, or insert the assembly and/or bins like this :
+   To use multiple user-provided assemblies and binning, you can either run them one at a time, or insert the assembly and/or bins like this:
    ```bash
    outputs/<sample_name>/<custom_assembly_process>/assembly.fasta
    outputs/<sample_name>/<assembly>/<custom_binning_process>_bins_reads_alignement/bins/<bins.fa>
    ```
    
-   Then, in the configfile, insert <custom_assembly_process> in the list of assemblers and/or <custom_binning_process> in the list of binners, and launch the pipeline as usual. It should look something like this : 
-
+   Then, in the configfile, insert <custom_assembly_process> in the list of assemblers and/or <custom_binning_process> in the list of binners, and launch the pipeline as usual. It should look something like this: 
+   
    ```bash
    samples: 
       - name: <sample_name>
@@ -102,40 +102,126 @@ Details on how to configure this file are written as comments in the template. T
    # - metaMDBG
     - <custom_assembly_process>
    [...]
-   binners: 
-    - metabat2
+   binners: # uncomment binners to use them
+   # - metabat2
     - <custom_binning_process>
    ```
-
-
-   
-
-   
-
-
+   Please note that <custom_assembly_process> cannot correspond to the name of any of the built-in assembly processes (metaMDBG, custom_assembly, metaflye, hifiasm_meta, operaMS). Likewise, the <custom_binning_process> cannot correspond to the name of any of the built-in binning processes (metabat2, custom)
 
 </details>
 
-
 ## Logs and Outputs
-Outputs of the assembly and its analyses can be found in `outputs/<sample_name>/<assembler>/` :
-- `assembly.fasta` : the assembly itself
-- `fastqc/<fraction>/fastqc_report.html` : read quality analysis
-- `kat/`
-   - `<fraction>-stats.tsv` : analysis of the k-mer frequency of reads
-   - `kat-plot.png` : comparison of the mapped and unmapped fractions
-- `kraken2/<fraction>/krona.html` : taxonomic assignation of reads
-- `metaquast/report.txt` : summarized metaquast output, aggregated by user-defined species groups (for instance according to species abundance in the sample)
-- `reads_on_contigs_mapping_evaluation/report.txt` : statistics on the alignments of reads on contigs
-- `<binning>/`
-   - `bins/*.fa` : the bins themselves
-   - `checkm/` : completeness and contamination assessment of each bin, sorting bins by levels of quality
-   - `kraken2/<bin of interst>/` : taxonomic assignment of contigs from a specific bin
-   - `gtdbtk/results` : taxonomic assignment of each bin
-   - `read_contig_mapping_plot.png` : a plot combining checkm and reads_on_contigs_mapping_evaluation results in a plot to show read mapping by bin quality
-
-
+```bash
+# Comments describe the required configuration of the config file
+outputs
+└── <sample_name>
+    └── <assembler> # multiple choice in the assemblers field
+        ├── assembly.fasta
+        ├── fastqc # Requires fastqc: true
+        │   └── <fraction_name> # multiple choice in the fractions field
+        │       ├── fastqc_report.html
+        │       └── <fraction_name>_fastqc.zip
+        ├── kat # Requires kat: true
+        │   ├── kat-plot.pdf # Requires both "mapped" and "unmapped" fractions
+        │   └── <fraction_name>-stats.tsv
+        ├── kraken2 # Requires kraken2: true
+        │   └── <fraction_name>
+        │       ├── kraken2.tsv
+        │       ├── krona.html
+        │       └── krona.html.files
+        ├── metaquast # Requires metaquast: true
+        │   ├── report.txt
+        │   └── results/
+        ├── <fraction_name>_reads.fastq # For either "mapped" or "unmapped" fraction analysis
+        ├── <binner>_bins_short_reads_alignement                  # multiple choices in the binners field. Requires short_read_binning: true
+        ├── <binner>_bins_cobinning_alignement                    # multiple choices in the binners field. Requires short_read_cobinning: true
+        ├── <binner>_bins_additional_reads_cobinning_alignement   # multiple choices in the binners field. Requires additional_reads_cobinning: true
+        ├── <binner>_bins_reads_alignement                        # multiple choices in the binners field. Requires binning: true
+        │   ├── bins
+        │   │   ├── bin.1.fa
+        │   │   ├── ...
+        │   │   └── contigs_depth.txt
+        │   ├── checkm # Requires checkm: true
+        │   │   ├── checkm-plot.pdf
+        │   │   ├── checkm_report.txt
+        │   │   └── quality_report.tsv
+        │   ├── gtdbtk # Requires gtdbtk:true
+        │   ├── kraken2 # Requires kraken2_on_bins:true
+        │   ├── read_contig_mapping_plot.pdf # Requires both checkm: true and read_mapping_evaluation: true
+        │   └── read_contig_mapping.txt # Requires both checkm: true and read_mapping_evaluation: true
+        ├── reads_on_contigs.bam
+        ├── reads_on_contigs.bam.bai
+        ├── reads_on_reference.<reference>.bam # Multiple choices in the reference_genomes field. Requires reference_mapping_evaluation:true
+        ├── contigs_on_reference.<reference>.bam # Multiple choices in the reference_genomes field. Requires reference_mapping_evaluation:true
+        └──  reads_on_contigs_mapping_evaluation # Requires read_mapping_evaluation: true
+            └── report.txt
+```
 Logs can be found in `logs/<analysis_name>/<date_hour>`, and contain the slurm log (only if `pipeline.sh` was used in a slurm cluster), the branch and hash of the latest git commit, and a copy of the config file used.
+
+## Results interpretation
+### Read mapping
+By alignining the reads on the contigs, we can look at two key metrics: 
+ - Aligned reads ratio: Aligned read count / Total read count
+ - Aligned bases ratio: Aligned read bases / Total read length
+
+The higher the ratios, the more representative of the sequenced sample is the assembly.
+If the aligned reads ratio is significantly higher than the aligned bases ratio, it's a sign that most reads are only partially aligned to contigs.
+
+`reads_on_contigs_mapping_evaluation/report.txt` gives a global overview of those ratios, while read_contig_mapping.txt and read_contig_mapping_plot.pdf provide a breakdown of the ratios separated by bin quality. 
+
+Here's an example of read_contig_mapping_plot.pdf: (coming soon) 
+
+### Fractional read analysis
+In samples where a significant proportion of the reads is not assembled, it can be useful to compare the set of reads that are represented by the assembly (mapped reads)with the set of reads that are not (unmapped reads).
+Mapler include three fractional reads analysis:
+<details>
+	<summary>FastQC</summary>
+   
+   With fastQC, it's possible to look into statistical differences between the sets of reads. Generally, the unmapped reads are slightly shorter and of slightly worse quality than the assembled reads on average. 
+   They also tend to have a different GC ratio, but this is unlikely to reflect an actual assembly bias and more likely to be the result of a particular high abundance population being assembled better and happening to have a specific GC ratio.
+
+   Here's an example of fastqc_report.html: (coming soon)
+
+</details>
+<details>
+	<summary>Kraken 2</summary>
+
+   By exploring the krona plots, it's possible to check whether some taxa are only present in the unassembled fraction of the reads, or whether some species have only been partially assembled, being present in both of the assembled and unassembled parts of the assembly. 
+
+   Here's an example of krona.html: (coming soon)
+
+</details>
+<details>
+	<summary>KAT</summary>
+
+   By computing the abundance of each read (via their median k-mer abundance) from the full set of reads, it is possible to check whether some abundance are better assembled than others. 
+   Typically, low abundance reads are more abundant in the unmapped fractions, but the proportion and abundance threshold varies by assembler used.
+
+   Here's an example of kat-plot.pdf: (coming soon)
+
+</details>
+
+<br>
+<details>
+	<summary>User-provided fractions</summary>
+
+   Just like with user-provided assemblies, additional reads fractions can be inserted in the pipeline, and will be treated like any other: 
+   ```bash
+   outputs/<sample_name>/<assembler>/<fraction_name>_reads.fastq
+   ```
+   
+   Then, in the configfile, insert <fraction_name> in the list of fractions, and launch the pipeline as usual. It should look something like this: 
+
+   ```bash
+   fractions:
+    - fraction_name
+   # - full #all reads
+   # - mapped #reads that mapped to a contig, and were sucessfully assembled
+   # - unmapped #reads that are not mapped to a contig
+   ```
+   Please note that <fraction_name> cannot correspond to the name of any of the built-in fractions (full, mapped, unmapped)
+</details>
+
    
 ## Thrid-party software
 Assembly is performed with: metaMDBG ([git](https://github.com/GaetanBenoitDev/metaMDBG), [article](https://doi.org/10.1038/s41587-023-01983-6)),
@@ -151,8 +237,5 @@ FastQC ([git](https://github.com/s-andrews/FastQC), [website](https://www.bioinf
 Kraken2 ([git](https://github.com/DerrickWood/kraken2), [article](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1891-0)),
 Krona ([git](https://github.com/marbl/Krona), [article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-385)),
 KAT ([git](https://github.com/TGAC/KAT), [article](https://academic.oup.com/bioinformatics/article/33/4/574/2664339)).
-
 Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used to perform custom evaluation
-
-
 
