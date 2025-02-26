@@ -169,7 +169,9 @@ If the aligned reads ratio is significantly higher than the aligned bases ratio,
 
 `reads_on_contigs_mapping_evaluation/report.txt` gives a global overview of those ratios, while read_contig_mapping.txt and read_contig_mapping_plot.pdf provide a breakdown of the ratios separated by bin quality. 
 
-Here's an example of read_contig_mapping_plot.pdf: (coming soon) 
+Here's an example of read_contig_mapping_plot.pdf: 
+
+![most reads are either unmapped or aligned to unbinned contigs or low quality bin, with less than 20% of medium, high or near complete quality. Moreover, the alignment length ratio is visibly lower than the aligned read count ratio](https://gitlab.inria.fr/-/project/48336/uploads/f84ee66686f8f09a7f335e836c0b4ef1/Screenshot_from_2025-02-26_15-28-45.png)
 
 ### Fractional read analysis
 In samples where a significant proportion of the reads is not assembled, it can be useful to compare the set of reads that are represented by the assembly (mapped reads)with the set of reads that are not (unmapped reads).
@@ -180,15 +182,11 @@ Mapler include three fractional reads analysis:
    With fastQC, it's possible to look into statistical differences between the sets of reads. Generally, the unmapped reads are slightly shorter and of slightly worse quality than the assembled reads on average. 
    They also tend to have a different GC ratio, but this is unlikely to reflect an actual assembly bias and more likely to be the result of a particular high abundance population being assembled better and happening to have a specific GC ratio.
 
-   Here's an example of fastqc_report.html: (coming soon)
-
 </details>
 <details>
 	<summary>Kraken 2</summary>
 
    By exploring the krona plots, it's possible to check whether some taxa are only present in the unassembled fraction of the reads, or whether some species have only been partially assembled, being present in both of the assembled and unassembled parts of the assembly. 
-
-   Here's an example of krona.html: (coming soon)
 
 </details>
 <details>
@@ -197,7 +195,9 @@ Mapler include three fractional reads analysis:
    By computing the abundance of each read (via their median k-mer abundance) from the full set of reads, it is possible to check whether some abundance are better assembled than others. 
    Typically, low abundance reads are more abundant in the unmapped fractions, but the proportion and abundance threshold varies by assembler used.
 
-   Here's an example of kat-plot.pdf: (coming soon)
+   Here's an example of kat-plot.pdf: 
+
+   ![A plot showing the abundance of unmapped reads, mostly uniquue, with some more abundant reads, in a sort of exponential decay with some reads with a median k-mer occurence of 2 or even 3, and mapped reads, also looking like an exponential decay, with with a less sharp decay, with still some reads with a median k-mer occurence of 16](https://gitlab.inria.fr/-/project/48336/uploads/c573bd3e4c4c5a972da11e02dd868e00/Screenshot_from_2025-02-26_15-31-27.png)
 
 </details>
 
