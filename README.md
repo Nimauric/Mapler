@@ -48,7 +48,7 @@ Or on a cluster:
 ```bash
 sbatch pipeline.sh config/config_test.yaml
 ```
-Either way, with 16 CPUs and 10G of RAM, it should require around 15 minutes (without taking into account dependencies installation) to produce results similar to this: 
+Either way, with 16 CPUs and 15G of RAM, it should require around 15 minutes (without taking into account dependencies installation) to produce results similar to this: 
 ```bash
 outputs/test_dataset/
 └── metaMDBG
