@@ -41,10 +41,10 @@ checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
 ### Assembly and binning ###
 assemblers: # uncomment assemblers to use them
  - metaMDBG
-# - custom_assembly # requires custom_assembly_path
  - metaflye
  - hifiasm_meta
 # - operaMS # requires short_read_assembly and operaMS_path, performs a hybrid assembly
+# - custom_assembly # requires custom_assembly_path
 
 short_read_binning: false # requires short_reads_1 and short_reads_2
 short_read_cobinning: false # requires short_reads_1 and short_reads_2, uses both short and long reads for binning
@@ -64,10 +64,11 @@ reference_mapping_evaluation: false # requires reference_genomes
 
 # bins analysis
 checkm: true
-gtdbtk: true # requires gtdbtk_database and mash_database, analyses all bins
-kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2db, analyses bins specified in target_bins
-target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db
- - 1
+gtdbtk: false # requires gtdbtk_database and mash_database, analyses all bins
+kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2db, analyses bins specified in kraken2_target_bins
+kraken2_target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db. Do not include the .fa extension in the name
+ - bin.1
+ - another_bin_name
 
 # Fractionned read analysis
 fractions: 

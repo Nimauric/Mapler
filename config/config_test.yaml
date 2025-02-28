@@ -75,8 +75,8 @@ reference_mapping_evaluation: false # requires reference_genomes
 # bins analysis
 checkm: true
 gtdbtk: false # requires gtdbtk_database and mash_database, analyses all bins
-kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2db, analyses bins specified in target_bins
-target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db
+kraken2_on_bins: false #/!\ Require having done binning separatly on a previous step, requires kraken2db, analyses bins specified in kraken2_target_bins
+kraken2_target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db
  - 1
 
 # Fractionned read analysis

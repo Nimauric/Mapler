@@ -93,7 +93,7 @@ rule all :
             if(config["checkm"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/gtdbtk/results/gtdbtk.bac120.summary.tsv", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["gtdbtk"] == True) else "Snakefile",
-        expand("outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings, target_bin=config["target_bins"])
+        expand("outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}/krona.html", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings, target_bin=config["kraken2_target_bins"])
             if(config["kraken2_on_bins"] == True) else "Snakefile",
         expand("outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.pdf", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)
             if(config["checkm"] == True and config["read_mapping_evaluation"] == True) else "Snakefile",

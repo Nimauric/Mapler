@@ -58,9 +58,9 @@ if(config["kraken2_on_bins"]) :
     rule kraken2_on_bins:
         params: 
             database = config["kraken2db"],
-            output_directory ="outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}"
-        input: "outputs/{sample}/{assembler}/{binning}/bins/bin.{target_bin}.fa"
-        output: "outputs/{sample}/{assembler}/{binning}/kraken2/bin.{target_bin}/krona.html",
+            output_directory ="outputs/{sample}/{assembler}/{binning}/kraken2/{target_bin}"
+        input: "outputs/{sample}/{assembler}/{binning}/bins/{target_bin}.fa"
+        output: "outputs/{sample}/{assembler}/{binning}/kraken2/{target_bin}/krona.html",
         threads: config["rule_kraken2_on_bins"]["threads"]
         resources:
             cpus_per_task = config["rule_kraken2_on_bins"]["threads"],
