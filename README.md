@@ -3,7 +3,7 @@ Metagenome Assembly and Evaluation Pipeline for Long Reads
 
 
 ## Description
-The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies and can either perform the assembly itself through multiple state-of-the-art assemblers (metaMDBG, metaflye, hifiasm-meta), or evaluate user-submitted assemblies. In addition to classifying assembly bins in classical quality categories according to their marker gene content and taxonomic assignment, Mapler analyzes the alignment of reads on contigs. To do so, it calculates the ratio of mapped reads and bases, and separately analyzes mapped and unmapped reads via their k-mer frequency, read quality, and taxonomic assignment. Those results are displayed in the form of text reports or plots.
+The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies and can either perform the assembly itself using multiple state-of-the-art assemblers (metaMDBG, metaflye, hifiasm-meta), or evaluate user-submitted assemblies. In addition to classifying assembly bins in classical quality categories according to their marker gene content and taxonomic assignment, Mapler analyzes the alignment of reads on contigs. It does this by calculating the ratio of mapped reads and bases, and separately analyzes mapped and unmapped reads via their k-mer frequency, read quality, and taxonomic assignment. These results are displayed in the form of text reports or plots.
 
 ## Installation
 
@@ -16,13 +16,13 @@ cd mapler
 The pipeline requires Snakemake and Conda. If running on a SLURM cluster, the Snakemake SLURM executor plugin is also needed.. If they're not already installed, they can be set up in a conda environment:
 
 ```bash
-conda create -n mapler 'bioconda::snakemake>=8.28' 'conda-forge::conda>=24.1.2' bioconda::snakemake-executor-plugin-slurm 
+conda create -n mapler -c bioconda -c conda-forge 'bioconda::snakemake>=8.28' 'conda-forge::conda>=24.1.2' bioconda::snakemake-executor-plugin-slurm 
 conda activate mapler
 ```
 
 The pipeline will handle and download any conda dependencies itself during the execution.
 To download them prior to running the pipeline and speed up the first execution of the pipeline, it's possible to use the following command.
-Note that only a part of the analysis are run on the test dataset. 
+Note that only part of the analysis is run on the test dataset. 
 To download the environments for other analysis, change the `--configfile` argument.
 Those environments will be stored in `.snakemake/conda`
 
@@ -48,7 +48,7 @@ Or on a cluster:
 ```bash
 sbatch pipeline.sh config/config_test.yaml
 ```
-Either way, with 16 CPUs and 15G of RAM, it should require around 15 minutes (without taking into account dependencies installation) to produce results similar to this: 
+Either way, with 16 CPUs and 15G of RAM, it should require around 15 minutes, not including dependency installation, to produce results similar to this: 
 ```bash
 outputs/test_dataset/
 └── metaMDBG
@@ -58,7 +58,7 @@ outputs/test_dataset/
     │   │   ├── bin.1.fa
     │   │   ├── ...
     │   ├── checkm
-    │   │   ├── checkm-plot.pdf # A 2D plot of bin completness and contamination
+    │   │   ├── checkm-plot.pdf # A 2D plot of bin completeness and contamination
     │   │   └── checkm_report.txt # A count of near complete, high quality, medium quality and low quality bins, followed by details on each bins
     │   ├── read_contig_mapping_plot.pdf # A visual version of read_contig_mapping.txt
     │   └── read_contig_mapping.txt # A report on the aligned reads and aligned bases ratios, split by bin quality
@@ -70,20 +70,20 @@ outputs/test_dataset/
 The pipeline must be launched from within the pipeline directory. Those familiar with snakemake may directly use snakemake commands to launch it. Otherwise, the following commands can be used:  
 ```bash
 ./local_pipeline.sh <configfile> > mylog.txt # for local execution
-sbatch pipeline.sh <configfile> # for slurm execution
+sbatch pipeline.sh <configfile> # for SLURM execution
 ./np_pipeline.sh <configfile> # to preview the execution
 snakemake --unlock --configfile <configfile> # to unlock the working directory after a crash
 ```
 It is recommended to copy `config/config_template.yaml` as a configfile, and to tweak it according to the analysis's needs. 
 Details on how to configure this file are written as comments in the template. The configfile is structured in three parts:
 - Inputs: path to samples and external programs (most are optional and only needed for certain analyses)
-- Controls: allowing a choice between multiple non-exclusive options, or a binary choice on whether the analysis is run (true) or not (false)
+- Controls: allowing a choice among multiple non-exclusive options, or a binary choice on whether the analysis is run (true) or not (false)
 - Parameters: functional parameters define values that can be adjusted for certain analyses, while resource parameters allow users to configure memory, threads, and execution time
 
 <details>
 	<summary>Multiple user-provided assemblies and binning</summary>
 
-   To use multiple user-provided assemblies and binning, you can either run them one at a time, or insert the assembly and/or bins like this:
+   To use multiple user-provided assemblies and binning, you can either run them one at a time, or insert (via a copy or the creation of a symbolic link) the assembly and/or bins like this:
    ```bash
    outputs/<sample_name>/<custom_assembly_process>/assembly.fasta
    outputs/<sample_name>/<assembly>/<custom_binning_process>_bins_reads_alignement/bins/<bins.fa>
@@ -156,7 +156,7 @@ outputs
         └──  reads_on_contigs_mapping_evaluation # Requires read_mapping_evaluation: true
             └── report.txt
 ```
-Logs can be found in `logs/<analysis_name>/<date_hour>`, and contain the slurm log (only if `pipeline.sh` was used in a slurm cluster), the branch and hash of the latest git commit, and a copy of the config file used.
+Logs can be found in `logs/<analysis_name>/<date_hour>`, and contain the SLURM log (only if `pipeline.sh` was used in a SLURM cluster), the branch and hash of the latest git commit, and a copy of the config file used.
 
 ## Results interpretation
 ### Read mapping
@@ -171,11 +171,11 @@ If the aligned reads ratio is significantly higher than the aligned bases ratio,
 
 Here's an example of read_contig_mapping_plot.pdf: 
 
-![most reads are either unmapped or aligned to unbinned contigs or low quality bin, with less than 20% of medium, high or near complete quality. Moreover, the alignment length ratio is visibly lower than the aligned read count ratio](https://gitlab.inria.fr/-/project/48336/uploads/f84ee66686f8f09a7f335e836c0b4ef1/Screenshot_from_2025-02-26_15-28-45.png)
+![most reads are either unmapped or aligned to unbinned contigs or low-quality bins, with less than 20% of medium, high or near complete quality. Moreover, the alignment length ratio is visibly lower than the aligned read count ratio](https://gitlab.inria.fr/-/project/48336/uploads/f84ee66686f8f09a7f335e836c0b4ef1/Screenshot_from_2025-02-26_15-28-45.png)
 
-### Fractional read analysis
+### Analysis of reads by category
 In samples where a significant proportion of the reads is not assembled, it can be useful to compare the set of reads that are represented by the assembly (mapped reads)with the set of reads that are not (unmapped reads).
-Mapler include three fractional reads analysis:
+Mapler include three read analyses :
 <details>
 	<summary>FastQC</summary>
    
@@ -186,44 +186,44 @@ Mapler include three fractional reads analysis:
 <details>
 	<summary>Kraken 2</summary>
 
-   By exploring the krona plots, it's possible to check whether some taxa are only present in the unassembled fraction of the reads, or whether some species have only been partially assembled, being present in both of the assembled and unassembled parts of the assembly. 
+   By exploring the Krona plots, it's possible to check whether some taxa are only present in the unassembled portion of the reads, or whether some species have only been partially assembled, being present in both of the assembled and unassembled parts of the assembly. 
 
 </details>
 <details>
 	<summary>KAT</summary>
 
-   By computing the abundance of each read (via their median k-mer abundance) from the full set of reads, it is possible to check whether some abundance are better assembled than others. 
-   Typically, low abundance reads are more abundant in the unmapped fractions, but the proportion and abundance threshold varies by assembler used.
+   By computing the abundance of each read (via its median k-mer abundance) from the full set of reads, it is possible to check whether some abundance are better assembled than others. 
+   Typically, low abundance reads are more abundant in the unmapped portions, but the proportion and abundance threshold varies by assembler used.
 
-   Here's an example of kat-plot.pdf: 
+   Here's an example of `kat-plot.pdf`: 
 
-   ![A plot showing the abundance of unmapped reads, mostly uniquue, with some more abundant reads, in a sort of exponential decay with some reads with a median k-mer occurence of 2 or even 3, and mapped reads, also looking like an exponential decay, with with a less sharp decay, with still some reads with a median k-mer occurence of 16](https://gitlab.inria.fr/-/project/48336/uploads/c573bd3e4c4c5a972da11e02dd868e00/Screenshot_from_2025-02-26_15-31-27.png)
+   ![A plot showing the abundance of unmapped reads, mostly unique, with some more abundant reads, in a sort of exponential decay with some reads with a median k-mer occurrence of 2 or even 3, and mapped reads, also looking like an exponential decay, with with a less sharp decay, with still some reads with a median k-mer occurrence of 16](https://gitlab.inria.fr/-/project/48336/uploads/c573bd3e4c4c5a972da11e02dd868e00/Screenshot_from_2025-02-26_15-31-27.png)
 
 </details>
 
 <br>
 <details>
-	<summary>User-provided fractions</summary>
+	<summary>User-provided read categories</summary>
 
-   Just like with user-provided assemblies, additional reads fractions can be inserted in the pipeline, and will be treated like any other: 
+   Just like with user-provided assemblies, additional read categories can be inserted (via a file copy or the creation of a symbolic link) in the pipeline, and will be treated like any other: 
    ```bash
    outputs/<sample_name>/<assembler>/<fraction_name>_reads.fastq
    ```
    
-   Then, in the configfile, insert <fraction_name> in the list of fractions, and launch the pipeline as usual. It should look something like this: 
+   Then, in the configfile, insert <fraction_name> in the list of read categories, and launch the pipeline as usual. It should look something like this: 
 
    ```bash
    fractions:
-    - fraction_name
+    - <fraction_name>
    # - full #all reads
-   # - mapped #reads that mapped to a contig, and were sucessfully assembled
+   # - mapped #reads that mapped to a contig, and were successfully assembled
    # - unmapped #reads that are not mapped to a contig
    ```
-   Please note that <fraction_name> cannot correspond to the name of any of the built-in fractions (full, mapped, unmapped)
+   Please note that <fraction_name> cannot correspond to the name of any of the built-in categories (full, mapped, unmapped)
 </details>
 
    
-## Thrid-party software
+## Third-party software
 Assembly is performed with: metaMDBG ([git](https://github.com/GaetanBenoitDev/metaMDBG), [article](https://doi.org/10.1038/s41587-023-01983-6)),
 hifiasm-meta ([git](https://github.com/xfengnefx/hifiasm-meta), [article](https://www.nature.com/articles/s41592-022-01478-3)),
 metaflye ([git](https://github.com/mikolmogorov/Flye), [article](https://www.nature.com/articles/s41592-020-00971-x)),
@@ -239,3 +239,25 @@ Krona ([git](https://github.com/marbl/Krona), [article](https://bmcbioinformatic
 KAT ([git](https://github.com/TGAC/KAT), [article](https://academic.oup.com/bioinformatics/article/33/4/574/2664339)).
 Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used to perform custom evaluation
 
+## FAQ
+<details>
+	<summary>How to run Mapler with low computing resources ?</summary>
+
+   The default resources in `config/config_template.yaml` are designed to handle large and complex datasets (150G soil sample). 
+   On smaller or less diverse datasets, it might be possible to lower their required memory.
+
+   Kraken2 and KAT are both quite memory intensive, if resources are limited, they can be skipped by setting `kat: false`and `kraken2: false`in the config file. 
+
+   The assembly is also quite costly. If available, using it as an input can save computational resources.
+</details>
+
+<details>
+	<summary>How to run taxonomic assignment ?</summary>
+
+   There are three ways to use taxonomic assignment with mapler : 
+    - Taxonomic assignment of reads : done with kraken2 (`kraken2: true` in the config file) 
+    - Taxonomic assignment of all bins : done with GTDB-Tk (`gtdbtk: true` in the config file)
+    - Taxonomic assignment of specific bins of the bins folder : done with kraken2 (`kraken2_on_bins: true`in the config file). It is generally recommended to use GTDB-Tk on bins, but kraken2 can provide a way to check for coherence between the reads and specific bins.
+
+
+</details>
