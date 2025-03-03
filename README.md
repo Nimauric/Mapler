@@ -40,7 +40,7 @@ snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_t
 
 
 ## Testing the pipeline
-To verify the installation, launch the pipeline with a test dataset, either locally
+To verify the installation, launch the pipeline with the test dataset (included in `test/test_dataset.fastq.gz`), either locally
 ```bash
 ./local_pipeline.sh config/config_test.yaml > mylog.txt
 ```
@@ -72,7 +72,7 @@ The pipeline must be launched from within the pipeline directory. Those familiar
 ./local_pipeline.sh <configfile> > mylog.txt # for local execution
 sbatch pipeline.sh <configfile> # for SLURM execution
 ./np_pipeline.sh <configfile> # to preview the execution
-snakemake --unlock --configfile <configfile> # to unlock the working directory after a crash
+snakemake --unlock --configfile <configfile> -np # to unlock the working directory after a crash
 ```
 It is recommended to copy `config/config_template.yaml` as a configfile, and to tweak it according to the analysis's needs. 
 Details on how to configure this file are written as comments in the template. The configfile is structured in three parts:
@@ -181,7 +181,7 @@ Mapler include three read analyses :
    
    With fastQC, it's possible to look into statistical differences between the sets of reads. Generally, the unmapped reads are slightly shorter and of slightly worse quality than the assembled reads on average. 
    They also tend to have a different GC ratio, but this is unlikely to reflect an actual assembly bias and more likely to be the result of a particular high abundance population being assembled better and happening to have a specific GC ratio.
-
+rule checkm
 </details>
 <details>
 	<summary>Kraken 2</summary>
@@ -258,6 +258,18 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
     - Taxonomic assignment of reads : done with kraken2 (`kraken2: true` in the config file) 
     - Taxonomic assignment of all bins : done with GTDB-Tk (`gtdbtk: true` in the config file)
     - Taxonomic assignment of specific bins of the bins folder : done with kraken2 (`kraken2_on_bins: true`in the config file). It is generally recommended to use GTDB-Tk on bins, but kraken2 can provide a way to check for coherence between the reads and specific bins.
+</details>
 
+<details>
+	<summary>Does mapler accept compressed input files ?</summary>
 
+   Most rules accept gzip compressed reads, although there is one exception : OPERA-MS assembly. 
+   It is however recommended to use uncompressed reads, as Mapler uses multiple programs that would otherwise each decompress the reads internally.
+</details>
+
+<details>
+	<summary>Does mapler require internet access ?</summary>
+
+   Most rules do not require internet access, although there is one exception : kronadb_download, used to download krona taxonomy for kraken2 analyses.
+   If not already present and included in the config file, the checkm2 (rule checkm) and mash (rule gtdbtk_on_bins) databases also require an internet connection to be downloaded
 </details>
