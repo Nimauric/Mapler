@@ -40,7 +40,8 @@ snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_t
 
 
 ## Testing the pipeline
-To verify the installation, launch the pipeline with the test dataset (included in `test/test_dataset.fastq.gz`), either locally
+To speed this up, you may use `config/config_test_evaluation_only.yaml`instad of `config/config_test.yaml`. This will speed things up, as it will only perform the evaluation, on a precomputed assembly and set of bins. 
+To verify the installation, launch the pipeline with the test dataset (included in `test/test_dataset.tar.gz`, decompressed automatically), either locally
 ```bash
 ./local_pipeline.sh config/config_test.yaml > mylog.txt
 ```

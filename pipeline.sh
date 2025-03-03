@@ -6,9 +6,7 @@
 config=${1:-"config/config.yaml"}
 
 if [[ "$config" == "config/config_test.yaml" ]]; then
-    if [[ ! -f test/test_dataset.fastq ]]; then
-        gzip -d test/test_dataset.fastq.gz
-    fi
+    tar -xf "test/test_dataset.tar.gz"
 fi
 
 analysis_name=$(grep "analysis_name:" $config | cut -d " " -f 2)
