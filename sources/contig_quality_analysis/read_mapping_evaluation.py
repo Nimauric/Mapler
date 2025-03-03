@@ -1,7 +1,7 @@
 import sys
 import pysam
 from Bio import SeqIO
-
+from xopen import xopen
 
 reads_path = str(sys.argv[1])
 alignement_path = str(sys.argv[2])
@@ -24,7 +24,7 @@ with pysam.AlignmentFile(alignement_path, "rb") as bamfile:
 
 #II) : get the length of each read
 reads_to_length = {}
-with open(reads_path, "r") as reads_file :
+with xopen(reads_path, "r") as reads_file :
     i=0
     for line in reads_file:
         line = line.strip()

@@ -11,12 +11,6 @@ kraken2 --db "$database" --threads $(nproc) \
 
 echo "launching Krona"
 
-conda_env=$(conda info --envs | awk '$1=="*"{print $2}')
-if [ ! -f "$conda_env"/opt/krona/taxonomy/taxonomy.tab ]; then
-    echo "Downloading Krona taxonomy"
-    ktUpdateTaxonomy.sh
-fi
-
 ktImportTaxonomy \
     -q 2 -t 3 -m 4 \
     -o "$output_directory"/krona.html \

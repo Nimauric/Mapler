@@ -4,6 +4,7 @@ from Bio import SeqIO
 import pysam
 import matplotlib.pyplot as plt
 import sys
+from xopen import xopen
 
 
 ### Arguments ###
@@ -60,7 +61,7 @@ with pysam.AlignmentFile(reads_on_contigs_alignment, "rb") as bamfile:
 
 #IV) : get the length of each read
 reads_to_length = {}
-with open(reads_path, "r") as reads_file :
+with xopen(reads_path, "r") as reads_file :
     i=0
     for line in reads_file:
         line = line.strip()

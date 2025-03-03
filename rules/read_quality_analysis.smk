@@ -41,7 +41,9 @@ if(config["kraken2"]) :
             expand("{fraction}", fraction=config["fractions"]),
             database = config["kraken2db"],
             output_directory = "outputs/{sample}/{assembler}/kraken2/{fraction}"
-        input : get_read_path
+        input : 
+            krona_witness = "outputs/.kronatax",
+            read_paths = get_read_path
         conda : "../envs/kraken2.yaml"
         output : "outputs/{sample}/{assembler}/kraken2/{fraction}/krona.html",
         threads : config["rule_kraken2"]["threads"]
@@ -49,7 +51,7 @@ if(config["kraken2"]) :
             cpus_per_task = config["rule_kraken2"]["threads"],
             mem_mb=config["rule_kraken2"]["memory"],
             runtime=eval(config["rule_kraken2"]["time"]),
-        shell : "./sources/read_quality_analysis/kraken2.sh {params.database} {input} {params.output_directory}"
+        shell : "./sources/read_quality_analysis/kraken2.sh {params.database} {input.read_paths} {params.output_directory}"
 
 if(config["kat"]) : 
     rule kat_sect : 
