@@ -1,3 +1,8 @@
+
+###  / \   ### For analysis of real datasets, please use config_template instead.
+### / | \  ### The ressources parameters in config_test.yaml were chosen to use as few ressources as possible for the test dataset
+###/  *  \ ### On bigger and more complex datasets, using this config file might lead to crashes
+
 analysis_name: test # Used to name the logs files
 
 ##################
@@ -35,7 +40,7 @@ samples:
 
 ### External programs ###
 # (optional), used for evaluation via taxonomic assignation
-#kraken2db: /path/to/kraken_database/ #must be downloaded separately
+kraken2db: /projects/genscale/nimauric/databases/standard_kraken_database/ #must be downloaded separately
 #gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
 #mash_database: outputs/mash_db #if doesn't exist, will be created here
 checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
@@ -81,11 +86,11 @@ kraken2_target_bins: #/!\ Require having done binning separatly on a previous st
 
 # Fractionned read analysis
 fractions: 
-  - full #all reads
+#  - full #all reads
 #  - mapped #reads that mapped to a contig, and were sucessfully assembled
-#  - unmapped #reads that are not mapped to a contig
+  - unmapped #reads that are not mapped to a contig
 fastqc: false 
-kraken2: false # requires kraken2db
+kraken2: true # requires kraken2db
 kat: false
 
 #############################
@@ -157,12 +162,12 @@ rule_checkm_report_writer:
 
 rule_kraken2_on_bins: 
   threads: 2
-  memory: 1000 
+  memory: 100000 
   time: 4*60 #in minutes
 
 rule_gtdbtk_on_bins: 
   threads: 4
-  memory: 1000 
+  memory: 50000 
   time: 8*60 #in minutes
 
 rule_read_contig_mapping_plot:
@@ -179,7 +184,7 @@ rule_extract_unmapped_reads:
 
 rule_kraken2: 
   threads: 2
-  memory: 1000 
+  memory: 100000 
   time: 4*60 #in minutes
 
 rule_kat_sect: 
