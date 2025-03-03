@@ -49,10 +49,8 @@ if(config["additional_reads_cobinning"]) :
         shell: "./sources/binning/metabat2_wraper.sh  {input.contigs} {input.alignement} {output.directory} {input.additional_alignements}"
 
 if("custom" in config["binners"]) :
-    rule copy_bins:
+    rule link_bins:
         input: config["custom_bins_path"]
         output:
             directory = directory("outputs/{sample}/{assembler}/custom_bins_reads_alignement/bins"),
-        shell:
-            """mkdir -p {output.directory}
-            cp {input}/*.fa {output.directory}"""
+        shell: "ln -sr {input} {output.directory}"

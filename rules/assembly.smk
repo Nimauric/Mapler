@@ -65,7 +65,7 @@ if("operaMS" in config["assemblers"]) :
         shell : "./sources/assembly/operaMS_wraper.sh {params.operaMS_path} {input.long_reads} {input.short_read_1} {input.short_read_2} {input.short_read_assembly} {params.tmp_directory} {output}"
 
 if("custom_assembly" in config["assemblers"]) :
-    rule copy_assembly : 
+    rule link_assembly : 
         input : config["custom_assembly_path"],
         output : "outputs/{sample}/custom_assembly/assembly.fasta"
-        shell : "cp {input} {output}"
+        shell : "ln -sr {input} {output}"
