@@ -181,12 +181,17 @@ Mapler include three read analyses :
    
    With fastQC, it's possible to look into statistical differences between the sets of reads. Generally, the unmapped reads are slightly shorter and of slightly worse quality than the assembled reads on average. 
    They also tend to have a different GC ratio, but this is unlikely to reflect an actual assembly bias and more likely to be the result of a particular high abundance population being assembled better and happening to have a specific GC ratio.
-rule checkm
+
+Here's an example of fastqc_report.html: 
+![Per base sequence quality plot](https://gitlab.inria.fr/-/project/48336/uploads/5b9bc2c9322a112c9799f9c49fbd9a37/image.png)
 </details>
 <details>
 	<summary>Kraken 2</summary>
 
    By exploring the Krona plots, it's possible to check whether some taxa are only present in the unassembled portion of the reads, or whether some species have only been partially assembled, being present in both of the assembled and unassembled parts of the assembly. 
+   Here's an example of krona.html.html: 
+![Krona plot](https://gitlab.inria.fr/-/project/48336/uploads/41595f9710202edc41488a34d20c6055/image.png)
+
 
 </details>
 <details>
@@ -194,7 +199,6 @@ rule checkm
 
    By computing the abundance of each read (via its median k-mer abundance) from the full set of reads, it is possible to check whether some abundance are better assembled than others. 
    Typically, low abundance reads are more abundant in the unmapped portions, but the proportion and abundance threshold varies by assembler used.
-
    Here's an example of `kat-plot.pdf`: 
 
    ![A plot showing the abundance of unmapped reads, mostly unique, with some more abundant reads, in a sort of exponential decay with some reads with a median k-mer occurrence of 2 or even 3, and mapped reads, also looking like an exponential decay, with with a less sharp decay, with still some reads with a median k-mer occurrence of 16](https://gitlab.inria.fr/-/project/48336/uploads/c573bd3e4c4c5a972da11e02dd868e00/Screenshot_from_2025-02-26_15-31-27.png)
