@@ -3,7 +3,7 @@ Metagenome Assembly and Evaluation Pipeline for Long Reads
 
 
 ## Description
-The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies and can either perform the assembly itself using multiple state-of-the-art assemblers (metaMDBG, metaflye, hifiasm-meta), or evaluate user-submitted assemblies. In addition to classifying assembly bins in classical quality categories according to their marker gene content and taxonomic assignment, Mapler analyzes the alignment of reads on contigs. It does this by calculating the ratio of mapped reads and bases, and separately analyzes mapped and unmapped reads via their k-mer frequency, read quality, and taxonomic assignment. These results are displayed in the form of text reports or plots.
+The aim of this tool is to evaluate HiFi long-reads metagenomic assemblies, and it can either perform the assembly itself using multiple state-of-the-art assemblers (metaMDBG, metaflye, hifiasm-meta), or evaluate user-submitted assemblies. In addition to classifying assembly bins in classical quality categories according to their marker gene content and taxonomic assignment, Mapler analyzes the alignment of reads on contigs. It does this by calculating the ratio of mapped reads and bases, and separately analyzes mapped and unmapped reads via their k-mer frequency, read quality, and taxonomic assignment. These results are displayed in the form of text reports and plots.
 
 ## Installation
 
@@ -13,7 +13,7 @@ git clone https://gitlab.inria.fr/mistic/mapler.git
 cd mapler
 ```
 
-The pipeline requires Snakemake and Conda. If running on a SLURM cluster, the Snakemake SLURM executor plugin is also needed.. If they're not already installed, they can be set up in a conda environment:
+The pipeline requires Snakemake and Conda. If running on a SLURM cluster, the Snakemake SLURM executor plugin is also needed. If they're not already installed, they can be set up in a conda environment:
 
 ```bash
 conda create -n mapler -c bioconda -c conda-forge 'bioconda::snakemake>=8.28' 'conda-forge::conda>=24.1.2' bioconda::snakemake-executor-plugin-slurm 
@@ -40,7 +40,7 @@ snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_t
 
 
 ## Testing the pipeline
-To speed this up, you may use `config/config_test_evaluation_only.yaml`instad of `config/config_test.yaml`. This will speed things up, as it will only perform the evaluation, on a precomputed assembly and set of bins. 
+To speed this up, `config/config_test_evaluation_only.yaml` may be used instead of `config/config_test.yaml`. This will only perform the evaluation, on a precomputed assembly and set of bins. 
 To verify the installation, launch the pipeline with the test dataset (included in `test/test_dataset.tar.gz`, decompressed automatically), either locally
 ```bash
 ./local_pipeline.sh config/config_test.yaml > mylog.txt
@@ -161,7 +161,7 @@ Logs can be found in `logs/<analysis_name>/<date_hour>`, and contain the SLURM l
 
 ## Results interpretation
 ### Read mapping
-By alignining the reads on the contigs, we can look at two key metrics: 
+By aligning the reads on the contigs, we can look at two key metrics: 
  - Aligned reads ratio: Aligned read count / Total read count
  - Aligned bases ratio: Aligned read bases / Total read length
 
@@ -175,8 +175,8 @@ Here's an example of read_contig_mapping_plot.pdf:
 ![most reads are either unmapped or aligned to unbinned contigs or low-quality bins, with less than 20% of medium, high or near complete quality. Moreover, the alignment length ratio is visibly lower than the aligned read count ratio](https://gitlab.inria.fr/-/project/48336/uploads/f84ee66686f8f09a7f335e836c0b4ef1/Screenshot_from_2025-02-26_15-28-45.png)
 
 ### Analysis of reads by category
-In samples where a significant proportion of the reads is not assembled, it can be useful to compare the set of reads that are represented by the assembly (mapped reads)with the set of reads that are not (unmapped reads).
-Mapler include three read analyses :
+In samples where a significant proportion of the reads is not assembled, it can be useful to compare the set of reads that are represented by the assembly (mapped reads) with the set of reads that are not (unmapped reads).
+Mapler includes three read analyses :
 <details>
 	<summary>FastQC</summary>
    
@@ -190,7 +190,7 @@ Here's an example of fastqc_report.html:
 	<summary>Kraken 2</summary>
 
    By exploring the Krona plots, it's possible to check whether some taxa are only present in the unassembled portion of the reads, or whether some species have only been partially assembled, being present in both of the assembled and unassembled parts of the assembly. 
-   Here's an example of krona.html.html: 
+   Here's an example of krona.html: 
 ![Krona plot](https://gitlab.inria.fr/-/project/48336/uploads/41595f9710202edc41488a34d20c6055/image.png)
 
 
@@ -253,7 +253,7 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
 
    Kraken2 and KAT are both quite memory intensive, if resources are limited, they can be skipped by setting `kat: false`and `kraken2: false`in the config file. 
 
-   The assembly is also quite costly. If available, using it as an input can save computational resources.
+   The assembly is also quite costly. If available, using a precomputed assembly as an input can save computational resources.
 </details>
 
 <details>
