@@ -1,12 +1,18 @@
 
 if(config["checkm"]) :
+
+    rule checkm_db_download : 
+        conda: "../envs/checkm.yaml",
+        output: directory(config["checkm_database"])
+        shell: "./sources/bin_quality_analysis/checkm_db_download.sh {output}"
+
     rule checkm: 
         params: 
             output_directory = "outputs/{sample}/{assembler}/{binning}/checkm/",
             bins_extension = "fa",
-            database_directory = config["checkm_database"]
         input:
             bins = "outputs/{sample}/{assembler}/{binning}/bins",
+            database_directory = config["checkm_database"]
         conda: "../envs/checkm.yaml",
         threads: config["rule_checkm"]["threads"]
         resources:
@@ -14,7 +20,7 @@ if(config["checkm"]) :
             mem_mb=config["rule_checkm"]["memory"],
             runtime=eval(config["rule_checkm"]["time"]),
         output:"outputs/{sample}/{assembler}/{binning}/checkm/quality_report.tsv"
-        shell: "./sources/bin_quality_analysis/checkm_wraper.sh {params.bins_extension} {input.bins} {params.output_directory} {output} {params.database_directory}"
+        shell: "./sources/bin_quality_analysis/checkm_wraper.sh {params.bins_extension} {input.bins} {params.output_directory} {output} {input.database_directory}"
 
     rule checkm_report_writer: 
         input:
