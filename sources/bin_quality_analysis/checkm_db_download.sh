@@ -1,8 +1,14 @@
 #!/bin/sh
 
-database_dir="$1"
+database="$1"
+
+
 
 echo ""
-if [ ! -d "$database_dir" ] || [ -z "$(ls -A "$database_dir")" ]; then
-    checkm2 database --download --path "$database_dir"
+if [ ! -e "$database" ]; then
+    parent_dir=$(dirname "$database");
+    echo "$parent_dir"/..
+    echo $database
+    mkdir -p $parent_dir
+    checkm2 database --download --path "$parent_dir"/..
 fi

@@ -34,7 +34,7 @@ samples:
 #kraken2db: /path/to/kraken_database/ #must be downloaded separately
 #gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
 mash_database: outputs/mash_db #if doesn't exist, will be created here
-checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
+checkm_database: outputs/CheckM2_database/uniref100.KO.1.dmnd #if it doesn't exist, CheckM2_database/uniref100.KO.1.dmnd will be created in outputs
 
 
 ##### Controls #####
