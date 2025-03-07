@@ -20,15 +20,15 @@ conda create -n mapler -c bioconda -c conda-forge 'bioconda::snakemake>=8.28' 'c
 conda activate mapler
 ```
 
-The pipeline will handle and download any conda dependencies itself during the execution.
-To download them prior to running the pipeline and speed up the first execution of the pipeline, it's possible to use the following command.
-Note that only part of the analysis is run on the test dataset. 
-To download the environments for other analysis, change the `--configfile` argument.
+The pipeline will handle and download any conda dependencies during the execution.
+To install them prior to running the pipeline and speed up the first execution of the pipeline, it's possible to use the following command.
 Those environments will be stored in `.snakemake/conda`
 
 ```bash
 snakemake --use-conda --conda-create-envs-only  -c1 --configfile config/config_test.yaml
 ```
+Note that only part of the analysis is run on the test dataset. 
+To install the environments for other analyses, change the `--configfile` argument.
 
 <details>
 	<summary>Optional databases</summary>
@@ -49,7 +49,7 @@ Or on a cluster:
 ```bash
 sbatch pipeline.sh config/config_test.yaml
 ```
-Either way, with 16 CPUs and 15G of RAM, it should require around 15 minutes, not including dependency installation, to produce results similar to this: 
+Either way, with 16 CPUs and 15G of RAM, it should require around 15 minutes, not including dependency installation, to produce the following results: 
 ```bash
 outputs/test_dataset/
 └── metaMDBG
@@ -84,7 +84,7 @@ Details on how to configure this file are written as comments in the template. T
 <details>
 	<summary>Multiple user-provided assemblies and binning</summary>
 
-   To use multiple user-provided assemblies and binning, you can either run them one at a time, or insert (via a copy or the creation of a symbolic link) the assembly and/or bins like this:
+   To use multiple user-provided assemblies and binning, you can either run them one at a time, or put the corresponding files (via a copy or the creation of a symbolic link) the assembly and/or bins like this:
    ```bash
    outputs/<sample_name>/<custom_assembly_process>/assembly.fasta
    outputs/<sample_name>/<assembly>/<custom_binning_process>_bins_reads_alignement/bins/<bins.fa>
@@ -107,7 +107,7 @@ Details on how to configure this file are written as comments in the template. T
    # - metabat2
     - <custom_binning_process>
    ```
-   Please note that <custom_assembly_process> cannot correspond to the name of any of the built-in assembly processes (metaMDBG, custom_assembly, metaflye, hifiasm_meta, operaMS). Likewise, the <custom_binning_process> cannot correspond to the name of any of the built-in binning processes (metabat2, custom)
+   Please note that <custom_assembly_process> cannot have the same name as any of the built-in assembly processes (metaMDBG, custom_assembly, metaflye, hifiasm_meta, operaMS). Likewise, the <custom_binning_process> cannot have the same name as any of the built-in binning processes (metabat2, custom)
 
 </details>
 
@@ -162,26 +162,26 @@ Logs can be found in `logs/<analysis_name>/<date_hour>`, and contain the SLURM l
 ## Results interpretation
 ### Read mapping
 By aligning the reads on the contigs, we can look at two key metrics: 
- - Aligned reads ratio: Aligned read count / Total read count
- - Aligned bases ratio: Aligned read bases / Total read length
+ - Aligned read ratio: Aligned read count / Total read count
+ - Aligned base ratio: Aligned read bases / Total read length
 
-The higher the ratios, the more representative of the sequenced sample is the assembly.
-If the aligned reads ratio is significantly higher than the aligned bases ratio, it's a sign that most reads are only partially aligned to contigs.
+The higher those ratios are, the more representative of the sequenced sample is the assembly.
+If the aligned read ratio is significantly higher than the aligned base ratio, it is a sign that most reads are only partially aligned to contigs.
 
 `reads_on_contigs_mapping_evaluation/report.txt` gives a global overview of those ratios, while read_contig_mapping.txt and read_contig_mapping_plot.pdf provide a breakdown of the ratios separated by bin quality. 
 
 Here's an example of read_contig_mapping_plot.pdf: 
 
-![most reads are either unmapped or aligned to unbinned contigs or low-quality bins, with less than 20% of medium, high or near complete quality. Moreover, the alignment length ratio is visibly lower than the aligned read count ratio](https://gitlab.inria.fr/-/project/48336/uploads/f84ee66686f8f09a7f335e836c0b4ef1/Screenshot_from_2025-02-26_15-28-45.png)
+![most reads are either unmapped or aligned to unbinned contigs or low-quality bins, with less than 20% of medium, high or near complete quality. Moreover, the alignment length ratio is visibly lower than the aligned read ratio](https://gitlab.inria.fr/-/project/48336/uploads/f84ee66686f8f09a7f335e836c0b4ef1/Screenshot_from_2025-02-26_15-28-45.png)
 
 ### Analysis of reads by category
 In samples where a significant proportion of the reads is not assembled, it can be useful to compare the set of reads that are represented by the assembly (mapped reads) with the set of reads that are not (unmapped reads).
-Mapler includes three read analyses :
+Mapler includes three read set analyses :
 <details>
 	<summary>FastQC</summary>
    
-   With fastQC, it's possible to look into statistical differences between the sets of reads. Generally, the unmapped reads are slightly shorter and of slightly worse quality than the assembled reads on average. 
-   They also tend to have a different GC ratio, but this is unlikely to reflect an actual assembly bias and more likely to be the result of a particular high abundance population being assembled better and happening to have a specific GC ratio.
+   With fastQC, it's possible to look into basic differences between the sets of reads. Generally, the unmapped reads are slightly shorter and of slightly worse quality than the assembled reads on average. 
+   They can also tend to have a different GC ratio, but this is unlikely to reflect an actual assembly bias and more likely to be the result of a particular high abundance population being assembled better and happening to have a specific GC ratio.
 
 Here's an example of fastqc_report.html: 
 ![Per base sequence quality plot](https://gitlab.inria.fr/-/project/48336/uploads/5b9bc2c9322a112c9799f9c49fbd9a37/image.png)
@@ -198,8 +198,8 @@ Here's an example of fastqc_report.html:
 <details>
 	<summary>KAT</summary>
 
-   By computing the abundance of each read (via its median k-mer abundance) from the full set of reads, it is possible to check whether some abundance are better assembled than others. 
-   Typically, low abundance reads are more abundant in the unmapped portions, but the proportion and abundance threshold varies by assembler used.
+   By computing the abundance of each read (via its median k-mer abundance) from the full set of reads, it is possible to check whether some abundances are better assembled than others. 
+   Typically, low abundance reads are more libely to be more abundant in the unmapped portions, but the proportion and abundance threshold may very depending on the assembler used.
    Here's an example of `kat-plot.pdf`: 
 
    ![A plot showing the abundance of unmapped reads, mostly unique, with some more abundant reads, in a sort of exponential decay with some reads with a median k-mer occurrence of 2 or even 3, and mapped reads, also looking like an exponential decay, with with a less sharp decay, with still some reads with a median k-mer occurrence of 16](https://gitlab.inria.fr/-/project/48336/uploads/c573bd3e4c4c5a972da11e02dd868e00/Screenshot_from_2025-02-26_15-31-27.png)
@@ -224,7 +224,7 @@ Here's an example of fastqc_report.html:
    # - mapped #reads that mapped to a contig, and were successfully assembled
    # - unmapped #reads that are not mapped to a contig
    ```
-   Please note that <fraction_name> cannot correspond to the name of any of the built-in categories (full, mapped, unmapped)
+   Please note that <fraction_name> cannot have the same name as any of the built-in categories (full, mapped, unmapped)
 </details>
 
    
@@ -249,7 +249,7 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
 	<summary>How to run Mapler with low computing resources ?</summary>
 
    The default resources in `config/config_template.yaml` are designed to handle large and complex datasets (150G soil sample). 
-   On smaller or less diverse datasets, it might be possible to lower their required memory.
+   On smaller or less diverse datasets, it is possible to lower their required memory.
 
    Kraken2 and KAT are both quite memory intensive, if resources are limited, they can be skipped by setting `kat: false`and `kraken2: false`in the config file. 
 
@@ -259,10 +259,10 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
 <details>
 	<summary>How to run taxonomic assignment ?</summary>
 
-   There are three ways to use taxonomic assignment with mapler : 
-    - Taxonomic assignment of reads : done with kraken2 (`kraken2: true` in the config file) 
-    - Taxonomic assignment of all bins : done with GTDB-Tk (`gtdbtk: true` in the config file)
-    - Taxonomic assignment of specific bins of the bins folder : done with kraken2 (`kraken2_on_bins: true`in the config file). It is generally recommended to use GTDB-Tk on bins, but kraken2 can provide a way to check for coherence between the reads and specific bins.
+   There are three ways to use taxonomic assignment with mapler :
+- Taxonomic assignment of reads : done with kraken2 (`kraken2: true` in the config file) 
+- Taxonomic assignment of all bins : done with GTDB-Tk (`gtdbtk: true` in the config file)
+- Taxonomic assignment of specific bins of the bins folder : done with kraken2 (`kraken2_on_bins: true`in the config file). It is generally recommended to use GTDB-Tk on bins, but kraken2 can provide a way to check for coherence between the reads and specific bins.
 </details>
 
 <details>
@@ -276,5 +276,5 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
 	<summary>Does mapler require internet access ?</summary>
 
    Most rules do not require internet access, although there is one exception : kronadb_download, used to download krona taxonomy for kraken2 analyses.
-   If not already present and included in the config file, the checkm2 (rule checkm) and mash (rule gtdbtk_on_bins) databases also require an internet connection to be downloaded
+   If not already present and included in the config file, the checkm2 database (rule checkm_db_download) and mash (rule gtdbtk_on_bins) databases also require an internet connection to be downloaded the first time they are used.
 </details>
