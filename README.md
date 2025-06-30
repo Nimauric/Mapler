@@ -280,7 +280,7 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
 </details>
 
 
-Citation
+## Citation
    Nicolas Maurice, Claire Lemaitre, Riccardo Vicedomini, Clémence Frioux, [Mapler: a pipeline for assessing assembly quality in taxonomically rich metagenomes sequenced with HiFi reads](https://academic.oup.com/bioinformatics/article/41/6/btaf334/8157874), Bioinformatics (2025)
 
 
