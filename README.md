@@ -278,3 +278,9 @@ Additionally, minimap2, pysam, biopython, pandas, matplotlib and numpy were used
    Most rules do not require internet access, although there is one exception : kronadb_download, used to download krona taxonomy for kraken2 analyses.
    If not already present and included in the config file, the checkm2 database (rule checkm_db_download) and mash (rule gtdbtk_on_bins) databases also require an internet connection to be downloaded the first time they are used.
 </details>
+
+
+Citation
+   Nicolas Maurice, Claire Lemaitre, Riccardo Vicedomini, Clémence Frioux, [Mapler: a pipeline for assessing assembly quality in taxonomically rich metagenomes sequenced with HiFi reads](https://academic.oup.com/bioinformatics/article/41/6/btaf334/8157874), Bioinformatics (2025)
+
+
