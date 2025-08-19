@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 assembly="$1"
 reads_on_contigs="$2"
 output_directory="$3"
