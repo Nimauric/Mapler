@@ -43,8 +43,7 @@ samples:
 kraken2db: /projects/genscale/nimauric/databases/standard_kraken_database/ #must be downloaded separately
 #gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
 #mash_database: outputs/mash_db #if doesn't exist, will be created here
-checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
-
+checkm_database: outputs/checkm_db/CheckM2_database/uniref100.KO.1.dmnd #if doesn't exist, will be created here (note : path must finish with CheckM2_database/uniref100.KO.1.dmnd)
 # (optional), for hybrid assembly
 #operaMS_path: /path/to/OPERA-MS
 
@@ -134,7 +133,7 @@ rule_operaMS_assembly:
 # Binning
 rules_metabat2_binnings: 
   threads: 4
-  memory: 200
+  memory: 500
   time: 12*60 #in minutes
 
 # Contig quality analysis

@@ -42,7 +42,7 @@ custom_bins_path: test/test_bins/ # path to a folder containing bins in .fa form
 kraken2db: /projects/genscale/nimauric/databases/standard_kraken_database/ #must be downloaded separately
 #gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
 #mash_database: outputs/mash_db #if doesn't exist, will be created here
-checkm_database: outputs/checkm_db/ #if doesn't exist, will be created here
+checkm_database: outputs/checkm_db/CheckM2_database/uniref100.KO.1.dmnd #if doesn't exist, will be created here
 
 # (optional), for hybrid assembly
 #operaMS_path: /path/to/OPERA-MS
