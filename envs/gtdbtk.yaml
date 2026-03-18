@@ -4,3 +4,4 @@ channels :
 dependencies :
   - gtdbtk=2.4.0
   - python=3.12
+  - "numpy<2"

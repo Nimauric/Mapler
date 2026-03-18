@@ -1,14 +1,56 @@
-###### Utility function ###### 
+###### Utility function ######
 
 # Return a list containing the attribute "attribute" of each sample
+# attribute = {name, read_path, short_reads_1, short_reads_2}
 def get_samples(attribute) : 
-    # attribute = {name, read_path}
     return [sample[attribute] for sample in config["samples"]]
 
 # Return the attribute "attribute" of an assembly with the name "sample"
 def get_sample(attribute, wildcards):
     index = get_samples("name").index(wildcards.sample)
     return get_samples(attribute)[index]
+
+# Return short reads either from the sample section or from global config
+def get_short_read(attribute, wildcards):
+    index = get_samples("name").index(wildcards.sample)
+    sample = config["samples"][index]
+
+    if attribute in sample:
+        return sample[attribute]
+    elif attribute in config:
+        return config[attribute]
+    else:
+        raise ValueError(
+            f"{attribute} not found neither in sample '{wildcards.sample}' nor in global config"
+        )
+def sample_has_long_reads(wildcards):
+    return get_sample("read_path", wildcards) != "none"
+
+def sample_has_short_reads(wildcards):
+    index = get_samples("name").index(wildcards.sample)
+    sample = config["samples"][index]
+
+    if "short_reads_1" in sample and "short_reads_2" in sample:
+        return True
+    elif "short_reads_1" in config and "short_reads_2" in config:
+        return True
+    return False
+
+def get_samples_with_long_reads():
+    out = []
+    for sample in config["samples"]:
+        if "read_path" in sample and sample["read_path"] != "none":
+            out.append(sample["name"])
+    return out
+
+def get_samples_with_short_reads():
+    out = []
+    for sample in config["samples"]:
+        if "short_reads_1" in sample and "short_reads_2" in sample:
+            out.append(sample["name"])
+        elif "short_reads_1" in config and "short_reads_2" in config:
+            out.append(sample["name"])
+    return out
 
 # Return the path to the reads of a fraction of an assembly 
 def get_read_path(wildcards) : 
@@ -32,7 +74,19 @@ def get_reference(reference_name) :
         if reference_name in ref : 
             return ref
     return None
-    
+
+
+##### Sequencing technology (global) #####
+TECH = config.get("technology", "hifi")
+
+allowed_tech = ["hifi", "ont"]
+if TECH not in allowed_tech:
+    raise ValueError(f"technology must be one of {allowed_tech} (got: {TECH})")
+
+# minimap2 preset for long reads mapping
+LONGREAD_PRESET = "lr:hq" if TECH == "ont" else "map-hifi"
+
+
 ##### Additional rules #####  
 include : "rules/assembly.smk"
 include : "rules/mapping.smk"
@@ -81,10 +135,12 @@ rule all :
             if(config["metaquast"] == True and ("abundance_information" in config)) else "Snakefile",
         expand("outputs/{sample}/{assembler}/metaquast/results/summary/TSV/", sample=get_samples("name"), assembler = config["assemblers"])
             if(config["metaquast"] == True) else "Snakefile",
-        expand("outputs/{sample}/reads_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
+        expand("outputs/{sample}/long_reads_on_reference.{reference}.bam", sample=get_samples_with_long_reads(), reference=get_reference_names())
             if(config["reference_mapping_evaluation"] == True) else "Snakefile",
-        expand("outputs/{sample}/{assembler}/contigs_on_reference.{reference}.bam", sample=get_samples("name"), assembler = config["assemblers"], reference=get_reference_names())
+        expand("outputs/{sample}/short_reads_on_reference.{reference}.bam", sample=get_samples_with_short_reads(), reference=get_reference_names())
             if(config["reference_mapping_evaluation"] == True) else "Snakefile", 
+        expand("outputs/{sample}/{assembler}/short_reads_on_contigs.bam", sample=get_samples("name"), assembler=config["assemblers"])
+            if(config["short_read_mapping_evaluation"] == True or config["short_read_binning"] == True or config["short_read_cobinning"] == True) else "Snakefile",
         
         # Bins quality analysis (checkm, separate read and contig quality analysis by bin quality)
         expand("outputs/{sample}/{assembler}/{binning}/checkm/checkm_report.txt", sample=get_samples("name"), assembler = config["assemblers"], binning=binnings)

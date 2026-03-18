@@ -1,5 +1,10 @@
 analysis_name: analysis_name # Used to name the logs files
 
+##### Sequencing technology #####
+# Type of long reads used in the pipeline.
+# Options: default = "hifi" (PacBio HiFi) or "ont" (Oxford Nanopore R10.4+)
+technology: technology_type
+
 ##### Inputs #####
 ### Samples ###
 # long reads used for assembly and evaluation

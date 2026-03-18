@@ -1,5 +1,7 @@
+name: spades
 channels:
   - conda-forge
   - bioconda
+  - defaults
 dependencies:
-  - metamdbg>=1.2
+  - spades

@@ -1,5 +1,3 @@
- 
-
 
 rule reads_on_contigs_mapping : 
     params : 
@@ -14,7 +12,7 @@ rule reads_on_contigs_mapping :
         cpus_per_task = config["rules_mapping"]["threads"],
         mem_mb=config["rules_mapping"]["memory"],
         runtime=eval(config["rules_mapping"]["time"]),
-    shell : "./sources/mapping.sh {output} {input.reads} {input.assembly} map-hifi "
+    shell : "./sources/mapping.sh {output} {input.reads} {input.assembly} {LONGREAD_PRESET}"
 
 if(config["short_read_binning"] or config["short_read_cobinning"] or config["short_read_mapping_evaluation"]) :
     rule short_reads_on_contigs_mapping : 
@@ -22,8 +20,8 @@ if(config["short_read_binning"] or config["short_read_cobinning"] or config["sho
             expand("{sample}", sample=get_samples("name")),
         input :
             assembly = "outputs/{sample}/{assembler}/assembly.fasta",
-            R1 = config["short_reads_1"], 
-            R2 = config["short_reads_2"], 
+            R1 = lambda wildcards: get_short_read("short_reads_1", wildcards),
+            R2 = lambda wildcards: get_short_read("short_reads_2", wildcards) 
         output : "outputs/{sample}/{assembler}/short_reads_on_contigs.bam"
         conda : "../envs/mapping.yaml"
         threads : config["rules_mapping"]["threads"]
@@ -56,21 +54,41 @@ if(config["additional_reads_cobinning"]) :
             cpus_per_task = config["rules_mapping"]["threads"],
             mem_mb=config["rules_mapping"]["memory"],
             runtime=eval(config["rules_mapping"]["time"]),
-        shell : "./sources/mapping.sh {output} {input.reads} {input.assembly} map-hifi "
+        shell : "./sources/mapping.sh {output} {input.reads} {input.assembly} {LONGREAD_PRESET}"
 
 if(config['reference_mapping_evaluation']) :
-    rule reads_on_reference_mapping : 
+    rule long_reads_on_reference_mapping : 
         input :
-            reads = lambda wildcards: get_sample( "read_path", wildcards), 
             reference = lambda wildcards: get_reference(wildcards.reference_name)
-        output : "outputs/{sample}/reads_on_reference.{reference_name}.bam"
+        params :
+            reads = lambda wildcards: get_sample("read_path", wildcards)
+        output : "outputs/{sample}/long_reads_on_reference.{reference_name}.bam"
         conda : "../envs/mapping.yaml"
         threads : config["rules_mapping"]["threads"]
         resources :
             cpus_per_task = config["rules_mapping"]["threads"],
             mem_mb=config["rules_mapping"]["memory"],
             runtime=eval(config["rules_mapping"]["time"]),
-        shell : "./sources/mapping.sh {output} {input.reads} {input.reference} map-hifi"
+        run:
+            if params.reads == "none":
+                shell("touch {output}")
+            else:
+                shell("./sources/mapping.sh {output} {params.reads} {input.reference} {LONGREAD_PRESET}")
+
+
+    rule short_reads_on_reference_mapping : 
+        input :
+            R1 = lambda wildcards: get_short_read("short_reads_1", wildcards),
+            R2 = lambda wildcards: get_short_read("short_reads_2", wildcards),
+            reference = lambda wildcards: get_reference(wildcards.reference_name)
+        output : "outputs/{sample}/short_reads_on_reference.{reference_name}.bam"
+        conda : "../envs/mapping.yaml"
+        threads : config["rules_mapping"]["threads"]
+        resources :
+            cpus_per_task = config["rules_mapping"]["threads"],
+            mem_mb=config["rules_mapping"]["memory"],
+            runtime=eval(config["rules_mapping"]["time"]),
+        shell : "./sources/mapping.sh {output} {input.R1} {input.reference} sr {input.R2}"
 
 
     rule contigs_on_reference_mapping : 
