@@ -1,4 +1,5 @@
 channels:
+  - conda-forge
   - bioconda
 dependencies:
-  - myloasm
+  - myloasm=0.4.0

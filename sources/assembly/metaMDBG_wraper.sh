@@ -1,9 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
+
 # This script assemble a set of reads into a metagenome, using MetaMDBG
+
 sample="$1"
 tmp_directory="$2"
 output="$3"
 technology="$4"
+cleanup="${5:-yes}"
 
 Ncpu=$(nproc)
 
@@ -18,8 +22,8 @@ fi
 
 metaMDBG asm --out-dir "$tmp_directory" $READ_TYPE "$sample" --threads $Ncpu
 
-gzip -d "$tmp_directory"/contigs.fasta.gz
-mv "$tmp_directory"/contigs.fasta "$output"
-if [ -f "$output_directory/assembly.fasta" ]; then
-    rm -rf "$output_directory"/tmp/
+./sources/assembly/finalize_assembly_output.sh "$tmp_directory"/contigs.fasta.gz "$output"
+
+if [ "$cleanup" != "no" ] && [ -s "$output" ]; then
+    rm -rf "$(dirname "$output")"/tmp/
 fi

@@ -2,3 +2,6 @@ outputs/
 logs/
 slurm-*.out
 .snakemake/
+test/
+carnet_modifications/
+scripts_travail/

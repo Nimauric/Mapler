@@ -42,13 +42,13 @@ if(config["checkm"]) :
         conda : "../envs/python.yaml"
         shell : "python3 sources/bin_quality_analysis/checkm_plot.py {input} {output}"
 
-if(config["checkm"] and config["binning"]) :
+if(config["checkm"] and long_read_mapping_plot_enabled()) :
     rule read_contig_mapping_plot: 
         input:
             checkm_report = "outputs/{sample}/{assembler}/{binning}/checkm/quality_report.tsv",
             bins_directory = "outputs/{sample}/{assembler}/{binning}/bins",
             reads_on_contigs_alignment = "outputs/{sample}/{assembler}/reads_on_contigs.bam",
-            reads = lambda wildcards: get_sample("read_path", wildcards)
+            reads = get_long_read_path
         threads: config["rule_read_contig_mapping_plot"]["threads"]
         resources:
             cpus_per_task = config["rule_read_contig_mapping_plot"]["threads"],
@@ -58,6 +58,8 @@ if(config["checkm"] and config["binning"]) :
         output: 
             plot="outputs/{sample}/{assembler}/{binning}/read_contig_mapping_plot.pdf",
             text="outputs/{sample}/{assembler}/{binning}/read_contig_mapping.txt"
+        wildcard_constraints:
+            binning="[^/]+_bins_(reads|cobinning|additional_reads_cobinning)_alignement"
         shell: "python3 sources/bin_quality_analysis/reads_on_contigs_mapping_plot.py {input.checkm_report} {input.bins_directory} {input.reads_on_contigs_alignment} {input.reads} {output.plot} {output.text}"
 
 rule kronadb_download:
@@ -100,3 +102,32 @@ if(config["gtdbtk"]) :
         output: "outputs/{sample}/{assembler}/{binning}/gtdbtk/results/gtdbtk.bac120.summary.tsv"
         shell: "./sources/bin_quality_analysis/gtdbtk_wraper.sh {params.output_directory} {params.gtdbtk_database} {params.mash_database} {input.bins}"
 
+if(config["checkm"] and is_binning_enabled() and short_read_binning_enabled()):
+    rule short_read_contig_mapping_plot:
+        input:
+            checkm_report="outputs/{sample}/{assembler}/{binner}_bins_short_reads_alignement/checkm/quality_report.tsv",
+            bins_directory="outputs/{sample}/{assembler}/{binner}_bins_short_reads_alignement/bins",
+            bam="outputs/{sample}/{assembler}/short_reads_on_contigs.bam",
+            R1=lambda wildcards: get_short_read("short_reads_1", wildcards),
+            R2=lambda wildcards: get_short_read("short_reads_2", wildcards)
+        output:
+            plot="outputs/{sample}/{assembler}/{binner}_bins_short_reads_alignement/read_contig_mapping_plot.pdf",
+            text="outputs/{sample}/{assembler}/{binner}_bins_short_reads_alignement/read_contig_mapping.txt"
+        conda:
+            "../envs/python.yaml"
+        threads: config["rule_read_contig_mapping_plot"]["threads"]
+        resources:
+            cpus_per_task=config["rule_read_contig_mapping_plot"]["threads"],
+            mem_mb=config["rule_read_contig_mapping_plot"]["memory"],
+            runtime=eval(config["rule_read_contig_mapping_plot"]["time"])
+        shell:
+            """
+            python3 sources/bin_quality_analysis/reads_on_contigs_mapping_plot_short_reads.py \
+                {input.checkm_report} \
+                {input.bins_directory} \
+                {input.bam} \
+                {input.R1} \
+                {input.R2} \
+                {output.plot} \
+                {output.text}
+            """

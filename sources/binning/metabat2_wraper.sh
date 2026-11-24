@@ -1,11 +1,13 @@
 #!/bin/bash
+set -euo pipefail
+
 assembly="$1"
 reads_on_contigs="$2"
 output_directory="$3"
 second_reads_on_contigs="${@:4}"  # Optional, used for co-binning
 Ncpu=$(nproc)
 
-
+mkdir -p "$output_directory"
 
 echo ""
 echo "Summarizing conting depths..."

@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=mapler 
-#SBATCH --time=3-00:00:00
+#SBATCH --time=15-00:00:00
 #SBATCH --mem=5G
 
 config=${1:-"config/config.yaml"}

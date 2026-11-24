@@ -1,12 +1,21 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -euo pipefail
 
 database=$1 #/groups/genscale/nimauric/databases/standard_kraken_database/ #
-queries=$2 #outputs/zymo/metaMDBG/unmapped_reads.fastq #
+queries=$2 #outputs/zymo/metaMDBG/unmapped_reads.fastq.gz #
 output_directory=$3 #test_kraken # 
 
+mkdir -p "$output_directory"
+
+gzip_option=""
+if [[ "$queries" == *.gz ]]; then
+    gzip_option="--gzip-compressed"
+fi
+
 echo "launching kraken"
-kraken2 --db "$database" --threads $(nproc) \
+kraken2 --db "$database" --threads "$(nproc)" \
     --confidence 0.01 \
+    $gzip_option \
     "$queries" --output "$output_directory"/kraken2.tsv
 
 echo "launching Krona"

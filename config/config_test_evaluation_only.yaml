@@ -9,24 +9,41 @@ analysis_name: test # Used to name the logs files
 ##################
 
 ### Samples ###
-# long reads used for assembly and evaluation
-samples: 
- - name: test_dataset
-   read_path: test/test_dataset.fastq
+# technology options: hifi, ont, illumina
+# Sample model:
+# - hifi and ont samples must define read_path.
+# - hifi and ont samples may optionally define auxiliary_short_reads for hybrid tools such as OperaMS and/or short_read_cobinning.
+# - illumina samples must define read_path: none and short_reads_1/short_reads_2.
+# - Do not define short_reads_1/short_reads_2 inside hifi or ont samples.
+# - Do not define auxiliary_short_reads_1/2 inside illumina samples.
 
-# (optional), short reads, may be used for binning or evaluation. Should be from the same sample as the long reads
-#short_reads_1: /path/to/short_reads_1.fastq
-#short_reads_2: /path/to/short_reads_2.fastq
-# (optional), short read assembly, may be used for assembly. Should be from the same sample as the long reads
+samples:
+ - name: test_dataset
+   technology: hifi
+   read_path: test/test_dataset.fastq
+   # auxiliary_short_reads_1/2 are optional and used only by hybrid tools such as OPERA-MS and short_read_cobinning.
+   # auxiliary_short_reads_1: /path/to/illumina_R1.fastq.gz
+   # auxiliary_short_reads_2: /path/to/illumina_R2.fastq.gz
+
+# - name: test_dataset_illumina
+#   technology: illumina
+#   read_path: none
+#   short_reads_1: /path/to/illumina_R1.fastq.gz
+#   short_reads_2: /path/to/illumina_R2.fastq.gz
+
+# (Optional): Pre-assembled short-read contig file used by OPERA-MS only, should be from the same sample as the long reads.
+#             It is not used by metaspades, short_read_binning, or short_read_mapping_evaluation.
 #short_read_assembly: /path/to/short_read_assembly.fasta
 
-# (optional), long reads used for cobinning. Should be from a similar sample as the studied sample
+# (Optional): Additional long-read datasets used only for additional_reads_cobinning. These reads are not used for assembly.
+#             They are mapped to the contigs of the studied sample and used as extra coverage profiles for MetaBAT2.
 #additional_reads: 
 # - name: sample_name
 #   path: /path/to/reads.fastq
 
-# (optional), used for evaluation
-#reference_genomes: 
+# (Optional): Reference genomes used by MetaQUAST, reference_mapping_evaluation,
+# and contigs_on_reference_mapping.
+reference_genomes:
 #- /path/to/reference_genome.fasta
 #- /path/to/other-reference_genome.fasta
 # (optional), used for evaluation a csv with every line following the template "reference_genome_name, group". The names must be the same as the reference genomes files (without the path and extentions), and the groups are arbitrary
@@ -38,13 +55,13 @@ custom_bins_path: test/test_bins/ # path to a folder containing bins in .fa form
 
 
 ### External programs ###
-# (optional), used for evaluation via taxonomic assignation
+# (Optional): used for evaluation via taxonomic assignation
 kraken2db: /projects/genscale/nimauric/databases/standard_kraken_database/ #must be downloaded separately
-#gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
-#mash_database: outputs/mash_db #if doesn't exist, will be created here
+gtdbtk_database: /path/to/gtdbtk_release220/ #must be downloaded separately
+mash_database: outputs/mash_db #if doesn't exist, will be created here
 checkm_database: outputs/checkm_db/CheckM2_database/uniref100.KO.1.dmnd #if doesn't exist, will be created here
 
-# (optional), for hybrid assembly
+# (Optional): for hybrid assembly
 #operaMS_path: /path/to/OPERA-MS
 
 
@@ -53,21 +70,38 @@ checkm_database: outputs/checkm_db/CheckM2_database/uniref100.KO.1.dmnd #if does
 ####################
 
 ### Assembly and binning ###
+
+# Temporary assembly files are removed by default after the final assembly.fasta.gz is successfully generated.
+# Use cleanup_tmp: "no" to keep temporary files for debugging or manual inspection no matter the outcome.
+cleanup_tmp: yes
+
+### Assembly ###
+# Assemblers create contigs/assembly.fasta.gz.
 assemblers: # uncomment assemblers to use them
 # - metaMDBG
- - custom_assembly # requires custom_assembly_path
 # - metaflye
 # - hifiasm_meta
-# - operaMS # requires short_read_assembly and operaMS_path, performs a hybrid assembly
+# - metaspades
+# - hylight # recommended hybrid assembler; requires hifi/ont samples with auxiliary_short_reads_1/2
+# - operaMS # legacy/experimental hybrid assembler; requires hifi/ont samples with auxiliary_short_reads_1/2
+ - custom_assembly # requires custom_assembly_path
 
-short_read_binning: false # requires short_reads_1 and short_reads_2
-short_read_cobinning: false # requires short_reads_1 and short_reads_2, uses both short and long reads for binning
-additional_reads_cobinning: false # requires at least one additional_reads, uses both the long reads, and all additional reads for binning
-
+### Binning ###
+# Global switch for all binning analyses.
+# If false, no binning mode will run.
 binning: true
+
+# Binners create bins/MAGs from contigs and read coverage.
+# Currently supported: metabat2
 binners: # uncomment binners to use them
 #  - metabat2
  - custom # requires custom_bins_path
+
+# Binning modes decide which read coverage is used:
+long_read_binning: true # main long reads on contigs, uses: outputs/{sample}/{assembler}/reads_on_contigs.bam
+short_read_binning: false # Illumina reads on metaspades assemblies, uses: outputs/{sample}/{assembler}/short_reads_on_contigs.bam
+short_read_cobinning: false # long-read coverage + auxiliary short-read coverage
+additional_reads_cobinning: false # main long reads + additional long-read datasets
 
 ### Evaluation ###
 # contig analysis
@@ -75,6 +109,7 @@ metaquast: false # requires reference_genomes
 read_mapping_evaluation: true 
 short_read_mapping_evaluation: false # requires short_reads_1 and short_reads_2
 reference_mapping_evaluation: false # requires reference_genomes
+contigs_on_reference_mapping: false # maps assembly.fasta.gz/contigs to reference_genomes; requires reference_genomes
 
 # bins analysis
 checkm: true
@@ -83,12 +118,18 @@ kraken2_on_bins: false #/!\ Require having done binning separatly on a previous 
 kraken2_target_bins: #/!\ Require having done binning separatly on a previous step, requires kraken2db
  - 1
 
-# Fractionned read analysis
+# Fractioned read quality analysis
 fractions: 
-#  - full #all reads
-#  - mapped #reads that mapped to a contig, and were sucessfully assembled
-  - unmapped #reads that are not mapped to a contig
-fastqc: false 
+#  - full # all reads
+#  - mapped # reads that mapped to a contig, and were successfully assembled
+  - unmapped # reads that are not mapped to a contig
+fraction_evaluation_tools:
+# For Illumina mapped/unmapped fractions, the extract_short_read_fractions.sh separates reads according to each read's mapping flag in the BAM.
+# This means that is not a strict pair-level separation when read pairs have different mapping states.
+  long_reads:
+#  - nanoplot
+  short_reads:
+#  - fastqc
 kraken2: true # requires kraken2db
 kat: false
 
@@ -129,6 +170,16 @@ rule_operaMS_assembly:
   threads: 8
   memory: 1000 
   time: 5*24*60 #in minutes
+
+rule_hylight_assembly:
+  threads: 8
+  memory: 2000
+  time: 2*24*60 #in minutes
+
+rule_metaspades_assembly:
+  threads: 8
+  memory: 2000
+  time: 2*24*60 #in minutes
 
 # Binning
 rules_metabat2_binnings: 
@@ -195,3 +246,8 @@ rule_fastqc:
   threads: 2
   memory: 50
   time: 2*60 #in minutes
+
+rule_nanoplot:
+  threads: 8
+  memory: 16000
+  time: 2*60 # in minutes

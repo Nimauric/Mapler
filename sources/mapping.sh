@@ -3,20 +3,25 @@
 #SBATCH --mem=10G
 #SBATCH --cpus-per-task=24
 #conda activate .snakemake/conda/5d2e4a1fd40405f7cd25f2b961322ceb_
-#./sources/mapping.sh outputs/zymo/metaMDBG/contigs_on_reference.Saccharomyces_cerevisiae.bam outputs/zymo/metaMDBG/assembly.fasta /groups/genscale/nimauric/ZymoD6331/Saccharomyces_cerevisiae.fasta
-#./sources/mapping.sh outputs/zymo/metaMDBG/contigs_on_reference.Salmonella_enterica.bam outputs/zymo/metaMDBG/assembly.fasta /groups/genscale/nimauric/ZymoD6331/Salmonella_enterica.fasta
+#./sources/mapping.sh outputs/zymo/metaMDBG/contigs_on_reference.Saccharomyces_cerevisiae.bam outputs/zymo/metaMDBG/assembly.fasta.gz /groups/genscale/nimauric/ZymoD6331/Saccharomyces_cerevisiae.fasta
+#./sources/mapping.sh outputs/zymo/metaMDBG/contigs_on_reference.Salmonella_enterica.bam outputs/zymo/metaMDBG/assembly.fasta.gz /groups/genscale/nimauric/ZymoD6331/Salmonella_enterica.fasta
 
+set -eu
 
 output="$1"
 query="$2"
 target="$3"
 preset="$4" # map-hifi or map-ont or asm20 or sr
 additional_query="$5" # In case of short read mapping, query= R1, query2 = R2.
+threads="$6" 
 
-minimap2 --split-prefix "$output".tmp -a -t $(nproc) -cx $preset $target $query $additional_query\
-    | samtools sort --threads $(nproc) -o $output \
-    && samtools index $output
+if [ -n "$additional_query" ]; then
+    minimap2 --split-prefix "${output}.tmp" -a -t "$threads" -cx "$preset" "$target" "$query" "$additional_query" \
+        | samtools sort --threads "$threads" -m 1G -o "$output"
+else
+    minimap2 --split-prefix "${output}.tmp" -a -t "$threads" -cx "$preset" "$target" "$query" \
+        | samtools sort --threads "$threads" -m 1G -o "$output"
+fi
 
-
-
+samtools index "$output"
 

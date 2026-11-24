@@ -11,7 +11,7 @@ threshold= float(sys.argv[3])
 reads_alignment = {}
 with pysam.AlignmentFile(alignement_path, "rb") as bamfile:
     for alignment in bamfile.fetch():
-        read_name = alignment.query_name
+        read_name = alignment.query_name.split()[0]
         contig_name = alignment.reference_name
 
         start_pos = alignment.query_alignment_start
@@ -29,7 +29,7 @@ with xopen(reads_path, "r") as reads_file :
     for line in reads_file:
         line = line.strip()
         if i == 0:
-            name= line[1:].split(" ")[0]
+            name = line[1:].split()[0]
         elif i == 1:
             length = len(line)
         elif i == 3:

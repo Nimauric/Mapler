@@ -43,7 +43,7 @@ for bin_name in bin_to_quality.keys() :
 reads_to_quality = {}
 with pysam.AlignmentFile(reads_on_contigs_alignment, "rb") as bamfile:
     for alignment in bamfile.fetch():
-        read_name = alignment.query_name
+        read_name = alignment.query_name.split()[0]
         contig_name = alignment.reference_name
         try :
             bin_name = contig_to_bin[contig_name]
@@ -66,7 +66,7 @@ with xopen(reads_path, "r") as reads_file :
     for line in reads_file:
         line = line.strip()
         if i == 0:
-            name= line[1:].split(" ")[0]
+            name= line[1:].split()[0]
         elif i == 1:
             length = len(line)
         elif i == 3:

@@ -1,6 +1,18 @@
 channels:
   - conda-forge
   - bioconda
+
 dependencies:
-  - perl-app-cpanminus=1.7047
-  - r-rlang=1.1.3
+  - perl
+  - perl-app-cpanminus
+  - perl-local-lib
+  - perl-file-which
+  - perl-statistics-basic
+  - perl-statistics-r
+  - r-base
+  - make
+  - gcc
+  - gxx
+  - git
+  - zlib
+  - samtools
